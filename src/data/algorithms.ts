@@ -4,7 +4,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "algorithm-w",
     name: "Algorithm W",
-    labels: ["Global", "Unification", "Hindley-Milner", "Principal type"],
+    labels: ["Global", "Unification", "Hindley-Milner", "Principal Types"],
     viewMode: "tree",
     paper: {
       title: "A Theory of Type Polymorphism in Programming",
@@ -42,7 +42,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "worklist",
     name: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-rank", "Worklist"],
+    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist"],
     viewMode: "linear",
     paper: {
       title: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",

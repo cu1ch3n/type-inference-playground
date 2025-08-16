@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { TypingRule } from '@/types/inference';
+import { BookOpen } from 'lucide-react';
 
 interface TypingRulesProps {
   rules: TypingRule[];
@@ -13,7 +14,10 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
   return (
     <Card className="academic-panel">
       <CardHeader>
-        <CardTitle>Typing Rules</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <BookOpen className="w-4 h-4" />
+          Typing Rules
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {/* Reduction rules - single lines */}

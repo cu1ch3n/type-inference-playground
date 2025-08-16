@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
+import { GitBranch, Activity } from 'lucide-react';
 
 interface DerivationViewerProps {
   result?: InferenceResult;
@@ -69,7 +70,10 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
     return (
       <Card className="academic-panel">
         <CardHeader>
-          <CardTitle>Derivation</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <GitBranch className="w-4 h-4" />
+            Derivation
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-40 text-muted-foreground">
           Run type inference to see the derivation
@@ -82,7 +86,10 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
     return (
       <Card className="academic-panel">
         <CardHeader>
-          <CardTitle>Derivation</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <GitBranch className="w-4 h-4" />
+            Derivation
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
@@ -103,10 +110,16 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
     <Card className="academic-panel">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Derivation</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <GitBranch className="w-4 h-4" />
+            Derivation
+          </CardTitle>
           {result.finalType && (
             <div className="text-right">
-              <div className="text-xs text-muted-foreground mb-1">Result Type:</div>
+              <div className="text-xs text-muted-foreground mb-1 flex items-center justify-end gap-1">
+                <Activity className="w-3 h-3" />
+                Result Type:
+              </div>
               <Badge variant="default" className="font-math text-sm">
                 <KaTeXRenderer expression={result.finalType} />
               </Badge>

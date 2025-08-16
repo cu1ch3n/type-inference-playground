@@ -113,6 +113,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
             </div>
           )}
         </div>
+        <Separator className="mt-4" />
       </CardHeader>
       <CardContent>
         {viewMode === 'tree' ? (
@@ -128,7 +129,6 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
           </div>
         )}
       </CardContent>
-      <Separator />
     </Card>
   );
 };

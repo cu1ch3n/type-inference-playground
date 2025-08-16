@@ -79,8 +79,6 @@ export default {
 				'card': 'var(--shadow-card)'
 			},
 			fontFamily: {
-				'sans': ['Crimson Text', 'Georgia', 'serif'],
-				'serif': ['Crimson Text', 'Georgia', 'serif'],
 				'math': 'var(--math-font)',
 				'code': 'var(--code-font)',
 				'mono': ['Iosevka', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'monospace']

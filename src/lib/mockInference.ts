@@ -10,8 +10,6 @@ export const runInference = async (algorithm: string, expression: string): Promi
   // Generate mock derivation based on expression pattern
   if (algorithm === 'algorithm-w') {
     return generateAlgorithmWDerivation(cleanExpression);
-  } else if (algorithm === 'bidirectional') {
-    return generateBidirectionalDerivation(cleanExpression);
   } else if (algorithm === 'worklist') {
     return generateWorklistDerivation(cleanExpression);
   }

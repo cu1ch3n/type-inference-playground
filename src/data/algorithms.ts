@@ -4,13 +4,13 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'algorithm-w',
     name: 'Algorithm W',
-    labels: ['Global', 'Let-generalization', 'Principal type'],
+    labels: ['Global', 'Unification', 'Hindley-Milner', 'Let-generalization', 'Principal type'],
     viewMode: 'tree',
     paper: {
       title: 'A Theory of Type Polymorphism in Programming',
       authors: ['Robin Milner'],
       year: 1978,
-      url: 'https://doi.org/10.1016/0022-0000(78)90014-4'
+      url: 'https://doi.org/10.1016%2F0022-0000%2878%2990014-4'
     },
     rules: [
       {
@@ -46,53 +46,15 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     ]
   },
   {
-    id: 'bidirectional',
-    name: 'Bidirectional Type Checking',
-    labels: ['Local', 'Bidirectional', 'Check/Synth'],
-    viewMode: 'tree',
-    paper: {
-      title: 'Bidirectional Typing Rules: A Tutorial',
-      authors: ['David Raymond Christiansen'],
-      year: 2013,
-      url: 'https://arxiv.org/abs/1306.6032'
-    },
-    rules: [
-      {
-        id: 'Var',
-        name: 'Var',
-        premises: ['x : A \\in \\Gamma'],
-        conclusion: '\\Gamma \\vdash x \\Rightarrow A'
-      },
-      {
-        id: 'Lam',
-        name: 'Lam',
-        premises: ['\\Gamma, x : A \\vdash e \\Leftarrow B'],
-        conclusion: '\\Gamma \\vdash \\lambda x.e \\Leftarrow A \\rightarrow B'
-      },
-      {
-        id: 'App',
-        name: 'App',
-        premises: ['\\Gamma \\vdash e_1 \\Rightarrow A \\rightarrow B', '\\Gamma \\vdash e_2 \\Leftarrow A'],
-        conclusion: '\\Gamma \\vdash e_1 \\; e_2 \\Rightarrow B'
-      },
-      {
-        id: 'Sub',
-        name: 'Sub',
-        premises: ['\\Gamma \\vdash e \\Rightarrow A', 'A \\leq B'],
-        conclusion: '\\Gamma \\vdash e \\Leftarrow B'
-      }
-    ]
-  },
-  {
     id: 'worklist',
-    name: 'Worklist-based STLC',
-    labels: ['Constraint-based', 'STLC', 'Unification'],
+    name: 'A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference',
+    labels: ['Global', 'Unification', 'Dunfield-Krishnaswami'],
     viewMode: 'linear',
     paper: {
-      title: 'Constraint-Based Type Inference',
-      authors: ['François Pottier', 'Didier Rémy'],
-      year: 2005,
-      url: 'https://hal.inria.fr/hal-01499583'
+      title: 'A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference',
+      authors: ['Jinxu Zhao', 'Bruno C. d. S. Oliveira', 'Tom Schrijvers'],
+      year: 2019,
+      url: 'https://dl.acm.org/doi/10.1145/3341716'
     },
     rules: [
       {
@@ -139,18 +101,6 @@ export const algorithmExamples = {
       name: 'Composition',
       expression: '\\f. \\g. \\x. f (g x)',
       description: 'Function composition'
-    }
-  ],
-  'bidirectional': [
-    {
-      name: 'Identity',
-      expression: '\\x. x',
-      description: 'Identity with bidirectional checking'
-    },
-    {
-      name: 'Application',
-      expression: '(\\x. x) y',
-      description: 'Function application'
     }
   ],
   'worklist': [

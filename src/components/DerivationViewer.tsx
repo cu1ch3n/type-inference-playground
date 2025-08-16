@@ -29,6 +29,10 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         onClick={() => onStepClick?.(step.id)}
       >
         <div className="flex items-center gap-3">
+          <Badge variant="outline" className="text-xs min-w-[2rem] shrink-0 text-center font-mono">
+            {(index + 1).toString().padStart(2, ' ')}
+          </Badge>
+          
           <div className="flex-1 min-w-0">
             <KaTeXRenderer 
               expression={step.expression} 
@@ -42,15 +46,9 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
             )}
           </div>
           
-          <div className="flex items-center gap-2 ml-auto">
-            <Badge variant="secondary" className="text-xs font-medium">
-              {step.ruleId}
-            </Badge>
-            
-            <Badge variant="outline" className="text-xs min-w-0 shrink-0">
-              {index + 1}
-            </Badge>
-          </div>
+          <Badge variant="secondary" className="text-xs font-medium ml-auto">
+            {step.ruleId}
+          </Badge>
         </div>
       </div>
     );

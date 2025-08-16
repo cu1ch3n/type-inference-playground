@@ -14,7 +14,21 @@ interface DerivationViewerProps {
 }
 
 export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId }: DerivationViewerProps) => {
-  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
+  // Initialize with all steps expanded for tree view
+  const initializeExpandedSteps = () => {
+    if (!result?.derivation || algorithm?.viewMode !== 'tree') return new Set<string>();
+    const expanded = new Set<string>();
+    const addAllIds = (steps: DerivationStep[]) => {
+      steps.forEach(step => {
+        expanded.add(step.id);
+        if (step.children) addAllIds(step.children);
+      });
+    };
+    addAllIds(result.derivation);
+    return expanded;
+  };
+  
+  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(initializeExpandedSteps());
 
   const toggleExpanded = (stepId: string) => {
     const newExpanded = new Set(expandedSteps);
@@ -35,19 +49,24 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
       <div key={step.id} className="space-y-1">
         <div
           className={`
-            derivation-step font-mono text-sm
+            derivation-step font-mono text-sm flex items-start gap-2
             ${isActive ? 'active' : ''}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
-          style={{ marginLeft: `${depth * 1.2}rem` }}
           onClick={() => onStepClick?.(step.id)}
         >
-          <div className="flex items-start gap-2">
+          {/* Tree structure indicators */}
+          <div className="flex items-center gap-1" style={{ marginLeft: `${depth * 1.5}rem` }}>
+            {depth > 0 && (
+              <>
+                <div className="text-muted-foreground text-xs">└╴</div>
+              </>
+            )}
             {hasChildren && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1 h-auto mt-0.5"
+                className="p-1 h-auto"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleExpanded(step.id);
@@ -60,16 +79,21 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
                 )}
               </Button>
             )}
-            
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-primary">{step.ruleId}:</span>
-                <KaTeXRenderer 
-                  expression={step.expression} 
-                  displayMode={false}
-                  className="text-sm"
-                />
-              </div>
+          </div>
+          
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Badge 
+                variant={isActive ? "default" : "secondary"}
+                className="text-xs font-medium"
+              >
+                {step.ruleId}
+              </Badge>
+              <KaTeXRenderer 
+                expression={step.expression} 
+                displayMode={false}
+                className="text-sm"
+              />
             </div>
           </div>
         </div>
@@ -174,9 +198,12 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         <div className="flex items-center justify-between">
           <CardTitle>Derivation</CardTitle>
           {result.finalType && (
-            <Badge variant="default" className="font-math">
-              <KaTeXRenderer expression={result.finalType} />
-            </Badge>
+            <div className="text-right">
+              <div className="text-xs text-muted-foreground mb-1">Result Type:</div>
+              <Badge variant="default" className="font-math text-sm">
+                <KaTeXRenderer expression={result.finalType} />
+              </Badge>
+            </div>
           )}
         </div>
       </CardHeader>

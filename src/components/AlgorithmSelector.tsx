@@ -21,23 +21,25 @@ export const AlgorithmSelector = ({
 
   return (
     <div className="space-y-4">
-      <div>
-        <label className="text-sm font-medium text-foreground mb-2 block">
-          Type Inference Algorithm
-        </label>
-        <Select value={selectedAlgorithm} onValueChange={onAlgorithmChange}>
-          <SelectTrigger className="w-full bg-card">
-            <SelectValue placeholder="Select an algorithm..." />
-          </SelectTrigger>
-          <SelectContent>
-            {algorithms.map((algorithm) => (
-              <SelectItem key={algorithm.id} value={algorithm.id}>
-                {algorithm.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Card className="academic-panel">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium">Type Inference Algorithm</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Select value={selectedAlgorithm} onValueChange={onAlgorithmChange}>
+            <SelectTrigger className="w-full bg-card">
+              <SelectValue placeholder="Select an algorithm..." />
+            </SelectTrigger>
+            <SelectContent>
+              {algorithms.map((algorithm) => (
+                <SelectItem key={algorithm.id} value={algorithm.id}>
+                  {algorithm.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
 
       {selected && (
         <div className="p-4 bg-algorithm rounded-lg border">

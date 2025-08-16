@@ -15,59 +15,61 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       <CardHeader>
         <CardTitle>Typing Rules</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
-        {rules.map((rule) => (
-          <div
-            key={rule.id}
-            className={`
-              p-3 rounded border transition-all duration-200
-              ${activeRuleId === rule.id 
-                ? 'bg-highlight/30 border-primary shadow-sm' 
-                : 'bg-rule border-border hover:bg-rule/80'
-              }
-              ${onRuleClick ? 'cursor-pointer' : ''}
-            `}
-            onClick={() => onRuleClick?.(rule.id)}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <Badge 
-                variant={activeRuleId === rule.id ? "default" : "secondary"}
-                className="font-medium text-xs"
-              >
-                {rule.name}
-              </Badge>
-            </div>
+      <CardContent>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {rules.map((rule) => (
+            <div
+              key={rule.id}
+              className={`
+                p-3 rounded border transition-all duration-200
+                ${activeRuleId === rule.id 
+                  ? 'bg-highlight/30 border-primary shadow-sm' 
+                  : 'bg-rule border-border hover:bg-rule/80'
+                }
+                ${onRuleClick ? 'cursor-pointer' : ''}
+              `}
+              onClick={() => onRuleClick?.(rule.id)}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Badge 
+                  variant={activeRuleId === rule.id ? "default" : "secondary"}
+                  className="font-medium text-xs"
+                >
+                  {rule.name}
+                </Badge>
+              </div>
 
-            {/* Rule Display */}
-            <div className="space-y-1">
-              {rule.premises.length > 0 && (
-                <div className="space-y-0.5">
-                  {rule.premises.map((premise, index) => (
-                    <div key={index} className="text-center">
-                      <KaTeXRenderer 
-                        expression={premise} 
-                        displayMode={false}
-                        className="text-xs"
-                      />
-                    </div>
-                  ))}
+              {/* Rule Display */}
+              <div className="space-y-1">
+                {rule.premises.length > 0 && (
+                  <div className="space-y-0.5">
+                    {rule.premises.map((premise, index) => (
+                      <div key={index} className="text-center">
+                        <KaTeXRenderer 
+                          expression={premise} 
+                          displayMode={false}
+                          className="text-xs"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {rule.premises.length > 0 && (
+                  <div className="border-t border-foreground/20 mx-2"></div>
+                )}
+                
+                <div className="text-center">
+                  <KaTeXRenderer 
+                    expression={rule.conclusion} 
+                    displayMode={false}
+                    className="text-xs font-medium"
+                  />
                 </div>
-              )}
-              
-              {rule.premises.length > 0 && (
-                <div className="border-t border-foreground/20 mx-2"></div>
-              )}
-              
-              <div className="text-center">
-                <KaTeXRenderer 
-                  expression={rule.conclusion} 
-                  displayMode={false}
-                  className="text-xs font-medium"
-                />
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

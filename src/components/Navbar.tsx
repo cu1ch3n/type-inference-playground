@@ -18,8 +18,7 @@ export const Navbar = () => {
             size="sm"
             onClick={() => window.open('https://github.com/your-repo/type-inference-zoo', '_blank')}
           >
-            <Github className="w-4 h-4 mr-2" />
-            GitHub
+            <Github className="w-4 h-4" />
           </Button>
         </div>
       </div>

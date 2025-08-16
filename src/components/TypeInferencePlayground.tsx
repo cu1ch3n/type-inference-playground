@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
+import { Navbar } from './Navbar';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
 import { TypingRules } from './TypingRules';
@@ -76,58 +77,51 @@ export const TypeInferencePlayground = () => {
   }, [selectedAlgorithm, expression]);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-gradient-primary text-primary-foreground">
-        <div className="container mx-auto px-6 py-8">
-          <h1 className="text-4xl font-bold mb-2">Type Inference Explorer</h1>
-          <p className="text-lg opacity-90">
-            Interactive playground for type inference algorithms in lambda calculus
-          </p>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {/* Left Column - Input & Algorithm */}
-          <div className="space-y-6">
-            <AlgorithmSelector
-              algorithms={algorithms}
-              selectedAlgorithm={selectedAlgorithm}
-              onAlgorithmChange={setSelectedAlgorithm}
-            />
-            
-            <ExpressionInput
-              expression={expression}
-              onExpressionChange={setExpression}
-              onInfer={handleInference}
-              isInferring={isInferring}
-              selectedAlgorithm={selectedAlgorithm}
-            />
-          </div>
-
-          {/* Middle Column - Derivation */}
-          <div>
-            <DerivationViewer
-              result={result}
-              activeStepId={activeStepId}
-              onStepClick={handleStepClick}
-            />
-          </div>
-
-          {/* Right Column - Rules */}
-          <div>
-            {selectedAlgorithmData && (
-              <TypingRules
-                rules={selectedAlgorithmData.rules}
-                activeRuleId={activeRuleId}
-                onRuleClick={handleRuleClick}
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-background">
+        {/* Main Content */}
+        <div className="container mx-auto px-6 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {/* Left Column - Input & Algorithm */}
+            <div className="space-y-6">
+              <AlgorithmSelector
+                algorithms={algorithms}
+                selectedAlgorithm={selectedAlgorithm}
+                onAlgorithmChange={setSelectedAlgorithm}
               />
-            )}
+              
+              <ExpressionInput
+                expression={expression}
+                onExpressionChange={setExpression}
+                onInfer={handleInference}
+                isInferring={isInferring}
+                selectedAlgorithm={selectedAlgorithm}
+              />
+            </div>
+
+            {/* Middle Column - Derivation */}
+            <div>
+              <DerivationViewer
+                result={result}
+                activeStepId={activeStepId}
+                onStepClick={handleStepClick}
+              />
+            </div>
+
+            {/* Right Column - Rules */}
+            <div>
+              {selectedAlgorithmData && (
+                <TypingRules
+                  rules={selectedAlgorithmData.rules}
+                  activeRuleId={activeRuleId}
+                  onRuleClick={handleRuleClick}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

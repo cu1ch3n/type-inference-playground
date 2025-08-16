@@ -89,16 +89,6 @@ export const ExpressionInput = ({
           </div>
         </div>
 
-        <div className="flex justify-end">
-          <Button 
-            onClick={handleClear}
-            variant="outline"
-            size="sm"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Clear
-          </Button>
-        </div>
 
         {selectedExample && (
           <div className="p-3 bg-algorithm rounded-lg">

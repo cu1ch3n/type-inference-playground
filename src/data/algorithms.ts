@@ -58,28 +58,39 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     },
     rules: [
       {
-        id: 'Var',
-        name: 'Var',
+        id: 'InstLSolve',
+        name: 'InstLSolve',
         premises: [],
-        conclusion: '\\text{lookup}(x, \\Gamma) = \\tau'
+        conclusion: '',
+        reduction: '\\Gamma[\\alpha][\\Delta] \\vdash \\alpha = \\tau \\longrightarrow \\Gamma[\\alpha = \\tau][\\Delta[\\alpha := \\tau]]'
       },
       {
-        id: 'Lam',
-        name: 'Lam',
-        premises: ['\\text{fresh } \\alpha_1, \\alpha_2', '\\text{add constraint } \\alpha = \\alpha_1 \\rightarrow \\alpha_2'],
-        conclusion: '\\lambda x.e : \\alpha'
+        id: 'InstRSolve',
+        name: 'InstRSolve',
+        premises: [],
+        conclusion: '',
+        reduction: '\\Gamma[\\alpha][\\Delta] \\vdash \\tau = \\alpha \\longrightarrow \\Gamma[\\alpha = \\tau][\\Delta[\\alpha := \\tau]]'
       },
       {
-        id: 'App',
-        name: 'App',
-        premises: ['\\text{fresh } \\alpha', '\\text{add constraint } \\tau_1 = \\tau_2 \\rightarrow \\alpha'],
-        conclusion: 'e_1 \\; e_2 : \\alpha'
+        id: 'FunLR',
+        name: 'FunLR',
+        premises: [],
+        conclusion: '',
+        reduction: '\\Gamma \\vdash A_1 \\to B_1 \\leq A_2 \\to B_2 \\longrightarrow \\Gamma \\vdash A_2 \\leq A_1, B_1 \\leq B_2'
       },
       {
-        id: 'Unify',
-        name: 'Unify',
-        premises: ['\\text{unify } \\tau_1 = \\tau_2'],
-        conclusion: '\\text{apply substitution}'
+        id: 'ForallL',
+        name: 'ForallL',
+        premises: [],
+        conclusion: '',
+        reduction: '\\Gamma \\vdash \\forall \\alpha. A \\leq B \\longrightarrow \\Gamma[\\alpha_1] \\vdash A[\\alpha := \\alpha_1] \\leq B'
+      },
+      {
+        id: 'ForallR',
+        name: 'ForallR',
+        premises: [],
+        conclusion: '',
+        reduction: '\\Gamma \\vdash A \\leq \\forall \\alpha. B \\longrightarrow \\Gamma[\\alpha] \\vdash A \\leq B'
       }
     ]
   }

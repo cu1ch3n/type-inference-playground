@@ -30,42 +30,68 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
               `}
               onClick={() => onRuleClick?.(rule.id)}
             >
-              <div className="flex items-center justify-between mb-2">
-                <Badge 
-                  variant={activeRuleId === rule.id ? "default" : "secondary"}
-                  className="font-medium text-xs"
-                >
-                  {rule.name}
-                </Badge>
-              </div>
+              {!rule.reduction && (
+                <div className="flex items-center justify-between mb-2">
+                  <Badge 
+                    variant={activeRuleId === rule.id ? "default" : "secondary"}
+                    className="font-medium text-xs"
+                  >
+                    {rule.name}
+                  </Badge>
+                </div>
+              )}
 
               {/* Rule Display */}
               <div className="space-y-1">
-                {rule.premises.length > 0 && (
-                  <div className="space-y-0.5">
-                    {rule.premises.map((premise, index) => (
-                      <div key={index} className="text-center">
-                        <KaTeXRenderer 
-                          expression={premise} 
-                          displayMode={false}
-                          className="text-xs"
-                        />
-                      </div>
-                    ))}
+                {rule.reduction ? (
+                  /* Worklist-style reduction rule */
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <KaTeXRenderer 
+                        expression={rule.reduction} 
+                        displayMode={false}
+                        className="text-xs"
+                      />
+                    </div>
+                    <div className="ml-2 text-right">
+                      <Badge 
+                        variant="outline"
+                        className="text-[10px] px-1 py-0"
+                      >
+                        {rule.name}
+                      </Badge>
+                    </div>
                   </div>
+                ) : (
+                  /* Traditional premise/conclusion rule */
+                  <>
+                    {rule.premises.length > 0 && (
+                      <div className="space-y-0.5">
+                        {rule.premises.map((premise, index) => (
+                          <div key={index} className="text-center">
+                            <KaTeXRenderer 
+                              expression={premise} 
+                              displayMode={false}
+                              className="text-xs"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {rule.premises.length > 0 && (
+                      <div className="border-t border-foreground/20 mx-2"></div>
+                    )}
+                    
+                    <div className="text-center">
+                      <KaTeXRenderer 
+                        expression={rule.conclusion} 
+                        displayMode={false}
+                        className="text-xs font-medium"
+                      />
+                    </div>
+                  </>
                 )}
-                
-                {rule.premises.length > 0 && (
-                  <div className="border-t border-foreground/20 mx-2"></div>
-                )}
-                
-                <div className="text-center">
-                  <KaTeXRenderer 
-                    expression={rule.conclusion} 
-                    displayMode={false}
-                    className="text-xs font-medium"
-                  />
-                </div>
               </div>
             </div>
           ))}

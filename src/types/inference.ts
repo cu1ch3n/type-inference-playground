@@ -19,6 +19,7 @@ export interface TypingRule {
   name: string;
   premises: string[]; // KaTeX expressions
   conclusion: string; // KaTeX expression
+  reduction?: string; // For worklist-style rules: "A → B"
 }
 
 export interface DerivationStep {

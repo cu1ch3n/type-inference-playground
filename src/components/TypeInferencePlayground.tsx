@@ -82,9 +82,9 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background">
         {/* Main Content */}
         <div className="container mx-auto px-6 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
-            <div className="space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               <AlgorithmSelector
                 algorithms={algorithms}
                 selectedAlgorithm={selectedAlgorithm}

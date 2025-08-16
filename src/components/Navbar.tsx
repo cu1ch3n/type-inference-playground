@@ -10,7 +10,16 @@ export const Navbar = () => {
             <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">λ</span>
             </div>
-            <h1 className="text-lg font-semibold">Type Inference Zoo</h1>
+            <h1 className="text-lg font-semibold">
+              <a 
+                href="https://zoo.cuichen.cc" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Type Inference Zoo
+              </a>
+            </h1>
           </div>
           
           <Button 

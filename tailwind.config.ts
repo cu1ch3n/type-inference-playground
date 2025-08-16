@@ -80,7 +80,8 @@ export default {
 			},
 			fontFamily: {
 				'math': 'var(--math-font)',
-				'code': 'var(--code-font)'
+				'code': 'var(--code-font)',
+				'mono': ['Iosevka', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'monospace']
 			},
 			transitionTimingFunction: {
 				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'

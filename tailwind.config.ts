@@ -76,12 +76,17 @@ export default {
 			},
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
-				'card': 'var(--shadow-card)'
+				'card': 'var(--shadow-card)',
+				'material-1': 'var(--shadow-material-1)',
+				'material-2': 'var(--shadow-material-2)',
+				'material-3': 'var(--shadow-material-3)'
 			},
 			fontFamily: {
+				'sans': ['Roboto', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+				'serif': ['Roboto Slab', 'ui-serif', 'Georgia', 'serif'],
+				'mono': ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'monospace'],
 				'math': 'var(--math-font)',
-				'code': 'var(--code-font)',
-				'mono': ['Iosevka', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'monospace']
+				'code': 'var(--code-font)'
 			},
 			transitionTimingFunction: {
 				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'

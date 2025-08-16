@@ -51,17 +51,20 @@ All colors MUST be HSL. Mathematical typography optimized.
     --code-bg: 220 20% 98%;
     --highlight: 50 100% 90%;
     
-    /* Mathematical Typography */
-    --math-font: 'Computer Modern', 'Latin Modern Math', serif;
-    --code-font: 'Fira Code', 'Monaco', monospace;
+    /* Typography */
+    --math-font: 'Roboto Slab', 'Computer Modern', 'Latin Modern Math', serif;
+    --code-font: 'Roboto Mono', 'Monaco', monospace;
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 99%));
     
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    /* Material Design Shadows */
+    --shadow-elegant: 0 8px 16px -4px hsl(var(--primary) / 0.2);
+    --shadow-card: 0 2px 8px -2px hsl(var(--primary) / 0.12);
+    --shadow-material-1: 0 1px 3px hsl(0 0% 0% / 0.12), 0 1px 2px hsl(0 0% 0% / 0.24);
+    --shadow-material-2: 0 3px 6px hsl(0 0% 0% / 0.16), 0 3px 6px hsl(0 0% 0% / 0.23);
+    --shadow-material-3: 0 10px 20px hsl(0 0% 0% / 0.19), 0 6px 6px hsl(0 0% 0% / 0.23);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -147,8 +150,10 @@ All colors MUST be HSL. Mathematical typography optimized.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   /* Mathematical Typography */

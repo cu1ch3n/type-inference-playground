@@ -78,14 +78,6 @@ export const TreeViewer = ({
             )}
           </div>
           
-          {/* Rule badge */}
-          <Badge 
-            variant={isActive ? "default" : "secondary"}
-            className="text-xs font-medium shrink-0 min-w-fit"
-          >
-            {step.ruleId}
-          </Badge>
-          
           {/* Expression and type */}
           <div className="flex-1 min-w-0 flex items-center gap-2">
             <KaTeXRenderer 
@@ -104,6 +96,14 @@ export const TreeViewer = ({
               </>
             )}
           </div>
+          
+          {/* Rule badge - aligned right */}
+          <Badge 
+            variant={isActive ? "default" : "secondary"}
+            className="text-xs font-medium shrink-0 min-w-fit ml-auto"
+          >
+            {step.ruleId}
+          </Badge>
         </div>
 
         {/* Children - nested list */}

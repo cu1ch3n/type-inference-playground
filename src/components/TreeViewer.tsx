@@ -51,7 +51,7 @@ export const TreeViewer = ({
       <li key={step.id} className="relative">
         <div
           className={`
-            flex items-center gap-2 py-2 pr-2 rounded transition-colors hover:bg-muted/40
+            flex items-center gap-2 py-1 pr-2 rounded transition-colors hover:bg-muted/40
             ${isActive ? 'bg-primary/10 border border-primary/20' : ''}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
@@ -108,7 +108,7 @@ export const TreeViewer = ({
 
         {/* Children - nested list */}
         {hasChildren && isExpanded && step.children && (
-          <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-1 space-y-1">
+          <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-0.5 space-y-0.5">
             {step.children.map((child, index) => 
               renderTreeNode(child, index === step.children!.length - 1)
             )}
@@ -120,7 +120,7 @@ export const TreeViewer = ({
 
   return (
     <div className="tree-view">
-      <ul className="space-y-1">
+      <ul className="space-y-0.5">
         {steps.map((step, index) => 
           renderTreeNode(step, index === steps.length - 1)
         )}

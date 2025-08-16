@@ -137,7 +137,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
             expandedByDefault={true}
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-1">
             {linearSteps.map((step, index) => renderLinearStep(step, index))}
           </div>
         )}

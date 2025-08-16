@@ -79,6 +79,7 @@ export default {
 				'card': 'var(--shadow-card)'
 			},
 			fontFamily: {
+				'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
 				'math': 'var(--math-font)',
 				'code': 'var(--code-font)',
 				'mono': ['Iosevka', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'monospace']

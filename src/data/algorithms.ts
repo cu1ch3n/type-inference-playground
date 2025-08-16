@@ -256,8 +256,8 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         reduction: "\\Gamma \\vdash x \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega"
       },
       {
-        id: "InfAnno",
-        name: "InfAnno",
+        id: "InfAnn",
+        name: "InfAnn",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash (e:A) \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega \\vdash e \\Leftarrow A"
@@ -295,14 +295,14 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         name: "InfAppArr",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash A \\to C ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma \\vdash [C/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash A \\to C ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma \\vdash [C/a]\\omega \\vdash e \\Leftarrow A"
       },
       {
         id: "InfAppExVar",
         name: "InfAppExVar",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\hat{\\alpha} ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2] \\vdash \\hat{\\alpha}_1 \\to \\hat{\\alpha}_2 ~ \\bullet e)"
+        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\hat{\\alpha} ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2] \\vdash \\hat{\\alpha}_1 \\to \\hat{\\alpha}_2 ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega)"
       }
     ]
   }

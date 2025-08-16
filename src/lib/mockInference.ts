@@ -156,64 +156,99 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   };
 };
 
-const generateBidirectionalDerivation = (expression: string): InferenceResult => {
-  // Simple identity function  
-  if (expression.match(/^\\x\.\s*x$/)) {
-    return {
-      success: true,
-      finalType: 'A \\rightarrow A',
-      derivation: [
-        {
-          id: '1',
-          ruleId: 'LamC',
-          expression: '\\vdash \\lambda x.~x \\Leftarrow A \\rightarrow A',
-          children: [
-            {
-              id: '2',
-              ruleId: 'VarS',
-              expression: 'x: A \\vdash x \\Rightarrow A'
-            }
-          ]
-        }
-      ]
-    };
-  }
 
-  // Default case
-  return {
-    success: true,
-    finalType: 'A',
-    derivation: [
-      {
-        id: '1',
-        ruleId: 'VarS',
-        expression: `\\vdash ${expression} \\Rightarrow A`
-      }
-    ]
-  };
-};
+// \begin{aligned}
+//            & \nil \Vdash (\lam x)~() \Lto 1\\
+// \rrule{18} & \nil \Vdash (\lam x)~() \To_a a\le 1\\
+// \rrule{26} & \nil \Vdash (\lam x) \To_b (\appInfAlg{b}{()}[a][a\le 1])\\
+// \rrule{25} & \nil,\al,\bt \Vdash \appInfAlg{\al\to\bt}{()}[a][a\le 1], x:\al \Vdash x\Lto \bt\\
+// \rrule{18} & \nil,\al,\bt \Vdash \appInfAlg{\al\to\bt}{()}[a][a\le 1], x:\al \Vdash x\To_b b\le \bt\\
+// \rrule{22} & \nil,\al,\bt \Vdash \appInfAlg{\al\to\bt}{()}[a][a\le 1], x:\al \Vdash \al\le \bt\\
+// \rrule{12} & \nil,\al \Vdash \appInfAlg{\al\to\al}{()}[a][a\le 1], x:\al\\
+// \rrule{3}  & \nil,\al \Vdash \appInfAlg{\al\to\al}{()}[a][a\le 1]\\
+// \rrule{28} & \nil,\al \Vdash \al\le 1 \Vdash () \Lto \al\\
+// \rrule{18} & \nil,\al \Vdash \al\le 1 \Vdash () \To_a a\le \al\\
+// \rrule{24} & \nil,\al \Vdash \al\le 1 \Vdash 1\le \al\\
+// \rrule{16} & \nil \Vdash 1\le 1\\
+// \rrule{4}  & \nil
+// \end{aligned}
 
 const generateWorklistDerivation = (expression: string): InferenceResult => {
   // Simple identity function
   if (expression.match(/^\\x\.\s*x$/)) {
     return {
       success: true,
-      finalType: 'a \\to a',
+      finalType: '\\text{Int}',
       derivation: [
         {
+          id: '0',
+          ruleId: 'Inf',
+          expression: "\\cdot \\vdash (\\lambda x.~x)~1 : \\text{Int} \\Rightarrow_a \\text{Out}(a)"
+        },
+        {
           id: '1',
-          ruleId: 'WLam',
-          expression: 'Generate constraint: \\lambda x.~x : a \\to a'
+          ruleId: 'InfAnn',
+          expression: "\\cdot \\vdash \\text{Out}(\\text{Int}) \\vdash (\\lambda x.~x)~1 \\Leftarrow \\text{Int}"
         },
         {
           id: '2',
-          ruleId: 'WVar',
-          expression: 'Lookup variable: x : a'
+          ruleId: 'ChkSub',
+          expression: "\\cdot \\vdash \\text{Out}(\\text{Int}) \\vdash (\\lambda x.~x)~1 \\Rightarrow_a a \\le \\text{Int}"
         },
         {
           id: '3',
-          ruleId: 'WUnify',
-          expression: 'Unify constraints: a = a'
+          ruleId: 'InfApp',
+          expression: "\\cdot \\vdash (\\lambda x.~x) \\Rightarrow_b (b \\bullet 1 \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a a \\le \\text{Int})"
+        },
+        {
+          id: '4',
+          ruleId: 'InfAbs',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\alpha} \\to \\hat{\\beta}/b](\\hat{\\alpha} \\to \\hat{\\beta} \\bullet 1 \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a a \\le \\text{Int}), x:\\hat{\\alpha} \\vdash x \\Leftarrow \\hat{\\beta}"
+        },
+        {
+          id: '5',
+          ruleId: 'InfAppArr',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\beta}/a](a \\le \\text{Int}) \\vdash 1 \\Leftarrow \\hat{\\alpha}"
+        },
+        {
+          id: '6',
+          ruleId: 'SExVar',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash \\hat{\\beta} \\le \\text{Int} \\vdash 1 \\Leftarrow \\hat{\\alpha}"
+        },
+        {
+          id: '7',
+          ruleId: 'ChkSub',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash \\hat{\\beta} \\le \\text{Int} \\vdash 1 \\Rightarrow_c c \\le \\hat{\\alpha}"
+        },
+        {
+          id: '8',
+          ruleId: 'InfAnn',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash \\hat{\\beta} \\le \\text{Int} \\vdash [\\text{Int}/c](c \\le \\hat{\\alpha}) \\vdash 1 \\Leftarrow \\text{Int}"
+        },
+        {
+          id: '9',
+          ruleId: 'InstRUnit',
+          expression: "\\cdot, \\hat{\\alpha}, \\hat{\\beta} \\vdash \\hat{\\beta} \\le \\text{Int} \\vdash \\text{Int} \\le \\hat{\\alpha} \\vdash 1 \\Leftarrow \\text{Int}"
+        },
+        {
+          id: '10',
+          ruleId: 'InstRReach',
+          expression: "\\cdot, \\hat{\\beta} \\vdash \\hat{\\beta} \\le \\text{Int} \\vdash 1 \\Leftarrow \\text{Int}"
+        },
+        {
+          id: '11',
+          ruleId: 'ChkSub',
+          expression: "x:\\text{Int} \\vdash x \\Rightarrow_d d \\le \\text{Int}"
+        },
+        {
+          id: '12',
+          ruleId: 'InfVar',
+          expression: "x:\\text{Int} \\vdash [\\text{Int}/d](d \\le \\text{Int})"
+        },
+        {
+          id: '13',
+          ruleId: 'SExVar',
+          expression: "x:\\text{Int} \\vdash \\text{Int} \\le \\text{Int}"
         }
       ]
     };

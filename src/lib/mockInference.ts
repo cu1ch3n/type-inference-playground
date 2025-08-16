@@ -82,66 +82,6 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
     };
   }
 
-  // Function composition
-  if (expression.match(/^\\f\.\s*\\g\.\s*\\x\.\s*f\s*\(\s*g\s+x\s*\)$/)) {
-    return {
-      success: true,
-      finalType: '(b \\to c) \\to (a \\to b) \\to a \\to c',
-      derivation: [
-        {
-          id: '1',
-          ruleId: 'Abs',
-          expression: '\\vdash \\lambda f.~\\lambda g.~\\lambda x.~f~(g~x) : (b \\to c) \\to (a \\to b) \\to a \\to c',
-          children: [
-            {
-              id: '2',
-              ruleId: 'Abs',
-              expression: 'f: b \\to c \\vdash \\lambda g.~\\lambda x.~f~(g~x) : (a \\to b) \\to a \\to c',
-              children: [
-                {
-                  id: '3',
-                  ruleId: 'Abs',
-                  expression: 'f: b \\to c, g: a \\to b \\vdash \\lambda x.~f~(g~x) : a \\to c',
-                  children: [
-                    {
-                      id: '4',
-                      ruleId: 'App',
-                      expression: 'f: b \\to c, g: a \\to b, x: a \\vdash f~(g~x) : c',
-                      children: [
-                        {
-                          id: '5',
-                          ruleId: 'Var',
-                          expression: 'f: b \\to c, g: a \\to b, x: a \\vdash f : b \\to c'
-                        },
-                        {
-                          id: '6',
-                          ruleId: 'App',
-                          expression: 'f: b \\to c, g: a \\to b, x: a \\vdash g~x : b',
-                          children: [
-                            {
-                              id: '7',
-                              ruleId: 'Var',
-                              expression: 'f: b \\to c, g: a \\to b, x: a \\vdash g : a \\to b'
-                            },
-                            {
-                              id: '8',
-                              ruleId: 'Var',
-                              expression: 'f: b \\to c, g: a \\to b, x: a \\vdash x : a'
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    };
-  }
-
   // Default case - generate simple derivation
   return {
     success: true,
@@ -158,8 +98,8 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
 
 
 const generateWorklistDerivation = (expression: string): InferenceResult => {
-  // Simple identity function
-  if (expression.match(/^\\x\.\s*x$/)) {
+  // Identity function applied to 1: (\x. x) 1
+  if (expression.match(/^\(\\x\.\s*x\)\s*1$/) || expression.match(/^\\x\.\s*x$/)) {
     return {
       success: true,
       finalType: '\\text{Int}',

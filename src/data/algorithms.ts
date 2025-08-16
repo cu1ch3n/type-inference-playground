@@ -35,7 +35,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         id: "Let",
         name: "Let",
         premises: ["\\Gamma \\vdash e_0 : \\tau, S_0", "S_0\\Gamma, x : \\overline{S_0\\Gamma}(\\tau) \\vdash e_1 : \\tau', S_1"],
-        conclusion: "\\Gamma \\vdash \\text{let} x = e_0 \\text{in} e_1 : \\tau', S_1 S_0"
+        conclusion: "\\Gamma \\vdash \\text{let } x = e_0 \\text{ in } e_1 : \\tau', S_1 S_0"
       }
     ]
   },
@@ -264,33 +264,13 @@ export const algorithmExamples = {
       name: "Identity",
       expression: "\\x. x",
       description: "The identity function"
-    },
-    {
-      name: "Constant",
-      expression: "\\x. \\y. x",
-      description: "The constant function"
-    },
-    {
-      name: "Composition",
-      expression: "\\f. \\g. \\x. f (g x)",
-      description: "Function composition"
     }
   ],
   "worklist": [
     {
-      name: "Identity",
-      expression: "\\x. x",
-      description: "Identity with constraint generation"
-    },
-    {
-      name: "Variable",
-      expression: "x",
-      description: "Simple variable lookup"
-    },
-    {
-      name: "Application",
-      expression: "f x",
-      description: "Function application with constraints"
+      name: "Trivial Application",
+      expression: "(\\x. x) 1",
+      description: ""
     }
   ]
 } as const;

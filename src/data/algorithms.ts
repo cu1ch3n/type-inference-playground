@@ -4,7 +4,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "algorithm-w",
     name: "Algorithm W",
-    labels: ["Global", "Unification", "Hindley-Milner", "Let-generalization", "Principal type"],
+    labels: ["Global", "Unification", "Hindley-Milner", "Principal type"],
     viewMode: "tree",
     paper: {
       title: "A Theory of Type Polymorphism in Programming",
@@ -42,7 +42,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "worklist",
     name: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami"],
+    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-rank", "Worklist"],
     viewMode: "linear",
     paper: {
       title: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
@@ -50,56 +50,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
       year: 2019,
       url: "https://dl.acm.org/doi/10.1145/3341716"
     },
-
-//     \begin{gather*}
-// \begin{aligned}
-// \Gm, a &\algrule \Gm \qquad
-// \Gm, \al \algrule \Gm \qquad
-// \Gm, x:A \algrule \Gm
-// \\[3mm]
-// \Gm \Vdash 1\le 1 &\algrule \Gm\\
-// \Gm \Vdash a\le a &\algrule \Gm\\
-// \Gm \Vdash \al\le \al &\algrule \Gm\\
-// \Gm \Vdash A_1\to A_2 \le B_1\to B_2 &\algrule \Gm \Vdash A_2 \le B_2 \Vdash B_1\le A_1\\
-// \Gm \Vdash \all A\le B &\algrule \Gm,\al \Vdash [\al/a]A\le B \quad\text{when } B \neq \all B'\\
-// \Gm \Vdash A\le \all[b]B &\algrule \Gm,b \Vdash A\le B
-// \\[3mm]
-// %\\
-// %\text{Let } \color{red}\Gm[\al \toto B // G_M] &:= \Gm_L, G_M, [B/\al]\Gm_R, \text{ when } \Gm[\al] = \Gm_L,\al,\Gm_R \ (G_M\text{ defaults to }\nil)\\
-// \Gm[\al] \Vdash \al \le A\to B &\algrule [\al[1]\to\al[2]/\al] (\Gm[\al[1], \al[2]] \Vdash \al[1]\to \al[2] \le A \to B)\\
-//  &\qquad\qquad \text{when }\al\notin FV(A)\cup FV(B)\\
-// \Gm[\al] \Vdash A\to B \le \al &\algrule [\al[1]\to \al[2]/\al] (\Gm[\al[1], \al[2]] \Vdash A \to B \le \al[1]\to \al[2])\\
-//  &\qquad\qquad \text{when }\al\notin FV(A)\cup FV(B)
-//  \\[3mm]
-// \Gm[\al][\bt] \Vdash \al \le \bt &\algrule [\al/\bt](\Gm[\al][])\\
-// \Gm[\al][\bt] \Vdash \bt \le \al &\algrule [\al/\bt](\Gm[\al][])\\
-// \Gm[a][\bt] \Vdash a \le \bt &\algrule [a/\bt](\Gm[a][])\\
-// \Gm[a][\bt] \Vdash \bt \le a &\algrule [a/\bt](\Gm[a][])\\
-// \Gm[\bt] \Vdash 1 \le \bt &\algrule [1/\bt](\Gm[])\\
-// \Gm[\bt] \Vdash \bt \le 1 &\algrule [1/\bt](\Gm[])
-// \\[3mm]
-// \Gm \Vdash e \Lto B &\algrule \Gm \Vdash e\To_a a\le B \quad
-//     \text{when } e \neq \lam e' \text{ and } B \neq \all B'\\
-// % \Gm \Vdash () \Lto 1 &\algrule \Gm\\
-// \Gm \Vdash e\Lto \all A &\algrule \Gm,a \Vdash e\Lto A\\
-// \Gm \Vdash \lam e \Lto A\to B &\algrule \Gm, x:A  \Vdash e \Lto B\\
-// \Gm[\al] \Vdash \lam e \Lto \al &\algrule [\al[1]\to \al[2] / \al](\Gm[\al[1],\al[2]], x:\al[1] \Vdash e \Lto \al[2])
-// % \quad\text{\jimmy{Additional}}
-// \\[3mm]
-// \Gm \Vdash x\To_a \jg &\algrule \Gm \Vdash [A/a] \jg \quad \text{when } (x:A)\in \Gm\\
-// \Gm \Vdash (e:A)\To_a \jg &\algrule \Gm \Vdash [A/a]\jg \Vdash e \Lto A\\
-// \Gm \Vdash ()\To_a \jg &\algrule \Gm \Vdash [1/a]\jg\\
-// \Gm \Vdash \lam e \To_a \jg &\algrule
-//     \Gm,\al,\bt \Vdash [\al\to\bt/a]\jg, x:\al \Vdash e\Lto \bt\\
-// \Gm \Vdash e_1\ e_2 \To_a \jg &\algrule \Gm \Vdash e_1\To_b (\appInfAlg{b}{e_2})
-// \\[3mm]
-// \Gm \Vdash \appInfAlg{\all A}{e} &\algrule \Gm,\al \Vdash \appInfAlg{[\al/a]A}{e}\\
-// \Gm \Vdash \appInfAlg{A\to C}{e} &\algrule \Gm \Vdash [C/a]\jg \Vdash e \Lto A\\
-// \Gm[\al] \Vdash \appInfAlg{\al}{e} &\algrule
-//     [\al[1]\to\al[2]/\al](\Gm[\al[1], \al[2]] \Vdash \appInfAlg{\al[1]\to\al[2]}{e})
-// %	[\al[1]\to\al[2]/\al](\Gm[\al[1], \al[2]] \Vdash [\al[2]/a]\jg \Vdash e\Lto \al[1])\\
-// % &\color{magenta} \makebox[0pt]{\qquad or} \phantom{{}\rrule{}{}}
-// \end{aligned}
     rules: [
       {
         id: "GCTyVar",

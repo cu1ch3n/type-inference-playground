@@ -120,6 +120,31 @@ export const TypeInferencePlayground = () => {
               )}
             </div>
           </div>
+          
+          {/* Footnote */}
+          <div className="mt-16 pt-8 border-t border-muted-foreground/20">
+            <div className="text-center text-sm text-muted-foreground">
+              Released under the{' '}
+              <a 
+                href="https://opensource.org/licenses/MIT" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                MIT License
+              </a>
+              .{' '}
+              Copyright © 2025{' '}
+              <a 
+                href="https://cuichen.cc" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Chen Cui
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </>

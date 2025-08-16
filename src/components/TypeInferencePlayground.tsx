@@ -11,7 +11,7 @@ import { InferenceResult } from '@/types/inference';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('algorithm-w');
-  const [expression, setExpression] = useState<string>('');
+  const [expression, setExpression] = useState<string>('\\x. x');
   const [result, setResult] = useState<InferenceResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();

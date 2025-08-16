@@ -259,6 +259,18 @@ export const algorithms: TypeInferenceAlgorithm[] = [
 ];
 
 export const algorithmExamples = {
-  "algorithm-w": [],
-  "worklist": []
+  "algorithm-w": [
+    {
+      name: "Identity",
+      expression: "\\x. x",
+      description: "The identity function"
+    }
+  ],
+  "worklist": [
+    {
+      name: "Trivial Application",
+      expression: "(\\x. x) 1",
+      description: ""
+    }
+  ]
 } as const;

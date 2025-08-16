@@ -54,8 +54,8 @@ export const AlgorithmSelector = ({
             <div className="mt-3 pt-3 border-t border-border/50">
               <div className="flex items-center justify-between">
                 <div className="text-xs text-muted-foreground">
-                  <div className="font-medium">{selected.paper.title}</div>
-                  <div>{selected.paper.authors.join(', ')} ({selected.paper.year})</div>
+                  <div className="font-medium">{selected.paper.title} ({selected.paper.year})</div>
+                  <div>{selected.paper.authors.join(', ')}</div>
                 </div>
                 {selected.paper.url && (
                   <Button 

@@ -1,0 +1,132 @@
+import { useState, useEffect } from 'react';
+import { Separator } from '@/components/ui/separator';
+import { AlgorithmSelector } from './AlgorithmSelector';
+import { ExpressionInput } from './ExpressionInput';
+import { TypingRules } from './TypingRules';
+import { DerivationViewer } from './DerivationViewer';
+import { algorithms } from '@/data/algorithms';
+import { runInference } from '@/lib/mockInference';
+import { InferenceResult } from '@/types/inference';
+
+export const TypeInferencePlayground = () => {
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('algorithm-w');
+  const [expression, setExpression] = useState<string>('λx.x');
+  const [result, setResult] = useState<InferenceResult | undefined>();
+  const [isInferring, setIsInferring] = useState(false);
+  const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
+  const [activeStepId, setActiveStepId] = useState<string | undefined>();
+
+  const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
+
+  const handleInference = async () => {
+    if (!expression.trim() || !selectedAlgorithm) return;
+    
+    setIsInferring(true);
+    setActiveRuleId(undefined);
+    setActiveStepId(undefined);
+    
+    try {
+      const inferenceResult = await runInference(selectedAlgorithm, expression);
+      setResult(inferenceResult);
+    } catch (error) {
+      console.error('Inference error:', error);
+      setResult({
+        success: false,
+        error: 'An unexpected error occurred during type inference.',
+        derivation: []
+      });
+    } finally {
+      setIsInferring(false);
+    }
+  };
+
+  const handleRuleClick = (ruleId: string) => {
+    setActiveRuleId(activeRuleId === ruleId ? undefined : ruleId);
+  };
+
+  const handleStepClick = (stepId: string) => {
+    setActiveStepId(activeStepId === stepId ? undefined : stepId);
+    
+    // Find the step and highlight corresponding rule
+    const findStepRule = (steps: any[]): string | undefined => {
+      for (const step of steps) {
+        if (step.id === stepId) return step.ruleId;
+        if (step.children) {
+          const found = findStepRule(step.children);
+          if (found) return found;
+        }
+      }
+      return undefined;
+    };
+    
+    if (result?.derivation) {
+      const ruleId = findStepRule(result.derivation);
+      if (ruleId) setActiveRuleId(ruleId);
+    }
+  };
+
+  // Auto-run inference when algorithm or expression changes
+  useEffect(() => {
+    if (expression.trim() && selectedAlgorithm) {
+      const timer = setTimeout(() => {
+        handleInference();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedAlgorithm, expression]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="bg-gradient-primary text-primary-foreground">
+        <div className="container mx-auto px-6 py-8">
+          <h1 className="text-4xl font-bold mb-2">Type Inference Explorer</h1>
+          <p className="text-lg opacity-90">
+            Interactive playground for type inference algorithms in lambda calculus
+          </p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {/* Left Column - Input & Algorithm */}
+          <div className="space-y-6">
+            <AlgorithmSelector
+              algorithms={algorithms}
+              selectedAlgorithm={selectedAlgorithm}
+              onAlgorithmChange={setSelectedAlgorithm}
+            />
+            
+            <ExpressionInput
+              expression={expression}
+              onExpressionChange={setExpression}
+              onInfer={handleInference}
+              isInferring={isInferring}
+            />
+          </div>
+
+          {/* Middle Column - Rules */}
+          <div>
+            {selectedAlgorithmData && (
+              <TypingRules
+                rules={selectedAlgorithmData.rules}
+                activeRuleId={activeRuleId}
+                onRuleClick={handleRuleClick}
+              />
+            )}
+          </div>
+
+          {/* Right Column - Derivation */}
+          <div>
+            <DerivationViewer
+              result={result}
+              activeStepId={activeStepId}
+              onStepClick={handleStepClick}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

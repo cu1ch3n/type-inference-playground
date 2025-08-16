@@ -2,39 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Academic Type Theory Playground Design System
+All colors MUST be HSL. Mathematical typography optimized.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Academic Blue Theme */
+    --background: 210 40% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
+    /* Deep Academic Primary */
+    --primary: 221 83% 25%;
     --primary-foreground: 210 40% 98%;
+    --primary-glow: 221 83% 35%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Subtle Secondary */
+    --secondary: 210 40% 95%;
+    --secondary-foreground: 215 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Mathematical Muted */
+    --muted: 210 40% 94%;
+    --muted-foreground: 215 16% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Theorem Accent */
+    --accent: 221 83% 92%;
+    --accent-foreground: 221 83% 25%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Error/Destructive */
+    --destructive: 0 72% 50%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Academic Borders */
+    --border: 214 32% 89%;
+    --input: 214 32% 89%;
+    --ring: 221 83% 25%;
+
+    /* Custom Academic Variables */
+    --algorithm-bg: 221 83% 96%;
+    --rule-bg: 210 40% 97%;
+    --derivation-bg: 0 0% 99%;
+    --code-bg: 215 25% 97%;
+    --highlight: 45 100% 85%;
+    
+    /* Mathematical Typography */
+    --math-font: 'Computer Modern', 'Latin Modern Math', serif;
+    --code-font: 'Fira Code', 'Monaco', monospace;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 99%));
+    
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
@@ -56,33 +86,50 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Academic Theme */
+    --background: 215 28% 8%;
+    --foreground: 210 40% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 215 28% 10%;
+    --card-foreground: 210 40% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 215 28% 10%;
+    --popover-foreground: 210 40% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 221 83% 65%;
+    --primary-foreground: 215 28% 8%;
+    --primary-glow: 221 83% 75%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 28% 15%;
+    --secondary-foreground: 210 40% 90%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 28% 12%;
+    --muted-foreground: 215 16% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 221 83% 20%;
+    --accent-foreground: 221 83% 85%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 215 28% 18%;
+    --input: 215 28% 18%;
+    --ring: 221 83% 65%;
+    
+    /* Dark Academic Variables */
+    --algorithm-bg: 221 83% 12%;
+    --rule-bg: 215 28% 12%;
+    --derivation-bg: 215 28% 9%;
+    --code-bg: 215 25% 11%;
+    --highlight: 45 100% 25%;
+    
+    /* Dark Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-card: linear-gradient(180deg, hsl(215 28% 10%), hsl(215 28% 8%));
+    
+    /* Dark Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +148,54 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+  
+  /* Mathematical Typography */
+  .math-text {
+    font-family: var(--math-font);
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+  
+  .code-text {
+    font-family: var(--code-font);
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+  
+  /* KaTeX Custom Styling */
+  .katex {
+    font-size: 1.1em !important;
+  }
+  
+  .katex-display {
+    margin: 1em 0 !important;
+  }
+  
+  /* Academic Panel Styling */
+  .academic-panel {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+  
+  .academic-panel:hover {
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  /* Derivation Step Highlighting */
+  .derivation-step {
+    transition: var(--transition-smooth);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .derivation-step:hover {
+    background: hsl(var(--highlight) / 0.3);
+  }
+  
+  .derivation-step.active {
+    background: hsl(var(--highlight) / 0.5);
+    border: 2px solid hsl(var(--primary));
   }
 }

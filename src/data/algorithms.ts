@@ -4,7 +4,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'algorithm-w',
     name: 'Algorithm W',
-    description: 'The classic Hindley-Milner type inference algorithm that infers the most general type for lambda calculus expressions using unification.',
     labels: ['Global', 'Let-generalization', 'Principal type'],
     viewMode: 'tree',
     paper: {
@@ -49,7 +48,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'bidirectional',
     name: 'Bidirectional Type Checking',
-    description: 'A type checking algorithm that uses both synthesis and checking modes for more predictable type inference.',
     labels: ['Local', 'Bidirectional', 'Check/Synth'],
     viewMode: 'tree',
     paper: {
@@ -88,7 +86,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'worklist',
     name: 'Worklist-based STLC',
-    description: 'A constraint-based type inference algorithm for Simply Typed Lambda Calculus using a worklist of constraints.',
     labels: ['Constraint-based', 'STLC', 'Unification'],
     viewMode: 'linear',
     paper: {

@@ -3,7 +3,6 @@
 export interface TypeInferenceAlgorithm {
   id: string;
   name: string;
-  description: string;
   labels: string[];
   viewMode: 'tree' | 'linear';
   paper?: {

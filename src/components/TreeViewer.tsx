@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, Minus } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { DerivationStep } from '@/types/inference';
 
@@ -16,7 +15,7 @@ export const TreeViewer = ({
   steps, 
   onStepClick, 
   activeStepId, 
-  expandedByDefault = false 
+  expandedByDefault = true 
 }: TreeViewerProps) => {
   const initializeExpandedSteps = () => {
     if (!expandedByDefault) return new Set<string>();
@@ -43,93 +42,89 @@ export const TreeViewer = ({
     setExpandedSteps(newExpanded);
   };
 
-  const renderTreeNode = (step: DerivationStep, depth = 0, isLast = false, prefix = '') => {
+  const renderTreeNode = (step: DerivationStep, isLast = false) => {
     const isExpanded = expandedSteps.has(step.id);
     const hasChildren = step.children && step.children.length > 0;
     const isActive = activeStepId === step.id;
 
-    const connector = depth === 0 ? '' : isLast ? '└─ ' : '├─ ';
-    const childPrefix = depth === 0 ? '' : prefix + (isLast ? '   ' : '│  ');
-
     return (
-      <div key={step.id}>
+      <li key={step.id} className="relative">
         <div
           className={`
-            flex items-center gap-2 py-1 px-2 rounded transition-colors font-mono text-sm
+            flex items-center gap-2 py-2 pr-2 rounded transition-colors hover:bg-muted/40
             ${isActive ? 'bg-primary/10 border border-primary/20' : ''}
-            ${onStepClick ? 'cursor-pointer hover:bg-muted/50' : ''}
+            ${onStepClick ? 'cursor-pointer' : ''}
           `}
           onClick={() => onStepClick?.(step.id)}
         >
-          {/* Tree structure */}
-          <div className="text-muted-foreground font-mono text-xs whitespace-pre select-none">
-            {prefix}{connector}
-          </div>
-          
           {/* Expand/collapse button */}
-          {hasChildren && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-0 h-4 w-4 shrink-0"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleExpanded(step.id);
-              }}
-            >
-              {isExpanded ? (
-                <ChevronDown className="w-3 h-3" />
-              ) : (
-                <ChevronRight className="w-3 h-3" />
-              )}
-            </Button>
-          )}
+          <div className="flex items-center justify-center w-5 h-5 shrink-0">
+            {hasChildren ? (
+              <button
+                className="w-4 h-4 flex items-center justify-center rounded hover:bg-muted-foreground/20 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleExpanded(step.id);
+                }}
+              >
+                {isExpanded ? (
+                  <ChevronDown className="w-3 h-3" />
+                ) : (
+                  <ChevronRight className="w-3 h-3" />
+                )}
+              </button>
+            ) : (
+              <Minus className="w-3 h-3 text-muted-foreground/40" />
+            )}
+          </div>
           
           {/* Rule badge */}
           <Badge 
             variant={isActive ? "default" : "secondary"}
-            className="text-xs font-medium shrink-0"
+            className="text-xs font-medium shrink-0 min-w-fit"
           >
             {step.ruleId}
           </Badge>
           
-          {/* Expression */}
-          <div className="flex-1 min-w-0">
+          {/* Expression and type */}
+          <div className="flex-1 min-w-0 flex items-center gap-2">
             <KaTeXRenderer 
               expression={step.expression} 
               displayMode={false}
               className="text-sm"
             />
             {step.type && (
-              <div className="text-xs text-muted-foreground mt-0.5">
-                Type: <KaTeXRenderer expression={step.type} displayMode={false} className="text-xs" />
-              </div>
+              <>
+                <span className="text-muted-foreground">:</span>
+                <KaTeXRenderer 
+                  expression={step.type} 
+                  displayMode={false} 
+                  className="text-sm text-primary/80" 
+                />
+              </>
             )}
           </div>
         </div>
 
-        {/* Children */}
+        {/* Children - nested list */}
         {hasChildren && isExpanded && step.children && (
-          <div>
+          <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-1">
             {step.children.map((child, index) => 
-              renderTreeNode(
-                child, 
-                depth + 1, 
-                index === step.children!.length - 1,
-                childPrefix
-              )
+              renderTreeNode(child, index === step.children!.length - 1)
             )}
-          </div>
+          </ul>
         )}
-      </div>
+      </li>
     );
   };
 
   return (
-    <div className="space-y-1">
-      {steps.map((step, index) => 
-        renderTreeNode(step, 0, index === steps.length - 1)
-      )}
+    <div className="tree-view">
+      <ul className="space-y-1">
+        {steps.map((step, index) => 
+          renderTreeNode(step, index === steps.length - 1)
+        )}
+      </ul>
     </div>
   );
 };

@@ -101,7 +101,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
 // % &\color{magenta} \makebox[0pt]{\qquad or} \phantom{{}\rrule{}{}}
 // \end{aligned}
     rules: [
-      // Garbage Collection Rules
       {
         id: "GCTyVar",
         name: "GCTyVar",
@@ -123,8 +122,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         conclusion: "",
         reduction: "\\Gamma, x:A \\longrightarrow \\Gamma"
       },
-      
-      // Subtyping Rules
       {
         id: "SUnit",
         name: "SUnit",
@@ -147,28 +144,26 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         reduction: "\\Gamma \\vdash \\hat{\\alpha} \\le \\hat{\\alpha} \\longrightarrow \\Gamma"
       },
       {
-        id: "SFun",
-        name: "SFun",
+        id: "SArr",
+        name: "SArr",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash A_1 \\to A_2 \\le B_1 \\to B_2 \\longrightarrow \\Gamma \\vdash A_2 \\le B_2, \\Gamma \\vdash B_1 \\le A_1"
       },
       {
-        id: "SForallL",
-        name: "SForallL",
+        id: "SAllL",
+        name: "SAllL",
         premises: ["B \\neq \\forall B'"],
         conclusion: "",
         reduction: "\\Gamma \\vdash \\forall a. A \\le B \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A \\le B"
       },
       {
-        id: "SForallR",
-        name: "SForallR",
+        id: "SAllR",
+        name: "SAllR",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash A \\le \\forall b. B \\longrightarrow \\Gamma, b \\vdash A \\le B"
       },
-      
-      // Existential Variable Instantiation Rules
       {
         id: "InstLArr",
         name: "InstLArr",
@@ -225,8 +220,6 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         conclusion: "",
         reduction: "\\Gamma[\\hat{\\beta}] \\vdash \\hat{\\beta} \\le 1 \\longrightarrow [1/\\hat{\\beta}](\\Gamma[])"
       },
-      
-      // Checking Rules
       {
         id: "ChkSub",
         name: "ChkSub",
@@ -235,82 +228,78 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         reduction: "\\Gamma \\vdash e \\Leftarrow B \\longrightarrow \\Gamma \\vdash e \\Rightarrow_a a \\le B"
       },
       {
-        id: "ChkGen",
-        name: "ChkGen",
+        id: "ChkAll",
+        name: "ChkAll",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash e \\Leftarrow \\forall a. A \\longrightarrow \\Gamma, a \\vdash e \\Leftarrow A"
       },
       {
-        id: "ChkLam",
-        name: "ChkLam",
+        id: "ChkAbs",
+        name: "ChkAbs",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash \\lambda x. e \\Leftarrow A \\to B \\longrightarrow \\Gamma, x:A \\vdash e \\Leftarrow B"
       },
       {
-        id: "ChkLamExVar",
-        name: "ChkLamExVar",
+        id: "ChkAbsExVar",
+        name: "ChkAbsExVar",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\lambda x. e \\Leftarrow \\hat{\\alpha} \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2], x:\\hat{\\alpha}_1 \\vdash e \\Leftarrow \\hat{\\alpha}_2)"
       },
-      
-      // Synthesis Rules
       {
-        id: "SynVar",
-        name: "SynVar",
+        id: "InfVar",
+        name: "InfVar",
         premises: ["(x:A) \\in \\Gamma"],
         conclusion: "",
-        reduction: "\\Gamma \\vdash x \\Rightarrow_a \\mathcal{J} \\longrightarrow \\Gamma \\vdash [A/a]\\mathcal{J}"
+        reduction: "\\Gamma \\vdash x \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega"
       },
       {
-        id: "SynAnno",
-        name: "SynAnno",
+        id: "InfAnno",
+        name: "InfAnno",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash (e:A) \\Rightarrow_a \\mathcal{J} \\longrightarrow \\Gamma \\vdash [A/a]\\mathcal{J}, \\Gamma \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash (e:A) \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
       },
       {
-        id: "SynUnit",
-        name: "SynUnit",
+        id: "InfUnit",
+        name: "InfUnit",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash () \\Rightarrow_a \\mathcal{J} \\longrightarrow \\Gamma \\vdash [1/a]\\mathcal{J}"
+        reduction: "\\Gamma \\vdash () \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [1/a]\\omega"
       },
       {
-        id: "SynLam",
-        name: "SynLam",
+        id: "InfLam",
+        name: "InfLam",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\lambda x. e \\Rightarrow_a \\mathcal{J} \\longrightarrow \\Gamma, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\alpha} \\to \\hat{\\beta}/a]\\mathcal{J}, x:\\hat{\\alpha} \\vdash e \\Leftarrow \\hat{\\beta}"
+        reduction: "\\Gamma \\vdash \\lambda x. e \\Rightarrow_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\alpha} \\to \\hat{\\beta}/a]\\omega, x:\\hat{\\alpha} \\vdash e \\Leftarrow \\hat{\\beta}"
       },
       {
-        id: "SynApp",
-        name: "SynApp",
+        id: "InfApp",
+        name: "InfApp",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash e_1 \\; e_2 \\Rightarrow_a \\mathcal{J} \\longrightarrow \\Gamma \\vdash e_1 \\Rightarrow_b (b \\; \\triangleright \\; e_2)"
+        reduction: "\\Gamma \\vdash e_1 \\; e_2 \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash e_1 \\Rightarrow_b (b \\; \\triangleright \\; e_2)"
       },
-      
-      // Application Synthesis Rules
       {
-        id: "AppForall",
-        name: "AppForall",
+        id: "InfAppAll",
+        name: "InfAppAll",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma \\vdash \\forall a. A \\; \\triangleright \\; e \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A \\; \\triangleright \\; e"
       },
       {
-        id: "AppFun",
-        name: "AppFun",
+        id: "InfAppArr",
+        name: "InfAppArr",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash A \\to C \\; \\triangleright \\; e \\longrightarrow \\Gamma \\vdash [C/a]\\mathcal{J}, \\Gamma \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash A \\to C \\; \\triangleright \\; e \\longrightarrow \\Gamma \\vdash [C/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
       },
       {
-        id: "AppExVar",
-        name: "AppExVar",
+        id: "InfAppExVar",
+        name: "InfAppExVar",
         premises: [],
         conclusion: "",
         reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\hat{\\alpha} \\; \\triangleright \\; e \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2] \\vdash \\hat{\\alpha}_1 \\to \\hat{\\alpha}_2 \\; \\triangleright \\; e)"

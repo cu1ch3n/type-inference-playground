@@ -16,31 +16,31 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: 'Var',
-        name: 'Variable',
+        name: 'Var',
         premises: ['x : \\sigma \\in \\Gamma'],
         conclusion: '\\Gamma \\vdash x : \\sigma'
       },
       {
         id: 'Lam',
-        name: 'Lambda',
+        name: 'Lam',
         premises: ['\\Gamma, x : \\tau_1 \\vdash e : \\tau_2'],
         conclusion: '\\Gamma \\vdash \\lambda x.e : \\tau_1 \\rightarrow \\tau_2'
       },
       {
         id: 'App',
-        name: 'Application',
+        name: 'App',
         premises: ['\\Gamma \\vdash e_1 : \\tau_1 \\rightarrow \\tau_2', '\\Gamma \\vdash e_2 : \\tau_1'],
         conclusion: '\\Gamma \\vdash e_1 \\; e_2 : \\tau_2'
       },
       {
         id: 'Gen',
-        name: 'Generalization',
+        name: 'Gen',
         premises: ['\\Gamma \\vdash e : \\tau', '\\alpha \\notin \\text{ftv}(\\Gamma)'],
         conclusion: '\\Gamma \\vdash e : \\forall \\alpha. \\tau'
       },
       {
         id: 'Inst',
-        name: 'Instantiation',
+        name: 'Inst',
         premises: ['\\Gamma \\vdash e : \\forall \\alpha. \\tau'],
         conclusion: '\\Gamma \\vdash e : [\\alpha := \\tau\'] \\tau'
       }
@@ -49,38 +49,38 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'bidirectional',
     name: 'Bidirectional Type Checking',
-    description: 'A type checking algorithm that uses both synthesis (inferring types) and checking (verifying types) judgments for more precise type information.',
-    labels: ['Local', 'Bidirectional', 'Synthesis/Checking'],
+    description: 'A type checking algorithm that uses both synthesis and checking modes for more predictable type inference.',
+    labels: ['Local', 'Bidirectional', 'Check/Synth'],
     viewMode: 'tree',
     paper: {
-      title: 'Bidirectional Typing',
-      authors: ['Jana Dunfield', 'Neel Krishnaswami'],
-      year: 2021,
-      url: 'https://doi.org/10.1145/3450952'
+      title: 'Bidirectional Typing Rules: A Tutorial',
+      authors: ['David Raymond Christiansen'],
+      year: 2013,
+      url: 'https://arxiv.org/abs/1306.6032'
     },
     rules: [
       {
-        id: 'VarS',
-        name: 'Variable Synthesis',
+        id: 'Var',
+        name: 'Var',
         premises: ['x : A \\in \\Gamma'],
         conclusion: '\\Gamma \\vdash x \\Rightarrow A'
       },
       {
-        id: 'LamC',
-        name: 'Lambda Check',
+        id: 'Lam',
+        name: 'Lam',
         premises: ['\\Gamma, x : A \\vdash e \\Leftarrow B'],
         conclusion: '\\Gamma \\vdash \\lambda x.e \\Leftarrow A \\rightarrow B'
       },
       {
-        id: 'AppS',
-        name: 'Application Synthesis',
+        id: 'App',
+        name: 'App',
         premises: ['\\Gamma \\vdash e_1 \\Rightarrow A \\rightarrow B', '\\Gamma \\vdash e_2 \\Leftarrow A'],
         conclusion: '\\Gamma \\vdash e_1 \\; e_2 \\Rightarrow B'
       },
       {
         id: 'Sub',
-        name: 'Subsumption',
-        premises: ['\\Gamma \\vdash e \\Rightarrow A', 'A <: B'],
+        name: 'Sub',
+        premises: ['\\Gamma \\vdash e \\Rightarrow A', 'A \\leq B'],
         conclusion: '\\Gamma \\vdash e \\Leftarrow B'
       }
     ]
@@ -88,109 +88,89 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: 'worklist',
     name: 'Worklist-based STLC',
-    description: 'A constraint-based approach to type inference for simply typed lambda calculus using a worklist algorithm.',
-    labels: ['Constraint-based', 'STLC', 'Worklist'],
+    description: 'A constraint-based type inference algorithm for Simply Typed Lambda Calculus using a worklist of constraints.',
+    labels: ['Constraint-based', 'STLC', 'Unification'],
     viewMode: 'linear',
     paper: {
-      title: 'Types and Programming Languages',
-      authors: ['Benjamin Pierce'],
-      year: 2002,
-      url: 'https://www.cis.upenn.edu/~bcpierce/tapl/'
+      title: 'Constraint-Based Type Inference',
+      authors: ['François Pottier', 'Didier Rémy'],
+      year: 2005,
+      url: 'https://hal.inria.fr/hal-01499583'
     },
     rules: [
       {
-        id: 'WVar',
-        name: 'Variable',
-        premises: ['x : \\tau \\in \\Gamma'],
-        conclusion: '\\Gamma \\vdash x : \\tau'
+        id: 'Var',
+        name: 'Var',
+        premises: [],
+        conclusion: '\\text{lookup}(x, \\Gamma) = \\tau'
       },
       {
-        id: 'WLam',
-        name: 'Lambda',
-        premises: ['\\Gamma, x : \\tau_1 \\vdash e : \\tau_2'],
-        conclusion: '\\Gamma \\vdash \\lambda x.e : \\tau_1 \\rightarrow \\tau_2'
+        id: 'Lam',
+        name: 'Lam',
+        premises: ['\\text{fresh } \\alpha_1, \\alpha_2', '\\text{add constraint } \\alpha = \\alpha_1 \\rightarrow \\alpha_2'],
+        conclusion: '\\lambda x.e : \\alpha'
       },
       {
-        id: 'WApp',
-        name: 'Application',
-        premises: ['\\Gamma \\vdash e_1 : \\tau_1', '\\Gamma \\vdash e_2 : \\tau_2', '\\tau_1 \\sim \\tau_2 \\rightarrow \\alpha'],
-        conclusion: '\\Gamma \\vdash e_1 \\; e_2 : \\alpha'
+        id: 'App',
+        name: 'App',
+        premises: ['\\text{fresh } \\alpha', '\\text{add constraint } \\tau_1 = \\tau_2 \\rightarrow \\alpha'],
+        conclusion: 'e_1 \\; e_2 : \\alpha'
       },
       {
-        id: 'WUnify',
-        name: 'Unification',
-        premises: ['\\tau_1 \\sim \\tau_2'],
-        conclusion: '[\\tau_1 / \\alpha] \\text{constraints}'
+        id: 'Unify',
+        name: 'Unify',
+        premises: ['\\text{unify } \\tau_1 = \\tau_2'],
+        conclusion: '\\text{apply substitution}'
       }
     ]
   }
 ];
 
-export const algorithmExamples: Record<string, Array<{name: string, expression: string, description: string}>> = {
+export const algorithmExamples = {
   'algorithm-w': [
     {
-      name: 'Identity Function',
+      name: 'Identity',
       expression: '\\x. x',
-      description: 'The polymorphic identity function'
+      description: 'The identity function'
     },
     {
-      name: 'Constant Function', 
+      name: 'Constant',
       expression: '\\x. \\y. x',
-      description: 'Returns its first argument, ignoring the second'
+      description: 'The constant function'
     },
     {
-      name: 'Function Composition',
+      name: 'Composition',
       expression: '\\f. \\g. \\x. f (g x)',
-      description: 'Composes two functions'
-    },
-    {
-      name: 'Self Application',
-      expression: '\\x. x x',
-      description: 'Applies a function to itself (untypeable)'
+      description: 'Function composition'
     }
   ],
   'bidirectional': [
     {
-      name: 'Simple Lambda',
+      name: 'Identity',
       expression: '\\x. x',
-      description: 'Identity function with bidirectional checking'
+      description: 'Identity with bidirectional checking'
     },
     {
       name: 'Application',
-      expression: '(\\x. x) 42',
-      description: 'Function application requiring synthesis'
-    },
-    {
-      name: 'Higher-order',
-      expression: '\\f. \\x. f x',
-      description: 'Higher-order function'
-    },
-    {
-      name: 'Let Expression',
-      expression: 'let id = \\x. x in id 5',
-      description: 'Let binding with polymorphism'
+      expression: '(\\x. x) y',
+      description: 'Function application'
     }
   ],
   'worklist': [
     {
-      name: 'Simple Variable',
-      expression: 'x',
-      description: 'Single variable type lookup'
+      name: 'Identity',
+      expression: '\\x. x',
+      description: 'Identity with constraint generation'
     },
     {
-      name: 'Identity Function',
-      expression: '\\x. x',
-      description: 'Identity function with constraint generation'
+      name: 'Variable',
+      expression: 'x',
+      description: 'Simple variable lookup'
     },
     {
       name: 'Application',
       expression: 'f x',
-      description: 'Function application with unification'
-    },
-    {
-      name: 'Nested Lambda',
-      expression: '\\f. \\x. f x',
-      description: 'Nested abstraction with constraints'
+      description: 'Function application with constraints'
     }
   ]
-};
+} as const;

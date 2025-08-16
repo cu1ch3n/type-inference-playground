@@ -2,20 +2,19 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChevronRight, ChevronDown, TreePine, List } from 'lucide-react';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
-import { DerivationStep, InferenceResult } from '@/types/inference';
+import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
 
 interface DerivationViewerProps {
   result?: InferenceResult;
+  algorithm?: TypeInferenceAlgorithm;
   onStepClick?: (stepId: string) => void;
   activeStepId?: string;
 }
 
-export const DerivationViewer = ({ result, onStepClick, activeStepId }: DerivationViewerProps) => {
+export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId }: DerivationViewerProps) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
-  const [viewMode, setViewMode] = useState<'tree' | 'linear'>('tree');
 
   const toggleExpanded = (stepId: string) => {
     const newExpanded = new Set(expandedSteps);
@@ -33,22 +32,22 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
     const isActive = activeStepId === step.id;
 
     return (
-      <div key={step.id} className="space-y-2">
+      <div key={step.id} className="space-y-1">
         <div
           className={`
-            derivation-step
+            derivation-step font-mono text-sm
             ${isActive ? 'active' : ''}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
-          style={{ marginLeft: `${depth * 1.5}rem` }}
+          style={{ marginLeft: `${depth * 1.2}rem` }}
           onClick={() => onStepClick?.(step.id)}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2">
             {hasChildren && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1 h-auto"
+                className="p-1 h-auto mt-0.5"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleExpanded(step.id);
@@ -62,28 +61,21 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
               </Button>
             )}
             
-            <Badge variant="outline" className="text-xs">
-              {step.ruleId}
-            </Badge>
-            
             <div className="flex-1">
-              <KaTeXRenderer 
-                expression={`${step.expression}${step.type ? ` : ${step.type}` : ''}`} 
-                displayMode={false}
-                className="text-sm"
-              />
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-primary">{step.ruleId}:</span>
+                <KaTeXRenderer 
+                  expression={step.expression} 
+                  displayMode={false}
+                  className="text-sm"
+                />
+              </div>
             </div>
           </div>
-          
-          {step.explanation && (
-            <p className="text-xs text-muted-foreground mt-1 ml-6">
-              {step.explanation}
-            </p>
-          )}
         </div>
 
         {hasChildren && isExpanded && (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {step.children!.map(child => renderTreeStep(child, depth + 1))}
           </div>
         )}
@@ -98,35 +90,34 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
       <div
         key={step.id}
         className={`
-          derivation-step
-          ${isActive ? 'active' : ''}
-          ${onStepClick ? 'cursor-pointer' : ''}
+          derivation-step p-3 border rounded-lg font-mono
+          ${isActive ? 'active border-primary bg-primary/5' : 'border-border'}
+          ${onStepClick ? 'cursor-pointer hover:border-primary/50' : ''}
         `}
         onClick={() => onStepClick?.(step.id)}
       >
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="text-xs min-w-0">
+          <Badge variant="outline" className="text-xs min-w-0 shrink-0">
             {index + 1}
           </Badge>
           
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs font-medium">
             {step.ruleId}
           </Badge>
           
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <KaTeXRenderer 
-              expression={`${step.expression}${step.type ? ` : ${step.type}` : ''}`} 
+              expression={step.expression} 
               displayMode={false}
               className="text-sm"
             />
+            {step.type && (
+              <div className="mt-1 text-xs text-muted-foreground">
+                Type: <KaTeXRenderer expression={step.type} displayMode={false} className="text-xs" />
+              </div>
+            )}
           </div>
         </div>
-        
-        {step.explanation && (
-          <p className="text-xs text-muted-foreground mt-2">
-            {step.explanation}
-          </p>
-        )}
       </div>
     );
   };
@@ -174,6 +165,7 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
     );
   }
 
+  const viewMode = algorithm?.viewMode || 'tree';
   const linearSteps = flattenSteps(result.derivation);
 
   return (
@@ -189,26 +181,15 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'tree' | 'linear')}>
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="tree" className="flex items-center gap-2">
-              <TreePine className="w-4 h-4" />
-              Tree View
-            </TabsTrigger>
-            <TabsTrigger value="linear" className="flex items-center gap-2">
-              <List className="w-4 h-4" />
-              Linear View
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="tree" className="space-y-3">
+        {viewMode === 'tree' ? (
+          <div className="space-y-2">
             {result.derivation.map(step => renderTreeStep(step))}
-          </TabsContent>
-
-          <TabsContent value="linear" className="space-y-3">
+          </div>
+        ) : (
+          <div className="space-y-3">
             {linearSteps.map((step, index) => renderLinearStep(step, index))}
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

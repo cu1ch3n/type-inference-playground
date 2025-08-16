@@ -12,6 +12,8 @@ export const runInference = async (algorithm: string, expression: string): Promi
     return generateAlgorithmWDerivation(cleanExpression);
   } else if (algorithm === 'bidirectional') {
     return generateBidirectionalDerivation(cleanExpression);
+  } else if (algorithm === 'worklist') {
+    return generateWorklistDerivation(cleanExpression);
   }
   
   return {
@@ -26,26 +28,17 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   if (expression.match(/^\\x\.\s*x$/)) {
     return {
       success: true,
-      finalType: '\\alpha \\rightarrow \\alpha',
+      finalType: 'a \\to a',
       derivation: [
         {
           id: '1',
-          ruleId: 'var',
-          expression: 'x',
-          type: '\\alpha',
-          explanation: 'Variable lookup'
-        },
-        {
-          id: '2', 
-          ruleId: 'abs',
-          expression: '\\lambda x. x',
-          type: '\\alpha \\rightarrow \\alpha',
+          ruleId: 'Lam',
+          expression: '\\vdash \\lambda x.~x : a \\to a',
           children: [
             {
-              id: '1',
-              ruleId: 'var',
-              expression: 'x', 
-              type: '\\alpha'
+              id: '2',
+              ruleId: 'Var',
+              expression: 'x: a \\vdash x : a'
             }
           ]
         }
@@ -57,25 +50,22 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   if (expression.match(/^\\x\.\s*\\y\.\s*x$/)) {
     return {
       success: true,
-      finalType: '\\alpha \\rightarrow \\beta \\rightarrow \\alpha',
+      finalType: 'a \\to b \\to a',
       derivation: [
         {
           id: '1',
-          ruleId: 'abs',
-          expression: '\\lambda x. \\lambda y. x',
-          type: '\\alpha \\rightarrow \\beta \\rightarrow \\alpha',
+          ruleId: 'Lam',
+          expression: '\\vdash \\lambda x.~\\lambda y.~x : a \\to b \\to a',
           children: [
             {
               id: '2',
-              ruleId: 'abs', 
-              expression: '\\lambda y. x',
-              type: '\\beta \\rightarrow \\alpha',
+              ruleId: 'Lam',
+              expression: 'x: a \\vdash \\lambda y.~x : b \\to a',
               children: [
                 {
                   id: '3',
-                  ruleId: 'var',
-                  expression: 'x',
-                  type: '\\alpha'
+                  ruleId: 'Var',
+                  expression: 'x: a, y: b \\vdash x : a'
                 }
               ]
             }
@@ -89,7 +79,7 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   if (expression.match(/^\\x\.\s*x\s+x$/)) {
     return {
       success: false,
-      error: 'Cannot unify \\alpha with \\alpha \\rightarrow \\beta (occurs check)',
+      error: 'Cannot unify a with a \\to b (occurs check)',
       derivation: []
     };
   }
@@ -98,43 +88,51 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   if (expression.match(/^\\f\.\s*\\g\.\s*\\x\.\s*f\s*\(\s*g\s+x\s*\)$/)) {
     return {
       success: true,
-      finalType: '(\\beta \\rightarrow \\gamma) \\rightarrow (\\alpha \\rightarrow \\beta) \\rightarrow \\alpha \\rightarrow \\gamma',
+      finalType: '(b \\to c) \\to (a \\to b) \\to a \\to c',
       derivation: [
         {
           id: '1',
-          ruleId: 'abs',
-          expression: '\\lambda f. \\lambda g. \\lambda x. f (g x)',
-          type: '(\\beta \\rightarrow \\gamma) \\rightarrow (\\alpha \\rightarrow \\beta) \\rightarrow \\alpha \\rightarrow \\gamma',
+          ruleId: 'Lam',
+          expression: '\\vdash \\lambda f.~\\lambda g.~\\lambda x.~f~(g~x) : (b \\to c) \\to (a \\to b) \\to a \\to c',
           children: [
             {
               id: '2',
-              ruleId: 'app',
-              expression: 'f (g x)',
-              type: '\\gamma',
+              ruleId: 'Lam',
+              expression: 'f: b \\to c \\vdash \\lambda g.~\\lambda x.~f~(g~x) : (a \\to b) \\to a \\to c',
               children: [
                 {
                   id: '3',
-                  ruleId: 'var',
-                  expression: 'f',
-                  type: '\\beta \\rightarrow \\gamma'
-                },
-                {
-                  id: '4',
-                  ruleId: 'app',
-                  expression: 'g x',
-                  type: '\\beta',
+                  ruleId: 'Lam',
+                  expression: 'f: b \\to c, g: a \\to b \\vdash \\lambda x.~f~(g~x) : a \\to c',
                   children: [
                     {
-                      id: '5',
-                      ruleId: 'var',
-                      expression: 'g',
-                      type: '\\alpha \\rightarrow \\beta'
-                    },
-                    {
-                      id: '6',
-                      ruleId: 'var',
-                      expression: 'x',
-                      type: '\\alpha'
+                      id: '4',
+                      ruleId: 'App',
+                      expression: 'f: b \\to c, g: a \\to b, x: a \\vdash f~(g~x) : c',
+                      children: [
+                        {
+                          id: '5',
+                          ruleId: 'Var',
+                          expression: 'f: b \\to c, g: a \\to b, x: a \\vdash f : b \\to c'
+                        },
+                        {
+                          id: '6',
+                          ruleId: 'App',
+                          expression: 'f: b \\to c, g: a \\to b, x: a \\vdash g~x : b',
+                          children: [
+                            {
+                              id: '7',
+                              ruleId: 'Var',
+                              expression: 'f: b \\to c, g: a \\to b, x: a \\vdash g : a \\to b'
+                            },
+                            {
+                              id: '8',
+                              ruleId: 'Var',
+                              expression: 'f: b \\to c, g: a \\to b, x: a \\vdash x : a'
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -149,14 +147,12 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   // Default case - generate simple derivation
   return {
     success: true,
-    finalType: '\\alpha',
+    finalType: 'a',
     derivation: [
       {
         id: '1',
-        ruleId: 'var',
-        expression: expression,
-        type: '\\alpha',
-        explanation: 'Default type assignment'
+        ruleId: 'Var',
+        expression: `\\vdash ${expression} : a`
       }
     ]
   };
@@ -171,21 +167,13 @@ const generateBidirectionalDerivation = (expression: string): InferenceResult =>
       derivation: [
         {
           id: '1',
-          ruleId: 'var-synth',
-          expression: 'x',
-          type: 'A'
-        },
-        {
-          id: '2',
-          ruleId: 'abs-check',
-          expression: '\\lambda x. x', 
-          type: 'A \\rightarrow A',
+          ruleId: 'LamC',
+          expression: '\\vdash \\lambda x.~x \\Leftarrow A \\rightarrow A',
           children: [
             {
-              id: '1',
-              ruleId: 'var-synth',
-              expression: 'x',
-              type: 'A'
+              id: '2',
+              ruleId: 'VarS',
+              expression: 'x: A \\vdash x \\Rightarrow A'
             }
           ]
         }
@@ -200,9 +188,93 @@ const generateBidirectionalDerivation = (expression: string): InferenceResult =>
     derivation: [
       {
         id: '1',
-        ruleId: 'var-synth',
-        expression: expression,
-        type: 'A'
+        ruleId: 'VarS',
+        expression: `\\vdash ${expression} \\Rightarrow A`
+      }
+    ]
+  };
+};
+
+const generateWorklistDerivation = (expression: string): InferenceResult => {
+  // Simple identity function
+  if (expression.match(/^\\x\.\s*x$/)) {
+    return {
+      success: true,
+      finalType: 'a \\to a',
+      derivation: [
+        {
+          id: '1',
+          ruleId: 'WLam',
+          expression: 'Generate constraint: \\lambda x.~x : a \\to a'
+        },
+        {
+          id: '2',
+          ruleId: 'WVar',
+          expression: 'Lookup variable: x : a'
+        },
+        {
+          id: '3',
+          ruleId: 'WUnify',
+          expression: 'Unify constraints: a = a'
+        }
+      ]
+    };
+  }
+
+  // Simple variable
+  if (expression.match(/^[a-z]$/)) {
+    return {
+      success: true,
+      finalType: 'a',
+      derivation: [
+        {
+          id: '1',
+          ruleId: 'WVar',
+          expression: `Lookup variable: ${expression} : a`
+        }
+      ]
+    };
+  }
+
+  // Function application
+  if (expression.match(/^[a-z]\s+[a-z]$/)) {
+    return {
+      success: true,
+      finalType: 'b',
+      derivation: [
+        {
+          id: '1',
+          ruleId: 'WApp',
+          expression: `Generate constraint: ${expression} : b`
+        },
+        {
+          id: '2',
+          ruleId: 'WVar',
+          expression: 'Lookup first variable: a \\to b'
+        },
+        {
+          id: '3',
+          ruleId: 'WVar',
+          expression: 'Lookup second variable: a'
+        },
+        {
+          id: '4',
+          ruleId: 'WUnify',
+          expression: 'Unify: (a \\to b) ~ (a \\to b)'
+        }
+      ]
+    };
+  }
+
+  // Default case
+  return {
+    success: true,
+    finalType: 'a',
+    derivation: [
+      {
+        id: '1',
+        ruleId: 'WVar',
+        expression: `Process: ${expression} : a`
       }
     ]
   };

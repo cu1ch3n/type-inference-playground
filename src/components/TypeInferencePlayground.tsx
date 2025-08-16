@@ -104,6 +104,7 @@ export const TypeInferencePlayground = () => {
             <div>
               <DerivationViewer
                 result={result}
+                algorithm={selectedAlgorithmData}
                 activeStepId={activeStepId}
                 onStepClick={handleStepClick}
               />

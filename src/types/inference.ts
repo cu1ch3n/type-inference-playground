@@ -5,6 +5,7 @@ export interface TypeInferenceAlgorithm {
   name: string;
   description: string;
   labels: string[];
+  viewMode: 'tree' | 'linear';
   paper?: {
     title: string;
     authors: string[];

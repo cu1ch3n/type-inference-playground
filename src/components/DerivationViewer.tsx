@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
@@ -127,6 +128,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
           </div>
         )}
       </CardContent>
+      <Separator />
     </Card>
   );
 };

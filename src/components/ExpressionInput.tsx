@@ -40,7 +40,7 @@ export const ExpressionInput = ({
   return (
     <Card className="academic-panel">
       <CardHeader>
-        <CardTitle>Lambda Expression</CardTitle>
+        <CardTitle>Input Program</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>

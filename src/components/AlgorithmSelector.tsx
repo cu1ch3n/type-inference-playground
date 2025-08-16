@@ -45,9 +45,21 @@ export const AlgorithmSelector = ({
             <h3 className="font-medium text-sm mb-2">{selected.name}</h3>
             <AlgorithmLabels labels={selected.labels} />
           </div>
-          <div className="text-xs text-muted-foreground">
-            {selected.paper?.authors.join(', ')} ({selected.paper?.year})
-          </div>
+          {selected.paper && (
+            <div className="text-xs">
+              <div className="text-muted-foreground mb-1">
+                {selected.paper.authors.join(', ')} ({selected.paper.year})
+              </div>
+              <a 
+                href={selected.paper.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                {selected.paper.title}
+              </a>
+            </div>
+          )}
         </div>
       )}
     </div>

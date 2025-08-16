@@ -5,6 +5,7 @@ export interface TypeInferenceAlgorithm {
   name: string;
   description: string;
   labels: string[];
+  derivationStyle: 'tree' | 'linear';
   paper?: {
     title: string;
     authors: string[];
@@ -35,6 +36,7 @@ export interface InferenceResult {
   finalType?: string;
   derivation: DerivationStep[];
   error?: string;
+  algorithm?: TypeInferenceAlgorithm;
 }
 
 export interface LambdaExpression {

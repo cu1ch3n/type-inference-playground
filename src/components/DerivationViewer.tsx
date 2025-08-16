@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { GitBranch, Activity, FileText, ArrowRight } from 'lucide-react';
+import { GitBranch, Activity, TreePine, Zap } from 'lucide-react';
 
 interface DerivationViewerProps {
   result?: InferenceResult;
@@ -77,17 +77,16 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center h-48 text-muted-foreground">
           <div className="relative mb-4">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-full blur-xl"></div>
-            <div className="relative bg-background/50 backdrop-blur-sm p-6 rounded-full border border-border/50">
-              <FileText className="w-8 h-8 text-primary/60" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-lg"></div>
+            <div className="relative bg-background/80 backdrop-blur-sm p-6 rounded-full border border-border/30">
+              <TreePine className="w-8 h-8 text-primary/50" />
             </div>
           </div>
           <div className="text-center space-y-2">
-            <p className="font-medium">Enter an expression to see the derivation</p>
+            <p className="font-medium">No derivation yet</p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-              <span>Type a lambda expression</span>
-              <ArrowRight className="w-3 h-3" />
-              <span>View the type inference steps</span>
+              <Zap className="w-3 h-3" />
+              <span>Enter an expression above to start type inference</span>
             </div>
           </div>
         </CardContent>

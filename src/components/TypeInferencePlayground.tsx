@@ -93,7 +93,12 @@ export const TypeInferencePlayground = () => {
               
               <ExpressionInput
                 expression={expression}
-                onExpressionChange={setExpression}
+                onExpressionChange={(expr) => {
+                  setExpression(expr);
+                  if (!expr.trim()) {
+                    setResult(undefined);
+                  }
+                }}
                 onInfer={handleInference}
                 isInferring={isInferring}
                 selectedAlgorithm={selectedAlgorithm}

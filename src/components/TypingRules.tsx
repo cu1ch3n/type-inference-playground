@@ -16,12 +16,15 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
         <CardTitle>Typing Rules</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        <div className="space-y-2">
           {rules.map((rule) => (
             <div
               key={rule.id}
               className={`
-                p-3 rounded border transition-all duration-200
+                ${rule.reduction 
+                  ? 'flex items-center justify-between p-2 rounded border transition-all duration-200' 
+                  : 'p-3 rounded border transition-all duration-200'
+                }
                 ${activeRuleId === rule.id 
                   ? 'bg-highlight/30 border-primary shadow-sm' 
                   : 'bg-rule border-border hover:bg-rule/80'
@@ -30,41 +33,36 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
               `}
               onClick={() => onRuleClick?.(rule.id)}
             >
-              {!rule.reduction && (
-                <div className="flex items-center justify-between mb-2">
+              {rule.reduction ? (
+                /* Worklist-style reduction rule - single line */
+                <>
+                  <div className="flex-1">
+                    <KaTeXRenderer 
+                      expression={rule.reduction} 
+                      displayMode={false}
+                      className="text-sm"
+                    />
+                  </div>
                   <Badge 
-                    variant={activeRuleId === rule.id ? "default" : "secondary"}
-                    className="font-medium text-xs"
+                    variant={activeRuleId === rule.id ? "default" : "outline"}
+                    className="ml-3 text-xs"
                   >
                     {rule.name}
                   </Badge>
-                </div>
-              )}
-
-              {/* Rule Display */}
-              <div className="space-y-1">
-                {rule.reduction ? (
-                  /* Worklist-style reduction rule */
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <KaTeXRenderer 
-                        expression={rule.reduction} 
-                        displayMode={false}
-                        className="text-xs"
-                      />
-                    </div>
-                    <div className="ml-2 text-right">
-                      <Badge 
-                        variant="outline"
-                        className="text-[10px] px-1 py-0"
-                      >
-                        {rule.name}
-                      </Badge>
-                    </div>
+                </>
+              ) : (
+                /* Traditional premise/conclusion rule */
+                <>
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge 
+                      variant={activeRuleId === rule.id ? "default" : "secondary"}
+                      className="font-medium text-xs"
+                    >
+                      {rule.name}
+                    </Badge>
                   </div>
-                ) : (
-                  /* Traditional premise/conclusion rule */
-                  <>
+
+                  <div className="space-y-1">
                     {rule.premises.length > 0 && (
                       <div className="space-y-0.5">
                         {rule.premises.map((premise, index) => (
@@ -90,9 +88,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
                         className="text-xs font-medium"
                       />
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

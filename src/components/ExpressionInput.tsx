@@ -68,8 +68,17 @@ export const ExpressionInput = ({
           </label>
           <div className="relative">
             <Textarea value={expression} onChange={e => onExpressionChange(e.target.value)} placeholder="Enter a lambda expression (e.g., \x. x)" className="font-code text-base bg-code min-h-[100px] resize-none pr-12" spellCheck={false} />
-            <Button onClick={onInfer} disabled={!expression.trim() || isInferring} size="sm" className="absolute bottom-2 right-2 h-8 w-8 p-0">
-              <Play className="w-4 h-4" />
+            <Button 
+              onClick={onInfer} 
+              disabled={!expression.trim() || isInferring} 
+              size="sm" 
+              className={`
+                absolute bottom-2 right-2 h-8 w-8 p-0 
+                transition-all duration-200 hover:scale-105 active:scale-95
+                ${isInferring ? 'animate-pulse' : ''}
+              `}
+            >
+              <Play className={`w-4 h-4 transition-transform duration-200 ${isInferring ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Zap } from 'lucide-react';
 import { TypeInferenceAlgorithm } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 
@@ -23,7 +23,10 @@ export const AlgorithmSelector = ({
     <div className="space-y-4">
       <Card className="academic-panel">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium">Type Inference Algorithm</CardTitle>
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            Type Inference Algorithm
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Select value={selectedAlgorithm} onValueChange={onAlgorithmChange}>

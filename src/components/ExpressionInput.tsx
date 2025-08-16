@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Play, RotateCcw } from 'lucide-react';
+import { Play, RotateCcw, Code, Lightbulb } from 'lucide-react';
 import { algorithmExamples } from '@/data/algorithms';
 interface ExpressionInputProps {
   expression: string;
@@ -34,11 +34,15 @@ export const ExpressionInput = ({
   };
   return <Card className="academic-panel">
       <CardHeader>
-        <CardTitle>Input Program</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Code className="w-4 h-4" />
+          Input Program
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">
+          <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+            <Lightbulb className="w-3 h-3" />
             Examples
           </label>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>

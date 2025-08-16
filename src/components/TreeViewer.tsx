@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, ChevronDown, Minus } from 'lucide-react';
+import { ChevronRight, ChevronDown, Circle } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { DerivationStep } from '@/types/inference';
 
@@ -74,7 +74,7 @@ export const TreeViewer = ({
                 )}
               </button>
             ) : (
-              <Minus className="w-3 h-3 text-muted-foreground/40" />
+              <Circle className="w-2 h-2 text-muted-foreground/40 fill-current" />
             )}
           </div>
           
@@ -108,7 +108,7 @@ export const TreeViewer = ({
 
         {/* Children - nested list */}
         {hasChildren && isExpanded && step.children && (
-          <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-1">
+          <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-1 space-y-1">
             {step.children.map((child, index) => 
               renderTreeNode(child, index === step.children!.length - 1)
             )}

@@ -74,7 +74,7 @@ export const TreeViewer = ({
                 )}
               </button>
             ) : (
-              <Circle className="w-2 h-2 text-muted-foreground/40 fill-current" />
+              <div className="w-2 h-2" />
             )}
           </div>
           

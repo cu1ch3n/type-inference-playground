@@ -76,17 +76,11 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-          <div className="relative mb-4">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-lg"></div>
-            <div className="relative bg-background/80 backdrop-blur-sm p-6 rounded-full border border-border/30">
-              <TreePine className="w-8 h-8 text-primary/50" />
-            </div>
-          </div>
           <div className="text-center space-y-2">
             <p className="font-medium">No derivation yet</p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
               <Zap className="w-3 h-3" />
-              <span>Enter an expression above to start type inference</span>
+              <span>Enter an expression to start type inference</span>
             </div>
           </div>
         </CardContent>

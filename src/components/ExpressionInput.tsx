@@ -78,7 +78,7 @@ export const ExpressionInput = ({
             <Textarea 
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
-              placeholder="Enter a lambda expression (e.g., \x. x)" 
+              placeholder="Please enter an expression. For example, (\x. x) 1" 
               className="font-code text-base bg-code min-h-[100px] resize-none pr-12" 
               spellCheck={false} 
             />

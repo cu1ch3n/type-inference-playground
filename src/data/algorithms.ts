@@ -23,13 +23,13 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         id: "App",
         name: "App",
         premises: ["\\Gamma \\vdash e_1 : \\tau_1 \\rightarrow \\tau_2", "\\Gamma \\vdash e_2 : \\tau_1"],
-        conclusion: "\\Gamma \\vdash e_1 \\; e_2 : \\tau_2"
+        conclusion: "\\Gamma \\vdash e_1 ~ e_2 : \\tau_2"
       },
       {
         id: "Abs",
         name: "Abs",
         premises: ["r = newvar", "\\Gamma, x : \\tau \\vdash e : \\tau', S"],
-        conclusion: "\\Gamma \\vdash \\lambda x.e : S\\tau \\rightarrow \\tau', S"
+        conclusion: "\\Gamma \\vdash \\lambda x.~e : S\\tau \\rightarrow \\tau', S"
       },
       {
         id: "Let",
@@ -239,14 +239,14 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         name: "ChkAbs",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\lambda x. e \\Leftarrow A \\to B \\longrightarrow \\Gamma, x:A \\vdash e \\Leftarrow B"
+        reduction: "\\Gamma \\vdash \\lambda x.~e \\Leftarrow A \\to B \\longrightarrow \\Gamma, x:A \\vdash e \\Leftarrow B"
       },
       {
         id: "ChkAbsExVar",
         name: "ChkAbsExVar",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\lambda x. e \\Leftarrow \\hat{\\alpha} \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2], x:\\hat{\\alpha}_1 \\vdash e \\Leftarrow \\hat{\\alpha}_2)"
+        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\lambda x.~e \\Leftarrow \\hat{\\alpha} \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2], x:\\hat{\\alpha}_1 \\vdash e \\Leftarrow \\hat{\\alpha}_2)"
       },
       {
         id: "InfVar",
@@ -260,7 +260,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         name: "InfAnno",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash (e:A) \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash (e:A) \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [A/a]\\omega \\vdash e \\Leftarrow A"
       },
       {
         id: "InfUnit",
@@ -270,39 +270,39 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         reduction: "\\Gamma \\vdash () \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash [1/a]\\omega"
       },
       {
-        id: "InfLam",
-        name: "InfLam",
+        id: "InfAbs",
+        name: "InfAbs",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\lambda x. e \\Rightarrow_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\alpha} \\to \\hat{\\beta}/a]\\omega, x:\\hat{\\alpha} \\vdash e \\Leftarrow \\hat{\\beta}"
+        reduction: "\\Gamma \\vdash \\lambda x.~e \\Rightarrow_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha}, \\hat{\\beta} \\vdash [\\hat{\\alpha} \\to \\hat{\\beta}/a]\\omega, x:\\hat{\\alpha} \\vdash e \\Leftarrow \\hat{\\beta}"
       },
       {
         id: "InfApp",
         name: "InfApp",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash e_1 \\; e_2 \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash e_1 \\Rightarrow_b (b \\; \\triangleright \\; e_2)"
+        reduction: "\\Gamma \\vdash e_1 ~ e_2 \\Rightarrow_a \\omega \\longrightarrow \\Gamma \\vdash e_1 \\Rightarrow_b (b \\bullet e_2 \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega)"
       },
       {
         id: "InfAppAll",
         name: "InfAppAll",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\forall a. A \\; \\triangleright \\; e \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A \\; \\triangleright \\; e"
+        reduction: "\\Gamma \\vdash \\forall a. A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega"
       },
       {
         id: "InfAppArr",
         name: "InfAppArr",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash A \\to C \\; \\triangleright \\; e \\longrightarrow \\Gamma \\vdash [C/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash A \\to C ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma \\vdash [C/a]\\omega, \\Gamma \\vdash e \\Leftarrow A"
       },
       {
         id: "InfAppExVar",
         name: "InfAppExVar",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\hat{\\alpha} \\; \\triangleright \\; e \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2] \\vdash \\hat{\\alpha}_1 \\to \\hat{\\alpha}_2 \\; \\triangleright \\; e)"
+        reduction: "\\Gamma[\\hat{\\alpha}] \\vdash \\hat{\\alpha} ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow [\\hat{\\alpha}_1 \\to \\hat{\\alpha}_2/\\hat{\\alpha}](\\Gamma[\\hat{\\alpha}_1, \\hat{\\alpha}_2] \\vdash \\hat{\\alpha}_1 \\to \\hat{\\alpha}_2 ~ \\bullet e)"
       }
     ]
   }

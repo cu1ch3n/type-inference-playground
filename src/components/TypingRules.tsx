@@ -16,7 +16,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="w-4 h-4" />
-          Typing Rules
+          Algorithmic Rules
         </CardTitle>
       </CardHeader>
       <CardContent>

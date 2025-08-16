@@ -72,7 +72,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
-            Derivation
+            Typing Derivation
           </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-40 text-muted-foreground">
@@ -88,7 +88,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
-            Derivation
+            Typing Derivation
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -112,7 +112,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
-            Derivation
+            Typing Derivation
           </CardTitle>
           {result.finalType && (
             <div className="text-right">

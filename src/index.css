@@ -8,48 +8,48 @@ All colors MUST be HSL. Mathematical typography optimized.
 
 @layer base {
   :root {
-    /* Academic Blue Theme */
-    --background: 210 40% 98%;
-    --foreground: 215 25% 15%;
+    /* Light Academic Theme */
+    --background: 0 0% 100%;
+    --foreground: 220 20% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 220 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 220 20% 20%;
 
-    /* Deep Academic Primary */
-    --primary: 221 83% 25%;
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 221 83% 35%;
+    /* Soft Academic Primary */
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 70% 60%;
 
-    /* Subtle Secondary */
-    --secondary: 210 40% 95%;
-    --secondary-foreground: 215 25% 25%;
+    /* Light Secondary */
+    --secondary: 220 15% 95%;
+    --secondary-foreground: 220 20% 30%;
 
-    /* Mathematical Muted */
-    --muted: 210 40% 94%;
-    --muted-foreground: 215 16% 55%;
+    /* Soft Muted */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 20% 60%;
 
-    /* Theorem Accent */
-    --accent: 221 83% 92%;
-    --accent-foreground: 221 83% 25%;
+    /* Light Accent */
+    --accent: 220 70% 95%;
+    --accent-foreground: 220 70% 40%;
 
     /* Error/Destructive */
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Academic Borders */
-    --border: 214 32% 89%;
-    --input: 214 32% 89%;
-    --ring: 221 83% 25%;
+    /* Light Borders */
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 220 70% 50%;
 
-    /* Custom Academic Variables */
-    --algorithm-bg: 221 83% 96%;
-    --rule-bg: 210 40% 97%;
+    /* Custom Light Variables */
+    --algorithm-bg: 220 70% 98%;
+    --rule-bg: 220 15% 98%;
     --derivation-bg: 0 0% 99%;
-    --code-bg: 215 25% 97%;
-    --highlight: 45 100% 85%;
+    --code-bg: 220 20% 98%;
+    --highlight: 50 100% 90%;
     
     /* Mathematical Typography */
     --math-font: 'Computer Modern', 'Latin Modern Math', serif;

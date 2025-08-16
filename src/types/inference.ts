@@ -4,6 +4,7 @@ export interface TypeInferenceAlgorithm {
   id: string;
   name: string;
   description: string;
+  labels: string[];
   paper?: {
     title: string;
     authors: string[];
@@ -18,7 +19,6 @@ export interface TypingRule {
   name: string;
   premises: string[]; // KaTeX expressions
   conclusion: string; // KaTeX expression
-  description?: string;
 }
 
 export interface DerivationStep {

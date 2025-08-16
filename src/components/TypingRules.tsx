@@ -15,39 +15,39 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       <CardHeader>
         <CardTitle>Typing Rules</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         {rules.map((rule) => (
           <div
             key={rule.id}
             className={`
-              p-4 rounded-lg border transition-all duration-200
+              p-3 rounded border transition-all duration-200
               ${activeRuleId === rule.id 
-                ? 'bg-highlight/30 border-primary shadow-md' 
+                ? 'bg-highlight/30 border-primary shadow-sm' 
                 : 'bg-rule border-border hover:bg-rule/80'
               }
               ${onRuleClick ? 'cursor-pointer' : ''}
             `}
             onClick={() => onRuleClick?.(rule.id)}
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <Badge 
                 variant={activeRuleId === rule.id ? "default" : "secondary"}
-                className="font-medium"
+                className="font-medium text-xs"
               >
                 {rule.name}
               </Badge>
             </div>
 
             {/* Rule Display */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               {rule.premises.length > 0 && (
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {rule.premises.map((premise, index) => (
                     <div key={index} className="text-center">
                       <KaTeXRenderer 
                         expression={premise} 
                         displayMode={false}
-                        className="text-sm"
+                        className="text-xs"
                       />
                     </div>
                   ))}
@@ -55,23 +55,17 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
               )}
               
               {rule.premises.length > 0 && (
-                <div className="border-t border-foreground/20 mx-4"></div>
+                <div className="border-t border-foreground/20 mx-2"></div>
               )}
               
               <div className="text-center">
                 <KaTeXRenderer 
                   expression={rule.conclusion} 
                   displayMode={false}
-                  className="font-medium"
+                  className="text-xs font-medium"
                 />
               </div>
             </div>
-
-            {rule.description && (
-              <p className="text-xs text-muted-foreground mt-3 italic">
-                {rule.description}
-              </p>
-            )}
           </div>
         ))}
       </CardContent>

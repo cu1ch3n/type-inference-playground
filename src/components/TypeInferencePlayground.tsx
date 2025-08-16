@@ -10,7 +10,7 @@ import { InferenceResult } from '@/types/inference';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('algorithm-w');
-  const [expression, setExpression] = useState<string>('λx.x');
+  const [expression, setExpression] = useState<string>('\\x. x');
   const [result, setResult] = useState<InferenceResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
@@ -103,10 +103,20 @@ export const TypeInferencePlayground = () => {
               onExpressionChange={setExpression}
               onInfer={handleInference}
               isInferring={isInferring}
+              selectedAlgorithm={selectedAlgorithm}
             />
           </div>
 
-          {/* Middle Column - Rules */}
+          {/* Middle Column - Derivation */}
+          <div>
+            <DerivationViewer
+              result={result}
+              activeStepId={activeStepId}
+              onStepClick={handleStepClick}
+            />
+          </div>
+
+          {/* Right Column - Rules */}
           <div>
             {selectedAlgorithmData && (
               <TypingRules
@@ -115,15 +125,6 @@ export const TypeInferencePlayground = () => {
                 onRuleClick={handleRuleClick}
               />
             )}
-          </div>
-
-          {/* Right Column - Derivation */}
-          <div>
-            <DerivationViewer
-              result={result}
-              activeStepId={activeStepId}
-              onStepClick={handleStepClick}
-            />
           </div>
         </div>
       </div>

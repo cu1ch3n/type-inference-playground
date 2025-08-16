@@ -8,33 +8,48 @@ All colors MUST be HSL. Mathematical typography optimized.
 
 @layer base {
   :root {
-    /* Nord Light Theme */
-    --background: 219 28% 88%;
-    --foreground: 220 16% 22%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 16% 22%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 16% 22%;
-    --primary: 213 32% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 22% 93%;
-    --secondary-foreground: 220 16% 22%;
-    --muted: 220 22% 93%;
-    --muted-foreground: 220 16% 36%;
-    --accent: 179 25% 65%;
-    --accent-foreground: 220 16% 22%;
-    --destructive: 354 42% 56%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 213 32% 52%;
+    /* Light Academic Theme */
+    --background: 0 0% 100%;
+    --foreground: 220 20% 20%;
 
-    /* Nord Light Variables */
-    --algorithm-bg: 220 22% 95%;
-    --rule-bg: 220 16% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 20%;
+
+    /* Soft Academic Primary */
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 70% 60%;
+
+    /* Light Secondary */
+    --secondary: 220 15% 95%;
+    --secondary-foreground: 220 20% 30%;
+
+    /* Soft Muted */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 20% 60%;
+
+    /* Light Accent */
+    --accent: 220 70% 95%;
+    --accent-foreground: 220 70% 40%;
+
+    /* Error/Destructive */
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Light Borders */
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 220 70% 50%;
+
+    /* Custom Light Variables */
+    --algorithm-bg: 220 70% 98%;
+    --rule-bg: 220 15% 98%;
     --derivation-bg: 0 0% 99%;
-    --code-bg: 220 16% 96%;
-    --highlight: 52 88% 75%;
+    --code-bg: 220 20% 98%;
+    --highlight: 50 100% 90%;
     
     /* Mathematical Typography */
     --math-font: 'Computer Modern', 'Latin Modern Math', serif;
@@ -71,33 +86,42 @@ All colors MUST be HSL. Mathematical typography optimized.
   }
 
   .dark {
-    /* Nord Dark Theme */
-    --background: 220 16% 22%;
-    --foreground: 218 27% 94%;
-    --card: 220 17% 17%;
-    --card-foreground: 218 27% 94%;
-    --popover: 220 17% 17%;
-    --popover-foreground: 218 27% 94%;
-    --primary: 213 32% 52%;
-    --primary-foreground: 218 27% 94%;
-    --secondary: 220 16% 28%;
-    --secondary-foreground: 218 27% 94%;
-    --muted: 220 16% 28%;
-    --muted-foreground: 220 17% 65%;
-    --accent: 179 25% 65%;
-    --accent-foreground: 220 16% 22%;
-    --destructive: 354 42% 56%;
-    --destructive-foreground: 218 27% 94%;
-    --border: 220 16% 28%;
-    --input: 220 16% 28%;
-    --ring: 213 32% 52%;
+    /* Dark Academic Theme */
+    --background: 215 28% 8%;
+    --foreground: 210 40% 95%;
+
+    --card: 215 28% 10%;
+    --card-foreground: 210 40% 95%;
+
+    --popover: 215 28% 10%;
+    --popover-foreground: 210 40% 95%;
+
+    --primary: 221 83% 65%;
+    --primary-foreground: 215 28% 8%;
+    --primary-glow: 221 83% 75%;
+
+    --secondary: 215 28% 15%;
+    --secondary-foreground: 210 40% 90%;
+
+    --muted: 215 28% 12%;
+    --muted-foreground: 215 16% 65%;
+
+    --accent: 221 83% 20%;
+    --accent-foreground: 221 83% 85%;
+
+    --destructive: 0 72% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 28% 18%;
+    --input: 215 28% 18%;
+    --ring: 221 83% 65%;
     
-    /* Nord Dark Variables */
-    --algorithm-bg: 220 16% 25%;
-    --rule-bg: 220 16% 26%;
-    --derivation-bg: 220 17% 19%;
-    --code-bg: 220 16% 26%;
-    --highlight: 14 51% 63%;
+    /* Dark Academic Variables */
+    --algorithm-bg: 221 83% 12%;
+    --rule-bg: 215 28% 12%;
+    --derivation-bg: 215 28% 9%;
+    --code-bg: 215 25% 11%;
+    --highlight: 45 100% 25%;
     
     /* Dark Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));

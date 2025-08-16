@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChevronRight, ChevronDown, TreePine, List } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { DerivationStep, InferenceResult } from '@/types/inference';
 
@@ -14,7 +15,7 @@ interface DerivationViewerProps {
 
 export const DerivationViewer = ({ result, onStepClick, activeStepId }: DerivationViewerProps) => {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
-  const viewMode = result?.algorithm?.derivationStyle || 'tree';
+  const [viewMode, setViewMode] = useState<'tree' | 'linear'>('tree');
 
   const toggleExpanded = (stepId: string) => {
     const newExpanded = new Set(expandedSteps);
@@ -179,7 +180,7 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
     <Card className="academic-panel">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Derivation ({viewMode === 'tree' ? 'Tree' : 'Linear'})</CardTitle>
+          <CardTitle>Derivation</CardTitle>
           {result.finalType && (
             <Badge variant="default" className="font-math">
               <KaTeXRenderer expression={result.finalType} />
@@ -188,15 +189,26 @@ export const DerivationViewer = ({ result, onStepClick, activeStepId }: Derivati
         </div>
       </CardHeader>
       <CardContent>
-        {viewMode === 'tree' ? (
-          <div className="space-y-3">
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'tree' | 'linear')}>
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="tree" className="flex items-center gap-2">
+              <TreePine className="w-4 h-4" />
+              Tree View
+            </TabsTrigger>
+            <TabsTrigger value="linear" className="flex items-center gap-2">
+              <List className="w-4 h-4" />
+              Linear View
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="tree" className="space-y-3">
             {result.derivation.map(step => renderTreeStep(step))}
-          </div>
-        ) : (
-          <div className="space-y-3">
+          </TabsContent>
+
+          <TabsContent value="linear" className="space-y-3">
             {linearSteps.map((step, index) => renderLinearStep(step, index))}
-          </div>
-        )}
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

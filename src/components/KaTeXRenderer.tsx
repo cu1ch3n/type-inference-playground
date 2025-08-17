@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface KaTeXRendererProps {
   expression: string;
@@ -18,6 +19,7 @@ export const KaTeXRenderer = ({
   isClickable = false
 }: KaTeXRendererProps) => {
   const ref = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (ref.current) {
@@ -40,10 +42,12 @@ export const KaTeXRenderer = ({
       ref={ref} 
       className={`
         math-text select-text
+        ${isMobile ? 'overflow-x-auto max-w-full' : ''}
         ${isClickable ? 'cursor-pointer hover:bg-highlight/20 rounded p-1 transition-colors' : ''}
         ${className}
       `}
       onClick={onClick}
+      style={isMobile ? { scrollbarWidth: 'thin' } : undefined}
     />
   );
 };

@@ -175,6 +175,42 @@ All colors MUST be HSL. Mathematical typography optimized.
   .katex-display {
     margin: 1em 0 !important;
   }
+
+  /* Mobile responsive KaTeX */
+  @media (max-width: 768px) {
+    .katex {
+      font-size: 0.9em !important;
+    }
+    
+    .katex-display {
+      font-size: 1em !important;
+      margin: 0.5em 0 !important;
+    }
+    
+    .math-text {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    /* Horizontal scroll for long formulas */
+    .math-text.overflow-x-auto {
+      scrollbar-width: thin;
+      scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
+    }
+    
+    .math-text.overflow-x-auto::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .math-text.overflow-x-auto::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .math-text.overflow-x-auto::-webkit-scrollbar-thumb {
+      background-color: hsl(var(--muted-foreground) / 0.5);
+      border-radius: 2px;
+    }
+  }
   
   /* Academic Panel Styling */
   .academic-panel {

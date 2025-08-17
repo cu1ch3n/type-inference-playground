@@ -264,13 +264,18 @@ export const algorithmExamples = {
       name: "Identity",
       expression: "\\x. x",
       description: "The identity function"
+    },
+    {
+      name: "Let-Polymorphism",
+      expression: "let id = (\\x. x) in (id 1, id True)",
+      description: "id can be instantiated with different types"
     }
   ],
   "WorklistDK": [
     {
       name: "Trivial Application",
       expression: "(\\x. x) 1",
-      description: ""
+      description: "Trivial function application of identity function to integer literal"
     }
   ]
 } as const;

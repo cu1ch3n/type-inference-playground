@@ -69,23 +69,28 @@ export const TypeInferencePlayground = () => {
   };
 
   const handleStepClick = (stepId: string) => {
-    setActiveStepId(activeStepId === stepId ? undefined : stepId);
+    const isToggling = activeStepId === stepId;
+    setActiveStepId(isToggling ? undefined : stepId);
     
-    // Find the step and highlight corresponding rule
-    const findStepRule = (steps: any[]): string | undefined => {
-      for (const step of steps) {
-        if (step.id === stepId) return step.ruleId;
-        if (step.children) {
-          const found = findStepRule(step.children);
-          if (found) return found;
+    if (!isToggling) {
+      // Find the step and highlight corresponding rule
+      const findStepRule = (steps: any[]): string | undefined => {
+        for (const step of steps) {
+          if (step.id === stepId) return step.ruleId;
+          if (step.children) {
+            const found = findStepRule(step.children);
+            if (found) return found;
+          }
         }
+        return undefined;
+      };
+      
+      if (result?.derivation) {
+        const ruleId = findStepRule(result.derivation);
+        if (ruleId) setActiveRuleId(ruleId);
       }
-      return undefined;
-    };
-    
-    if (result?.derivation) {
-      const ruleId = findStepRule(result.derivation);
-      if (ruleId) setActiveRuleId(ruleId);
+    } else {
+      setActiveRuleId(undefined);
     }
   };
 

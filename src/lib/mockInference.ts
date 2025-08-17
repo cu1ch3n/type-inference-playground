@@ -130,7 +130,7 @@ const generateWorklistDerivation = (expression: string): InferenceResult => {
         },
         {
           id: '7',
-          ruleId: 'InstLSolve ',
+          ruleId: 'InstLSolve',
           expression: "\\cdot \\vdash \\text{Out}(\\text{Int}), \\hat{\\alpha}, \\hat{\\beta} \\vdash \\hat{\\alpha} \\to \\hat{\\beta} \\bullet 1 \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a a \\le \\text{Int}, x:\\hat{\\alpha} \\vdash \\hat{\\alpha} \\le \\hat{\\beta}"
         },
         {
@@ -162,11 +162,6 @@ const generateWorklistDerivation = (expression: string): InferenceResult => {
           id: '13',
           ruleId: 'SUnit',
           expression: "\\cdot \\vdash \\text{Out}(\\text{Int}) \\vdash \\text{Int} \\le \\text{Int}"
-        },
-        {
-          id: '14',
-          ruleId: 'Out',
-          expression: "\\cdot \\vdash \\text{Out}(\\text{Int})"
         }
       ]
     };

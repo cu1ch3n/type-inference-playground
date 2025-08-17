@@ -44,8 +44,8 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
                   />
                 </div>
                 <Badge 
-                  variant={activeRuleId === rule.id ? "default" : "outline"}
-                  className="ml-3 text-xs"
+                  variant={activeRuleId === rule.id ? "default" : "secondary"}
+                  className="font-medium text-xs"
                 >
                   {rule.name}
                 </Badge>

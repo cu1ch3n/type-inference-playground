@@ -69,8 +69,44 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
   if (expression.match(/^\\x\.\s*x\s+x$/)) {
     return {
       success: false,
-      error: 'Cannot unify a with a \\to b (occurs check)',
-      derivation: []
+      error: 'a1 occurs in a_{1} \\to b_{2}',
+      derivation: [
+        {
+          ruleId: 'Debug',
+          expression: ' \\vdash \\lambda x.~x~x',
+          children: []
+        },
+        {
+          ruleId: 'Debug', 
+          expression: 'x: a_{1} \\vdash x~x',
+          children: []
+        },
+        {
+          ruleId: 'Debug',
+          expression: 'x: a_{1} \\vdash x',
+          children: []
+        },
+        {
+          ruleId: 'Debug',
+          expression: 'x: a_{1} \\vdash x : a_{1}, \\emptyset',
+          children: []
+        },
+        {
+          ruleId: 'Debug',
+          expression: 'x: a_{1} \\vdash x',
+          children: []
+        },
+        {
+          ruleId: 'Debug',
+          expression: 'x: a_{1} \\vdash x : a_{1}, \\emptyset',
+          children: []
+        },
+        {
+          ruleId: 'Debug',
+          expression: 'Unifying: a_{1} ~ a_{1} \\to b_{2}',
+          children: []
+        }
+      ]
     };
   }
 

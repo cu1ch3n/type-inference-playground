@@ -22,8 +22,8 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
       <div
         key={stepPath.join('-')}
         className={`
-          derivation-step p-2 rounded-lg font-mono transition-colors
-          ${isActive ? 'bg-yellow-100 border-2 border-yellow-400' : 'hover:bg-muted/30'}
+          derivation-step p-2 rounded-lg font-mono transition-all duration-200
+          ${isActive ? 'bg-highlight/30 border-primary shadow-sm border' : 'hover:bg-muted/30'}
           ${onStepClick ? 'cursor-pointer' : ''}
         `}
         onClick={() => onStepClick?.(stepPath)}

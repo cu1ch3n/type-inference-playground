@@ -12,48 +12,40 @@ interface TypingRulesProps {
 
 export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesProps) => {
   return (
-    <Card className="academic-panel animate-fade-in hover-lift">
+    <Card className="academic-panel">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+        <CardTitle className="flex items-center gap-2">
           <BookOpen className="w-4 h-4" />
           Algorithmic Rules
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
+      <CardContent>
         {/* Reduction rules - single lines */}
         {rules.some(rule => rule.reduction) && (
-          <div className="space-y-2 mb-4 animate-slide-up">
+          <div className="space-y-2 mb-4">
             {rules.filter(rule => rule.reduction).map((rule) => (
               <div
                 key={rule.id}
                 className={`
-                  flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded border 
-                  transition-all duration-200 focus-ring
+                  flex items-center justify-between p-2 rounded border transition-all duration-200
                   ${activeRuleId === rule.id 
-                    ? 'bg-highlight/30 border-primary shadow-sm animate-scale-in' 
-                    : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
+                    ? 'bg-highlight/30 border-primary shadow-sm' 
+                    : 'bg-rule border-border hover:bg-rule/80'
                   }
-                  ${onRuleClick ? 'cursor-pointer hover:scale-[1.02]' : ''}
+                  ${onRuleClick ? 'cursor-pointer' : ''}
                 `}
                 onClick={() => onRuleClick?.(rule.id)}
-                tabIndex={onRuleClick ? 0 : undefined}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onRuleClick?.(rule.id);
-                  }
-                }}
               >
-                <div className="flex-1 min-w-0">
+                <div className="flex-1">
                   <KaTeXRenderer 
                     expression={rule.reduction!} 
                     displayMode={false}
-                    className="text-xs sm:text-sm break-all"
+                    className="text-sm"
                   />
                 </div>
                 <Badge 
                   variant={activeRuleId === rule.id ? "default" : "secondary"}
-                  className="font-medium text-xs self-start sm:self-center"
+                  className="font-medium text-xs"
                 >
                   {rule.name}
                 </Badge>
@@ -64,26 +56,19 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
         {/* Traditional premise/conclusion rules - grid layout */}
         {rules.some(rule => !rule.reduction) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 animate-slide-up">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {rules.filter(rule => !rule.reduction).map((rule) => (
               <div
                 key={rule.id}
                 className={`
-                  p-2 sm:p-3 rounded border transition-all duration-200 focus-ring
+                  p-3 rounded border transition-all duration-200
                   ${activeRuleId === rule.id 
-                    ? 'bg-highlight/30 border-primary shadow-sm animate-scale-in' 
-                    : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
+                    ? 'bg-highlight/30 border-primary shadow-sm' 
+                    : 'bg-rule border-border hover:bg-rule/80'
                   }
-                  ${onRuleClick ? 'cursor-pointer hover:scale-[1.02] hover-lift' : ''}
+                  ${onRuleClick ? 'cursor-pointer' : ''}
                 `}
                 onClick={() => onRuleClick?.(rule.id)}
-                tabIndex={onRuleClick ? 0 : undefined}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onRuleClick?.(rule.id);
-                  }
-                }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <Badge 

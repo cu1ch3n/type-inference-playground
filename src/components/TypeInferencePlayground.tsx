@@ -4,6 +4,7 @@ import { Navbar } from './Navbar';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
 import { TypingRules } from './TypingRules';
+import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
@@ -82,6 +83,11 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background">
         {/* Main Content */}
         <div className="container mx-auto px-6 py-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Type Inference Playground</h1>
+            <WasmStatusIndicator />
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
             <div className="lg:col-span-2 space-y-6">

@@ -23,85 +23,97 @@ export interface InferenceResponse {
 }
 
 export class WasmTypeInference {
-  private wasmServiceUrl: string;
+  private wasmModule: WebAssembly.Instance | null = null;
+  private wasmUrl: string;
   private isInitialized = false;
   
-  constructor(serviceUrl = 'https://wasm.zoo.cuichen.cc') {
-    this.wasmServiceUrl = serviceUrl;
+  constructor(wasmUrl = 'https://wasm.zoo.cuichen.cc/inference.wasm') {
+    this.wasmUrl = wasmUrl;
     // eslint-disable-next-line no-console
-    console.log(`WASM service configured for: ${this.wasmServiceUrl}`);
+    console.log(`WASM configured for: ${this.wasmUrl}`);
   }
 
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
     try {
-      // Test connection to WASM service
-      const response = await fetch(`${this.wasmServiceUrl}/health`, {
-        method: 'GET',
+      // Load WASM file directly
+      const response = await fetch(this.wasmUrl, {
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        cache: 'default'
       });
       
-      if (response.ok) {
-        this.isInitialized = true;
-        // eslint-disable-next-line no-console
-        console.log(`✅ WASM service connected: ${this.wasmServiceUrl}`);
-        return true;
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn(`WASM service not available: ${response.status}`);
-        return false;
+      if (!response.ok) {
+        throw new Error(`Failed to fetch WASM: ${response.status}`);
       }
+      
+      const wasmBytes = await response.arrayBuffer();
+      const wasmModule = await WebAssembly.instantiate(wasmBytes, {
+        env: {
+          // Provide any imports your WASM module needs
+          memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+          __linear_memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+          abort: () => { throw new Error('WASM abort called'); }
+        }
+      });
+      
+      this.wasmModule = wasmModule.instance;
+      this.isInitialized = true;
+      
+      // eslint-disable-next-line no-console
+      console.log(`✅ WASM module loaded: ${this.wasmUrl}`);
+      return true;
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Failed to connect to WASM service:', error);
+      console.error('Failed to load WASM module:', error);
       return false;
     }
   }
 
   async runInference(request: InferenceRequest): Promise<InferenceResponse> {
     if (!this.isInitialized) {
-      // Try to initialize if not already done
       const initialized = await this.initialize();
       if (!initialized) {
-        throw new Error('WASM service not available');
+        throw new Error('WASM module not available');
       }
     }
 
     try {
-      const response = await fetch(`${this.wasmServiceUrl}/inference`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(request),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!this.wasmModule) {
+        throw new Error('WASM module not loaded');
       }
 
-      const result: InferenceResponse = await response.json();
-      return result;
+      // Call WASM function (adjust function name based on your WASM exports)
+      const exports = this.wasmModule.exports as any;
+      
+      if (typeof exports.run_inference === 'function') {
+        // Convert JS string to WASM memory and call function
+        // This is a simplified example - you'll need to implement proper string/memory handling
+        const result = exports.run_inference(request.algorithm, request.expression);
+        
+        return {
+          success: true,
+          result: { type: result?.toString() || 'unknown' },
+          steps: []
+        };
+      } else {
+        throw new Error('WASM function run_inference not found');
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('WASM inference error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
+        error: error instanceof Error ? error.message : 'Unknown WASM error',
       };
     }
   }
 
   destroy() {
+    this.wasmModule = null;
     this.isInitialized = false;
     // eslint-disable-next-line no-console
-    console.log('WASM service connection closed');
+    console.log('WASM module unloaded');
   }
 }
 

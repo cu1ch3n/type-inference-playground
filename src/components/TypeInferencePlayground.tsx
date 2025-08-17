@@ -47,7 +47,7 @@ export const TypeInferencePlayground = () => {
     setActiveRuleId(isToggling ? undefined : ruleId);
     
     if (!isToggling) {
-      // Always clear step selection and set the rule as active
+      // Always clear step selection when clicking a rule
       setActiveStepPath(undefined);
       
       // Check if this rule is actually used in the derivation
@@ -59,10 +59,22 @@ export const TypeInferencePlayground = () => {
         return false;
       };
       
-      // Always set the active rule (even if not used in derivation)
-      // The visual highlighting will be handled by checking if step.ruleId === activeRuleId
+      if (result?.derivation) {
+        if (isRuleUsedInDerivation(result.derivation)) {
+          // Rule is used in derivation - set it as active (this will highlight all matching steps)
+          setActiveRuleId(ruleId);
+        } else {
+          // Rule is not used in derivation - clear everything
+          setActiveRuleId(undefined);
+        }
+      } else {
+        // No derivation - clear everything
+        setActiveRuleId(undefined);
+      }
     } else {
+      // Toggling off - clear everything
       setActiveStepPath(undefined);
+      setActiveRuleId(undefined);
     }
   };
 
@@ -94,7 +106,13 @@ export const TypeInferencePlayground = () => {
       if (result?.derivation) {
         const step = findStepAtPath(result.derivation, stepPath);
         if (step?.ruleId) {
-          setActiveRuleId(step.ruleId);
+          // Clear activeRuleId if it's different from the clicked step's rule
+          if (activeRuleId && activeRuleId !== step.ruleId) {
+            setActiveRuleId(undefined);
+          } else if (!activeRuleId) {
+            // Set the rule if no rule is currently active
+            setActiveRuleId(step.ruleId);
+          }
         }
       }
     } else {

@@ -33,6 +33,7 @@ export interface InferenceResult {
   finalType?: string;
   derivation: DerivationStep[];
   error?: string;
+  errorLatex?: boolean;
 }
 
 export interface LambdaExpression {

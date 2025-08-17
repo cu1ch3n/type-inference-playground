@@ -72,17 +72,14 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-card': 'var(--gradient-card)',
-				'gradient-subtle': 'var(--gradient-subtle)',
-				'gradient-hero': 'var(--gradient-hero)'
+				'gradient-card': 'var(--gradient-card)'
 			},
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
 				'card': 'var(--shadow-card)',
 				'material-1': 'var(--shadow-material-1)',
 				'material-2': 'var(--shadow-material-2)',
-				'material-3': 'var(--shadow-material-3)',
-				'glow': 'var(--shadow-glow)'
+				'material-3': 'var(--shadow-material-3)'
 			},
 			fontFamily: {
 				'sans': ['Roboto', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
@@ -92,8 +89,7 @@ export default {
 				'code': 'var(--code-font)'
 			},
 			transitionTimingFunction: {
-				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
-				'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

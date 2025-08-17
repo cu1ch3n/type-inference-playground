@@ -16,7 +16,7 @@ export const TypeInferencePlayground = () => {
   const [result, setResult] = useState<InferenceResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
-  const [activeStepId, setActiveStepId] = useState<string | undefined>();
+  const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
@@ -25,7 +25,7 @@ export const TypeInferencePlayground = () => {
     
     setIsInferring(true);
     setActiveRuleId(undefined);
-    setActiveStepId(undefined);
+    setActiveStepPath(undefined);
     
     try {
       const inferenceResult = await runInference(selectedAlgorithm, expression);
@@ -48,11 +48,13 @@ export const TypeInferencePlayground = () => {
     
     if (!isToggling) {
       // Find the first step that uses this rule and highlight it
-      const findStepByRule = (steps: any[]): string | undefined => {
-        for (const step of steps) {
-          if (step.ruleId === ruleId) return step.id;
+      const findStepByRule = (steps: any[], basePath: number[] = []): number[] | undefined => {
+        for (let i = 0; i < steps.length; i++) {
+          const step = steps[i];
+          const currentPath = [...basePath, i];
+          if (step.ruleId === ruleId) return currentPath;
           if (step.children) {
-            const found = findStepByRule(step.children);
+            const found = findStepByRule(step.children, currentPath);
             if (found) return found;
           }
         }
@@ -60,34 +62,35 @@ export const TypeInferencePlayground = () => {
       };
       
       if (result?.derivation) {
-        const stepId = findStepByRule(result.derivation);
-        if (stepId) setActiveStepId(stepId);
+        const stepPath = findStepByRule(result.derivation);
+        if (stepPath) setActiveStepPath(stepPath);
       }
     } else {
-      setActiveStepId(undefined);
+      setActiveStepPath(undefined);
     }
   };
 
-  const handleStepClick = (stepId: string) => {
-    const isToggling = activeStepId === stepId;
-    setActiveStepId(isToggling ? undefined : stepId);
+  const handleStepClick = (stepPath: number[]) => {
+    const isToggling = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
+    setActiveStepPath(isToggling ? undefined : stepPath);
     
     if (!isToggling) {
       // Find the step and highlight corresponding rule
-      const findStepRule = (steps: any[]): string | undefined => {
-        for (const step of steps) {
-          if (step.id === stepId) return step.ruleId;
-          if (step.children) {
-            const found = findStepRule(step.children);
-            if (found) return found;
+      const findStepAtPath = (steps: any[], path: number[]): any | undefined => {
+        let current = steps;
+        for (const index of path) {
+          if (!current[index]) return undefined;
+          if (path.indexOf(index) === path.length - 1) {
+            return current[index];
           }
+          current = current[index].children || [];
         }
         return undefined;
       };
       
       if (result?.derivation) {
-        const ruleId = findStepRule(result.derivation);
-        if (ruleId) setActiveRuleId(ruleId);
+        const step = findStepAtPath(result.derivation, stepPath);
+        if (step?.ruleId) setActiveRuleId(step.ruleId);
       }
     } else {
       setActiveRuleId(undefined);
@@ -144,7 +147,7 @@ export const TypeInferencePlayground = () => {
               <DerivationViewer
                 result={result}
                 algorithm={selectedAlgorithmData}
-                activeStepId={activeStepId}
+                activeStepPath={activeStepPath}
                 onStepClick={handleStepClick}
               />
               

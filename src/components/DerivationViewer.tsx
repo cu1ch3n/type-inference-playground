@@ -9,28 +9,28 @@ import { GitBranch, Activity, TreePine, Zap } from 'lucide-react';
 interface DerivationViewerProps {
   result?: InferenceResult;
   algorithm?: TypeInferenceAlgorithm;
-  onStepClick?: (stepId: string) => void;
-  activeStepId?: string;
+  onStepClick?: (stepPath: number[]) => void;
+  activeStepPath?: number[];
 }
 
-export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId }: DerivationViewerProps) => {
+export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPath }: DerivationViewerProps) => {
 
-  const renderLinearStep = (step: DerivationStep, index: number) => {
-    const isActive = activeStepId === step.id;
+  const renderLinearStep = (step: DerivationStep, stepPath: number[]) => {
+    const isActive = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
 
     return (
       <div
-        key={step.id}
+        key={stepPath.join('-')}
         className={`
           derivation-step p-2 rounded-lg font-mono transition-colors
           ${isActive ? 'bg-yellow-100 border-2 border-yellow-400' : 'hover:bg-muted/30'}
           ${onStepClick ? 'cursor-pointer' : ''}
         `}
-        onClick={() => onStepClick?.(step.id)}
+        onClick={() => onStepClick?.(stepPath)}
       >
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-xs min-w-[2rem] shrink-0 text-center font-mono">
-            {(index + 1).toString().padStart(2, ' ')}
+            {(stepPath[stepPath.length - 1] + 1).toString().padStart(2, ' ')}
           </Badge>
           
           <div className="flex-1 min-w-0">
@@ -49,15 +49,15 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
     );
   };
 
-  const flattenSteps = (steps: DerivationStep[]): DerivationStep[] => {
-    const result: DerivationStep[] = [];
-    const visit = (step: DerivationStep) => {
-      result.push(step);
+  const flattenSteps = (steps: DerivationStep[]): Array<{step: DerivationStep, path: number[]}> => {
+    const result: Array<{step: DerivationStep, path: number[]}> = [];
+    const visit = (step: DerivationStep, path: number[]) => {
+      result.push({step, path});
       if (step.children) {
-        step.children.forEach(visit);
+        step.children.forEach((child, index) => visit(child, [...path, index]));
       }
     };
-    steps.forEach(visit);
+    steps.forEach((step, index) => visit(step, [index]));
     return result;
   };
 
@@ -134,12 +134,12 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
           <TreeViewer 
             steps={result.derivation}
             onStepClick={onStepClick}
-            activeStepId={activeStepId}
+            activeStepPath={activeStepPath}
             expandedByDefault={true}
           />
         ) : (
           <div className="space-y-1">
-            {linearSteps.map((step, index) => renderLinearStep(step, index))}
+            {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
           </div>
         )}
       </CardContent>

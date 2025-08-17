@@ -23,7 +23,6 @@ export interface TypingRule {
 }
 
 export interface DerivationStep {
-  id: string;
   ruleId: string;
   expression: string;
   children?: DerivationStep[];

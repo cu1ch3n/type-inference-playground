@@ -6,27 +6,28 @@ import { DerivationStep } from '@/types/inference';
 
 interface TreeViewerProps {
   steps: DerivationStep[];
-  onStepClick?: (stepId: string) => void;
-  activeStepId?: string;
+  onStepClick?: (stepPath: number[]) => void;
+  activeStepPath?: number[];
   expandedByDefault?: boolean;
 }
 
 export const TreeViewer = ({ 
   steps, 
   onStepClick, 
-  activeStepId, 
+  activeStepPath, 
   expandedByDefault = true 
 }: TreeViewerProps) => {
   const initializeExpandedSteps = () => {
     if (!expandedByDefault) return new Set<string>();
     const expanded = new Set<string>();
-    const addAllIds = (steps: DerivationStep[]) => {
-      steps.forEach(step => {
-        expanded.add(step.id);
-        if (step.children) addAllIds(step.children);
+    const addAllPaths = (steps: DerivationStep[], basePath: number[] = []) => {
+      steps.forEach((step, index) => {
+        const path = [...basePath, index];
+        expanded.add(path.join('-'));
+        if (step.children) addAllPaths(step.children, path);
       });
     };
-    addAllIds(steps);
+    addAllPaths(steps);
     return expanded;
   };
   
@@ -39,39 +40,40 @@ export const TreeViewer = ({
     }
   }, [steps, expandedByDefault]);
 
-  const toggleExpanded = (stepId: string) => {
+  const toggleExpanded = (stepPath: string) => {
     const newExpanded = new Set(expandedSteps);
-    if (newExpanded.has(stepId)) {
-      newExpanded.delete(stepId);
+    if (newExpanded.has(stepPath)) {
+      newExpanded.delete(stepPath);
     } else {
-      newExpanded.add(stepId);
+      newExpanded.add(stepPath);
     }
     setExpandedSteps(newExpanded);
   };
 
-  const renderTreeNode = (step: DerivationStep, isLast = false) => {
-    const isExpanded = expandedSteps.has(step.id);
+  const renderTreeNode = (step: DerivationStep, path: number[], isLast = false) => {
+    const pathKey = path.join('-');
+    const isExpanded = expandedSteps.has(pathKey);
     const hasChildren = step.children && step.children.length > 0;
-    const isActive = activeStepId === step.id;
+    const isActive = activeStepPath && activeStepPath.join('-') === pathKey;
 
     return (
-      <li key={step.id} className="relative">
+      <li key={pathKey} className="relative">
         <div
           className={`
             flex items-center gap-2 py-1 pr-2 rounded transition-colors
             ${isActive ? 'bg-yellow-100 border-2 border-yellow-400' : 'hover:bg-muted/40'}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
-          onClick={() => onStepClick?.(step.id)}
+          onClick={() => onStepClick?.(path)}
         >
           {/* Expand/collapse button */}
           <div className="flex items-center justify-center w-5 h-5 shrink-0">
             {hasChildren ? (
-              <button
+                <button
                 className="w-4 h-4 flex items-center justify-center rounded hover:bg-muted-foreground/20 transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleExpanded(step.id);
+                  toggleExpanded(pathKey);
                 }}
               >
                 {isExpanded ? (
@@ -107,7 +109,7 @@ export const TreeViewer = ({
         {hasChildren && isExpanded && step.children && (
           <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-0.5 space-y-0.5">
             {step.children.map((child, index) => 
-              renderTreeNode(child, index === step.children!.length - 1)
+              renderTreeNode(child, [...path, index], index === step.children!.length - 1)
             )}
           </ul>
         )}
@@ -119,7 +121,7 @@ export const TreeViewer = ({
     <div className="tree-view">
       <ul className="space-y-0.5">
         {steps.map((step, index) => 
-          renderTreeNode(step, index === steps.length - 1)
+          renderTreeNode(step, [index], index === steps.length - 1)
         )}
       </ul>
     </div>

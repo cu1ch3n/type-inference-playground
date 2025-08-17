@@ -86,29 +86,9 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
     );
   }
 
-  if (!result.success) {
-    return (
-      <Card className="academic-panel">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <GitBranch className="w-4 h-4" />
-            Derivation
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-destructive font-medium">Type Error</p>
-            <p className="text-sm text-destructive/80 mt-1">
-              {result.error || 'Unknown type error'}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   const viewMode = algorithm?.viewMode || 'tree';
   const linearSteps = flattenSteps(result.derivation);
+  const hasDerivation = result.derivation && result.derivation.length > 0;
 
   return (
     <Card className="academic-panel">
@@ -132,18 +112,45 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
         </div>
         <Separator className="mt-4" />
       </CardHeader>
-      <CardContent>
-        {viewMode === 'tree' ? (
-          <TreeViewer 
-            steps={result.derivation}
-            onStepClick={onStepClick}
-            activeStepPath={activeStepPath}
-            activeRuleId={activeRuleId}
-            expandedByDefault={true}
-          />
-        ) : (
-          <div className="space-y-1">
-            {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
+      <CardContent className="space-y-4">
+        {/* Show error if present */}
+        {!result.success && result.error && (
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-destructive font-medium">Type Error</p>
+            <p className="text-sm text-destructive/80 mt-1">
+              {result.error}
+            </p>
+          </div>
+        )}
+        
+        {/* Show derivation if available */}
+        {hasDerivation && (
+          <>
+            {!result.success && (
+              <div className="text-sm text-muted-foreground mb-2">
+                Partial derivation before error:
+              </div>
+            )}
+            {viewMode === 'tree' ? (
+              <TreeViewer 
+                steps={result.derivation}
+                onStepClick={onStepClick}
+                activeStepPath={activeStepPath}
+                activeRuleId={activeRuleId}
+                expandedByDefault={true}
+              />
+            ) : (
+              <div className="space-y-1">
+                {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
+              </div>
+            )}
+          </>
+        )}
+        
+        {/* Show message if no derivation available */}
+        {!hasDerivation && result.success && (
+          <div className="flex flex-col items-center justify-center h-32 text-muted-foreground">
+            <p className="text-sm">No derivation steps available</p>
           </div>
         )}
       </CardContent>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, ChevronDown, Circle } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
@@ -31,6 +31,13 @@ export const TreeViewer = ({
   };
   
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(initializeExpandedSteps());
+
+  // Re-initialize expanded steps when steps change and expandedByDefault is true
+  useEffect(() => {
+    if (expandedByDefault && steps.length > 0) {
+      setExpandedSteps(initializeExpandedSteps());
+    }
+  }, [steps, expandedByDefault]);
 
   const toggleExpanded = (stepId: string) => {
     const newExpanded = new Set(expandedSteps);

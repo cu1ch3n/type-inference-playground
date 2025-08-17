@@ -116,7 +116,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
         {/* Show error if present */}
         {!result.success && result.error && (
           <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-destructive font-medium">Type Error</p>
+            <p className="text-destructive font-medium">Error</p>
             <div className="text-sm text-destructive/80 mt-1">
               <KaTeXRenderer 
                 expression={result.error} 

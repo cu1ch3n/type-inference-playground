@@ -8,9 +8,9 @@ export const runInference = async (algorithm: string, expression: string): Promi
   const cleanExpression = expression.trim().replace(/\s+/g, ' ');
   
   // Generate mock derivation based on expression pattern
-  if (algorithm === 'algorithm-w') {
+  if (algorithm === 'AlgW') {
     return generateAlgorithmWDerivation(cleanExpression);
-  } else if (algorithm === 'worklist') {
+  } else if (algorithm === 'WorklistDK') {
     return generateWorklistDerivation(cleanExpression);
   }
   
@@ -37,35 +37,6 @@ const generateAlgorithmWDerivation = (expression: string): InferenceResult => {
               id: '2',
               ruleId: 'Var',
               expression: 'x: a \\vdash x : a'
-            }
-          ]
-        }
-      ]
-    };
-  }
-
-  // Constant function
-  if (expression.match(/^\\x\.\s*\\y\.\s*x$/)) {
-    return {
-      success: true,
-      finalType: 'a \\to b \\to a',
-      derivation: [
-        {
-          id: '1',
-          ruleId: 'Abs',
-          expression: '\\vdash \\lambda x.~\\lambda y.~x : a \\to b \\to a',
-          children: [
-            {
-              id: '2',
-              ruleId: 'Abs',
-              expression: 'x: a \\vdash \\lambda y.~x : b \\to a',
-              children: [
-                {
-                  id: '3',
-                  ruleId: 'Var',
-                  expression: 'x: a, y: b \\vdash x : a'
-                }
-              ]
             }
           ]
         }

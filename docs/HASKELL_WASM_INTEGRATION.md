@@ -420,14 +420,14 @@ algorithmW env expr = case runInfer (infer env expr) of
     , finalType = Nothing
     , derivation = []
     , errors = [err]
-    , metadata = ResultMetadata "algorithm-w" 0 0 True
+    , metadata = ResultMetadata "AlgW" 0 0 True
     }
   Right ((subst, typ), state) -> InferenceResult
     { success = True
     , finalType = Just $ apply subst typ
     , derivation = reverse $ inferSteps state
     , errors = []
-    , metadata = ResultMetadata "algorithm-w" 0 (length $ inferSteps state) True
+    , metadata = ResultMetadata "AlgW" 0 (length $ inferSteps state) True
     }
 ```
 
@@ -476,14 +476,14 @@ worklistInference env expr = case runWorklist (generateConstraints env expr >>= 
     , finalType = Nothing
     , derivation = []
     , errors = [err]
-    , metadata = ResultMetadata "worklist" 0 0 True
+    , metadata = ResultMetadata "WorklistDK" 0 0 True
     }
   Right (typ, state) -> InferenceResult
     { success = True
     , finalType = Just typ
     , derivation = reverse $ wlSteps state
     , errors = []
-    , metadata = ResultMetadata "worklist" 0 (length $ wlSteps state) True
+    , metadata = ResultMetadata "WorklistDK" 0 (length $ wlSteps state) True
     }
 
 generateConstraints :: TypeEnv -> Expr -> WorklistM (Type, Worklist)
@@ -574,8 +574,8 @@ processInference input = case decode (L8.pack input) of
     Right expr -> runAlgorithm (reqAlgorithm req) expr
 
 runAlgorithm :: Text -> Expr -> InferenceResult
-runAlgorithm "algorithm-w" expr = algorithmW baseEnv expr
-runAlgorithm "worklist" expr = worklistInference baseEnv expr
+runAlgorithm "AlgW" expr = algorithmW baseEnv expr
+runAlgorithm "WorklistDK" expr = worklistInference baseEnv expr
 runAlgorithm alg _ = InferenceResult
   { success = False
   , finalType = Nothing
@@ -1195,7 +1195,7 @@ describe('Haskell WASM Integration', () => {
   });
 
   it('should infer identity function type', async () => {
-    const result = await haskellWasm.runInference('algorithm-w', '\\x. x');
+    const result = await haskellWasm.runInference('AlgW', '\\x. x');
     
     expect(result.success).toBe(true);
     expect(result.finalType).toMatch(/^[a-z]+ → [a-z]+$/);
@@ -1203,7 +1203,7 @@ describe('Haskell WASM Integration', () => {
   });
 
   it('should handle parsing errors', async () => {
-    const result = await haskellWasm.runInference('algorithm-w', '\\x.');
+    const result = await haskellWasm.runInference('AlgW', '\\x.');
     
     expect(result.success).toBe(false);
     expect(result.errors).toHaveLength(1);
@@ -1211,7 +1211,7 @@ describe('Haskell WASM Integration', () => {
   });
 
   it('should handle type errors', async () => {
-    const result = await haskellWasm.runInference('algorithm-w', '(\\x. x) (\\x. x)');
+    const result = await haskellWasm.runInference('AlgW', '(\\x. x) (\\x. x)');
     
     expect(result.success).toBe(false);
     expect(result.errors).toHaveLength(1);
@@ -1238,11 +1238,11 @@ describe('Performance Comparison', () => {
 
   expressions.forEach(expr => {
     bench(`WASM: ${expr}`, async () => {
-      await haskellWasm.runInference('algorithm-w', expr);
+      await haskellWasm.runInference('AlgW', expr);
     });
 
     bench(`JS: ${expr}`, async () => {
-      await jsInference('algorithm-w', expr);
+      await jsInference('AlgW', expr);
     });
   });
 });

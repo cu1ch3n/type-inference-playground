@@ -13,7 +13,7 @@ The type inference playground supports WASM modules for performance-critical typ
 {
   "type": "inference_request",
   "data": {
-    "algorithm": "algorithm-w",
+    "algorithm": "AlgW",
     "expression": "\\x. x",
     "options": {
       "showSteps": true,
@@ -88,7 +88,7 @@ pub fn run_inference(request_json: &str) -> String {
     
     // Your type inference logic here
     let response = match request.algorithm.as_str() {
-        "algorithm-w" => run_algorithm_w(&request.expression),
+        "AlgW" => run_algorithm_w(&request.expression),
         "bidirectional" => run_bidirectional(&request.expression),
         _ => InferenceResponse {
             success: false,

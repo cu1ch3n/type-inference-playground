@@ -25,7 +25,7 @@ export const Navbar = () => {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={() => window.open('https://github.com/your-repo/type-inference-zoo', '_blank')}
+            onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo', '_blank')}
           >
             <Github className="w-4 h-4" />
           </Button>

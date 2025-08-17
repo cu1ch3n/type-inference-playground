@@ -2,7 +2,7 @@ import { TypeInferenceAlgorithm } from "@/types/inference";
 
 export const algorithms: TypeInferenceAlgorithm[] = [
   {
-    id: "algorithm-w",
+    id: "AlgW",
     name: "Algorithm W",
     labels: ["Global", "Unification", "Hindley-Milner", "Principal Types"],
     viewMode: "tree",
@@ -40,8 +40,8 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     ]
   },
   {
-    id: "worklist",
-    name: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
+    id: "WorklistDK",
+    name: "Worklist (Dunfield-Krishnaswami)",
     labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist"],
     viewMode: "linear",
     paper: {
@@ -259,14 +259,14 @@ export const algorithms: TypeInferenceAlgorithm[] = [
 ];
 
 export const algorithmExamples = {
-  "algorithm-w": [
+  "AlgW": [
     {
       name: "Identity",
       expression: "\\x. x",
       description: "The identity function"
     }
   ],
-  "worklist": [
+  "WorklistDK": [
     {
       name: "Trivial Application",
       expression: "(\\x. x) 1",

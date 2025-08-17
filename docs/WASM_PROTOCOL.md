@@ -4,7 +4,7 @@
 The frontend loads a pure WASM module directly from `wasm.zoo.cuichen.cc/inference.wasm` and calls its exported functions like a command-line tool.
 
 ## WASM File Loading
-- **URL**: `https://wasm.zoo.cuichen.cc/inference.wasm`
+- **URL**: `https://files.cuichen.cc/infer.wasm`
 - **Method**: Direct WebAssembly.instantiate() 
 - **Memory**: 256-512 pages allocated for WASM module
 - **Status Indicator**: Shows connection status (disconnected/connecting/connected/error)
@@ -34,7 +34,7 @@ export function run_inference(algorithm: string, expression: string) -> string;
 - **Memory**: Expects `env.memory` import (256-512 pages)
 - **String Handling**: Should handle UTF-8 string conversion
 - **Error Handling**: Return JSON with `{"success": false, "error": "message"}`
-- **CORS**: Your CDN should allow cross-origin requests from `zoo.cuichen.cc`
+- **CORS**: Your CDN should allow cross-origin requests from the frontend domain
 
 ## Example WASM Output
 ```json
@@ -53,7 +53,7 @@ The green/yellow/red dot shows:
 - ⚫ **Disconnected**: Initial state
 
 ## Testing
-1. Upload your `inference.wasm` to `wasm.zoo.cuichen.cc/`
+1. Upload your `infer.wasm` to `files.cuichen.cc/`
 2. Ensure proper CORS headers for cross-origin loading
 3. Test function exports match expected interface
 4. Verify memory allocation works correctly

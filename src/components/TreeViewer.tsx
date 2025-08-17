@@ -52,7 +52,6 @@ export const TreeViewer = ({
         <div
           className={`
             flex items-center gap-2 py-1 pr-2 rounded transition-colors hover:bg-muted/40
-            ${isActive ? 'bg-primary/10 border border-primary/20' : ''}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
           onClick={() => onStepClick?.(step.id)}

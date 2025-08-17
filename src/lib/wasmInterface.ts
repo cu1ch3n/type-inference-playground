@@ -94,6 +94,11 @@ export class WasmTypeInference {
 
       // Parse output as JSON or return as text
       const output = this.outputBuffer.trim();
+
+      console.log(output);
+      console.log(this.outputBuffer);
+      console.log(request.algorithm);
+      console.log(request.expression);
       try {
         const result = JSON.parse(output);
         return {

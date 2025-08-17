@@ -5,7 +5,7 @@ export const runInference = async (algorithm: string, expression: string): Promi
   // Try WASM service first, fallback to mock if unavailable
   try {
     const wasmResult = await wasmInference.runInference({
-      algorithm: algorithm.toLowerCase(),
+      algorithm: algorithm,
       expression,
       options: { showSteps: true, maxDepth: 100 }
     });
@@ -34,7 +34,7 @@ export const runInference = async (algorithm: string, expression: string): Promi
   const cleanExpression = expression.trim().replace(/\s+/g, ' ');
   
   // Generate mock derivation based on expression pattern
-  if (algorithm === 'AlgW') {
+  if (algorithm === 'W') {
     return generateAlgorithmWDerivation(cleanExpression);
   } else if (algorithm === 'WorklistDK') {
     return generateWorklistDerivation(cleanExpression);

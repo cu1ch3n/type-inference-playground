@@ -11,7 +11,7 @@ import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
 
 export const TypeInferencePlayground = () => {
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('AlgW');
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
   const [expression, setExpression] = useState<string>('');
   const [result, setResult] = useState<InferenceResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);

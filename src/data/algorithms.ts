@@ -2,7 +2,7 @@ import { TypeInferenceAlgorithm } from "@/types/inference";
 
 export const algorithms: TypeInferenceAlgorithm[] = [
   {
-    id: "AlgW",
+    id: "W",
     name: "Algorithm W",
     labels: ["Global", "Unification", "Hindley-Milner", "Principal Types"],
     viewMode: "tree",
@@ -259,7 +259,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
 ];
 
 export const algorithmExamples = {
-  "AlgW": [
+  "W": [
     {
       name: "Identity",
       expression: "\\x. x",

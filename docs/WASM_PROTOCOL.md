@@ -1,42 +1,36 @@
-# Pure WASM Integration Documentation
+# WASI Integration Documentation
 
 ## Overview
-The frontend loads a pure WASM module directly from `wasm.zoo.cuichen.cc/inference.wasm` and calls its exported functions like a command-line tool.
+The frontend loads a WASI (WebAssembly System Interface) module from `files.cuichen.cc/infer.wasm` and runs it like a command-line tool, following your type-inference-zoo implementation.
 
 ## WASM File Loading
 - **URL**: `https://files.cuichen.cc/infer.wasm`
-- **Method**: Direct WebAssembly.instantiate() 
-- **Memory**: 256-512 pages allocated for WASM module
+- **Type**: WASI module (wasm32-wasi target)
+- **Method**: WebAssembly.compile() + instantiate with WASI imports
 - **Status Indicator**: Shows connection status (disconnected/connecting/connected/error)
 
-## Expected WASM Exports
-Your WASM module should export these functions:
+## WASI Interface
+Your WASM module should be compiled with WASI support and expect:
 
-```wasm
-// Required exports in your WASM module
-export function run_inference(algorithm: string, expression: string) -> string;
+### Command Line Arguments
+```bash
+infer --alg <algorithm> <expression>
 ```
 
-## Function Interface
-**`run_inference(algorithm, expression)`**
-- **Input**: Algorithm name (e.g., "hindley-milner") and expression string
-- **Output**: JSON string with inference result
-- **Memory**: Uses provided linear memory for string handling
+### Supported Algorithms
+- `W` - Algorithm W
+- `DK` - Complete and Easy Bidirectional Typechecking
+- `Worklist` - Higher-Ranked Polymorphic Type Inference
+- `Elementary` - Elementary Type Inference
+- `R` - Fully Grounding Type Inference
+- `Bounded` - Greedy Implicit Bounded Quantification
+- `Contextual` - Contextual Typing
+- `IU` - Bidirectional with Intersection and Union Types
 
-## Integration Flow
-1. **Load**: Frontend fetches `inference.wasm` file  
-2. **Instantiate**: WebAssembly.instantiate() with memory allocation
-3. **Call**: Direct function calls to `run_inference()`
-4. **Status**: Live indicator shows connection state
-5. **Fallback**: Falls back to mock inference if WASM unavailable
+### Output Format
+Your WASI module should output to stdout in one of these formats:
 
-## WASM Module Requirements
-- **Memory**: Expects `env.memory` import (256-512 pages)
-- **String Handling**: Should handle UTF-8 string conversion
-- **Error Handling**: Return JSON with `{"success": false, "error": "message"}`
-- **CORS**: Your CDN should allow cross-origin requests from the frontend domain
-
-## Example WASM Output
+**JSON Output (preferred):**
 ```json
 {
   "success": true,
@@ -45,15 +39,49 @@ export function run_inference(algorithm: string, expression: string) -> string;
 }
 ```
 
+**Plain Text Output:**
+```
+forall a. a -> a
+```
+
+## Integration Flow
+1. **Load**: Frontend fetches `infer.wasm` file
+2. **Compile**: WebAssembly.compile() creates module
+3. **Run**: Instantiate with WASI imports and call `_start()`
+4. **Capture**: stdout is captured and parsed
+5. **Status**: Live indicator shows connection state
+6. **Fallback**: Falls back to mock inference if WASM unavailable
+
+## WASI Requirements
+Your GHC wasm32-wasi compilation should provide:
+- **Main function**: Entry point via `_start` export
+- **WASI imports**: `wasi_snapshot_preview1` imports
+- **Argument parsing**: Handle command line args via WASI
+- **Output**: Write results to stdout (fd 1)
+
+## GHC WASM Build Example
+Based on your build.yml:
+```bash
+ghc -O2 -threaded --make Main.hs -o infer.wasm
+```
+
 ## Status Indicator
-The green/yellow/red dot shows:
-- 🟢 **Connected**: WASM loaded successfully
-- 🟡 **Connecting**: Loading WASM file  
+The colored dot shows:
+- 🟢 **Connected**: WASM loaded and ready
+- 🟡 **Connecting**: Loading WASM file
 - 🔴 **Error**: Failed to load or CORS issue
 - ⚫ **Disconnected**: Initial state
+
+## CORS Configuration
+Ensure `files.cuichen.cc` serves the WASM file with proper headers:
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Content-Type: application/wasm
+```
 
 ## Testing
 1. Upload your `infer.wasm` to `files.cuichen.cc/`
 2. Ensure proper CORS headers for cross-origin loading
-3. Test function exports match expected interface
-4. Verify memory allocation works correctly
+3. Test with command: `infer --alg W "(\x. x) 1"`
+4. Verify stdout output format

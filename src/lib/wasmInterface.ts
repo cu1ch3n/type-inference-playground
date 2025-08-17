@@ -3,7 +3,7 @@
 
 export interface WasmMessage {
   type: 'inference_request' | 'inference_response' | 'error';
-  data: any;
+  data: InferenceRequest | InferenceResponse | { message: string };
 }
 
 export interface InferenceRequest {
@@ -17,9 +17,9 @@ export interface InferenceRequest {
 
 export interface InferenceResponse {
   success: boolean;
-  result?: any;
+  result?: Record<string, unknown>;
   error?: string;
-  steps?: any[];
+  steps?: Array<Record<string, unknown>>;
 }
 
 export class WasmTypeInference {
@@ -28,6 +28,7 @@ export class WasmTypeInference {
   
   constructor() {
     // WASM module is currently disabled
+    // eslint-disable-next-line no-console
     console.log('WASM module is disabled. See docs/WASM_INTEGRATION.md for setup instructions.');
   }
 
@@ -40,9 +41,11 @@ export class WasmTypeInference {
       // await this.setupWorkerListeners();
       // this.isInitialized = true;
       
+      // eslint-disable-next-line no-console
       console.warn('WASM initialization skipped - module disabled');
       return false;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to initialize WASM module:', error);
       return false;
     }
@@ -69,11 +72,12 @@ export class WasmTypeInference {
         if (type === 'inference_response') {
           clearTimeout(timeout);
           this.worker?.removeEventListener('message', handleResponse);
-          resolve(data);
+          resolve(data as InferenceResponse);
         } else if (type === 'error') {
           clearTimeout(timeout);
           this.worker?.removeEventListener('message', handleResponse);
-          reject(new Error(data.message));
+          const errorData = data as { message: string };
+          reject(new Error(errorData.message));
         }
       };
 
@@ -93,7 +97,7 @@ export class WasmTypeInference {
 
 /* UNCOMMENT TO ENABLE WASM
 // Global WASM interface - uncommented when WASM is enabled
-let wasmModule: any = null;
+let wasmModule: Record<string, unknown> | null = null;
 let wasmWorker: Worker | null = null;
 
 export async function initializeWasm(): Promise<boolean> {
@@ -107,6 +111,7 @@ export async function initializeWasm(): Promise<boolean> {
         if (event.data.type === 'wasm_ready') {
           clearTimeout(timeout);
           wasmModule = event.data.module;
+          // eslint-disable-next-line no-console
           console.log('✅ WASM module initialized successfully');
           resolve(true);
         }
@@ -115,6 +120,7 @@ export async function initializeWasm(): Promise<boolean> {
       wasmWorker?.postMessage({ type: 'init' });
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to initialize WASM:', error);
     return false;
   }

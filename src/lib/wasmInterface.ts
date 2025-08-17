@@ -1,5 +1,6 @@
 // WASM Interface for Type Inference Engines using WASI
 // Based on your type-inference-zoo implementation
+import { ConsoleStdout, WASI } from "@bjorn3/browser_wasi_shim";
 
 export interface InferenceRequest {
   algorithm: string;
@@ -17,74 +18,11 @@ export interface InferenceResponse {
   steps?: Array<Record<string, unknown>>;
 }
 
-// Simple WASI implementation for stdout capture
-class ConsoleStdout {
-  static lineBuffered(callback: (msg: string) => void) {
-    let buffer = '';
-    return {
-      write: (data: Uint8Array) => {
-        const str = new TextDecoder().decode(data);
-        buffer += str;
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-        lines.forEach(line => {
-          if (line) callback(line);
-        });
-      }
-    };
-  }
-}
-
-class SimpleWASI {
-  constructor(
-    private args: string[],
-    private env: string[],
-    private fds: any[]
-  ) {}
-
-  get wasiImport() {
-    return {
-      args_sizes_get: (argc_ptr: number, argv_buf_size_ptr: number) => {
-        // Return argument count and total buffer size needed
-        return 0;
-      },
-      args_get: (argv_ptr: number, argv_buf_ptr: number) => {
-        // Copy arguments to WASM memory
-        return 0;
-      },
-      environ_sizes_get: (environ_count_ptr: number, environ_buf_size_ptr: number) => {
-        return 0;
-      },
-      environ_get: (environ_ptr: number, environ_buf_ptr: number) => {
-        return 0;
-      },
-      fd_write: (fd: number, iovs_ptr: number, iovs_len: number, nwritten_ptr: number) => {
-        // Simplified stdout handling
-        if (fd === 1 && this.fds[1]) { // stdout
-          // In a real implementation, you'd read from WASM memory
-          // For now, just indicate success
-          return 0;
-        }
-        return 0;
-      },
-      proc_exit: (code: number) => {
-        // Process exit
-      }
-    };
-  }
-
-  start(instance: WebAssembly.Instance) {
-    const exports = instance.exports as any;
-    if (exports._start) {
-      exports._start();
-    }
-  }
-}
-
 export class WasmTypeInference {
   private wasmModule: WebAssembly.Module | null = null;
   private wasmUrl: string;
   private isInitialized = false;
+  private outputBuffer = '';
   
   constructor(wasmUrl = 'https://files.cuichen.cc/bin.wasm') {
     this.wasmUrl = wasmUrl;
@@ -133,28 +71,31 @@ export class WasmTypeInference {
         throw new Error('WASM module not loaded');
       }
 
-      // Prepare command line arguments like your original implementation
+      // Reset output buffer
+      this.outputBuffer = '';
+
+      // Prepare command line arguments exactly like your original implementation
       const args = ['infer', '--alg', request.algorithm, request.expression];
       const env: string[] = [];
-      let outputBuffer = '';
       
       const fds = [
         null, // stdin
         ConsoleStdout.lineBuffered((msg) => {
-          outputBuffer += `${msg}\n`;
+          this.outputBuffer += `${msg}\n`;
         }),
       ];
 
-      const wasi = new SimpleWASI(args, env, fds);
+      const wasi = new WASI(args, env, fds);
       const instance = await WebAssembly.instantiate(this.wasmModule, {
         wasi_snapshot_preview1: wasi.wasiImport,
       });
 
-      wasi.start(instance);
+      wasi.start(instance as any);
 
       // Parse output as JSON or return as text
+      const output = this.outputBuffer.trim();
       try {
-        const result = JSON.parse(outputBuffer.trim());
+        const result = JSON.parse(output);
         return {
           success: true,
           result,
@@ -164,7 +105,7 @@ export class WasmTypeInference {
         // If not JSON, return as text result
         return {
           success: true,
-          result: { type: outputBuffer.trim() },
+          result: { type: output },
           steps: []
         };
       }

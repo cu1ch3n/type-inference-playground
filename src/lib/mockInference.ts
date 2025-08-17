@@ -10,10 +10,10 @@ export const runInference = async (algorithm: string, expression: string): Promi
       options: { showSteps: true, maxDepth: 100 }
     });
     
-    if (wasmResult.success && wasmResult.result) {
+    if (wasmResult.result) {
       const result = wasmResult.result as any;
       return {
-        success: true,
+        success: result.success || false,
         finalType: result.finalType,
         derivation: result.derivation || [],
         error: result.error

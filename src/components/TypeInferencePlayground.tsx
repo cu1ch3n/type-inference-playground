@@ -80,19 +80,23 @@ export const TypeInferencePlayground = () => {
 
   const handleStepClick = (stepPath: number[]) => {
     const isToggling = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
-    setActiveStepPath(isToggling ? undefined : stepPath);
     
-    if (!isToggling) {
-      // Find the step and highlight corresponding rule
+    if (isToggling) {
+      // Toggling off - clear everything
+      setActiveStepPath(undefined);
+      setActiveRuleId(undefined);
+    } else {
+      // Setting new step - always set the step path
+      setActiveStepPath(stepPath);
+      
+      // Find the step and set corresponding rule
       const findStepAtPath = (steps: any[], path: number[]): any | undefined => {
         if (!path || path.length === 0) return undefined;
         
         let current = steps;
         for (let i = 0; i < path.length; i++) {
           const index = path[i];
-          if (!current[index]) {
-            return undefined;
-          }
+          if (!current[index]) return undefined;
           
           if (i === path.length - 1) {
             return current[index];
@@ -106,17 +110,9 @@ export const TypeInferencePlayground = () => {
       if (result?.derivation) {
         const step = findStepAtPath(result.derivation, stepPath);
         if (step?.ruleId) {
-          // Clear activeRuleId if it's different from the clicked step's rule
-          if (activeRuleId && activeRuleId !== step.ruleId) {
-            setActiveRuleId(undefined);
-          } else if (!activeRuleId) {
-            // Set the rule if no rule is currently active
-            setActiveRuleId(step.ruleId);
-          }
+          setActiveRuleId(step.ruleId);
         }
       }
-    } else {
-      setActiveRuleId(undefined);
     }
   };
 

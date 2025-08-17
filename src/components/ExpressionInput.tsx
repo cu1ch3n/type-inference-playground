@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,6 +36,16 @@ export const ExpressionInput = ({
     onExpressionChange('');
     setSelectedExample('');
   };
+
+  // Reset selected example when expression changes and doesn't match current example
+  useEffect(() => {
+    if (selectedExample) {
+      const currentExample = currentExamples.find(e => e.name === selectedExample);
+      if (currentExample && currentExample.expression !== expression) {
+        setSelectedExample('');
+      }
+    }
+  }, [expression, selectedExample, currentExamples]);
 
   return (
     <Card className="academic-panel">

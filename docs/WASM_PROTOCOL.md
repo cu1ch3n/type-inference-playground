@@ -28,20 +28,84 @@ infer --alg <algorithm> <expression>
 - `IU` - Bidirectional with Intersection and Union Types
 
 ### Output Format
-Your WASI module should output to stdout in one of these formats:
+Your WASI module should output to stdout in JSON format matching the InferenceResult interface:
 
-**JSON Output (preferred):**
+**Required JSON Structure:**
 ```json
 {
-  "success": true,
-  "result": {"type": "Int -> Int"},
-  "steps": [{"rule": "T-Abs", "conclusion": "..."}]
+  "success": boolean,
+  "finalType": "string (optional, the inferred type)",
+  "derivation": [
+    {
+      "id": "string (unique identifier)",
+      "ruleId": "string (typing rule name)",
+      "expression": "string (KaTeX expression)",
+      "type": "string (optional)",
+      "children": "DerivationStep[] (optional, for tree view)",
+      "explanation": "string (optional)"
+    }
+  ],
+  "error": "string (optional, for backwards compatibility)",
+  "errors": "TypeInferenceError[] (optional)",
+  "warnings": "TypeInferenceError[] (optional)",
+  "metadata": {
+    "algorithm": "string",
+    "duration": "number (milliseconds)",
+    "steps": "number",
+    "wasmUsed": true
+  }
 }
 ```
 
-**Plain Text Output:**
+**Tree View Example (Algorithm W):**
+```json
+{
+  "success": true,
+  "finalType": "a \\to a",
+  "derivation": [
+    {
+      "id": "1",
+      "ruleId": "Abs",
+      "expression": "\\vdash \\lambda x.~x : a \\to a",
+      "children": [
+        {
+          "id": "2",
+          "ruleId": "Var",
+          "expression": "x: a \\vdash x : a"
+        }
+      ]
+    }
+  ]
+}
 ```
-forall a. a -> a
+
+**Linear View Example (Worklist DK):**
+```json
+{
+  "success": true,
+  "finalType": "\\text{Int}",
+  "derivation": [
+    {
+      "id": "1",
+      "ruleId": "InfAnn",
+      "expression": "\\cdot \\vdash (\\lambda x.~x)~1 : \\text{Int} \\Rightarrow_a \\text{Out}(a)"
+    },
+    {
+      "id": "2", 
+      "ruleId": "ChkSub",
+      "expression": "\\cdot \\vdash \\text{Out}(\\text{Int}) \\vdash (\\lambda x.~x)~1 \\Leftarrow \\text{Int}"
+    }
+  ]
+}
+```
+
+**Error Example:**
+```json
+{
+  "success": false,
+  "error": "Cannot unify a with a \\to b (occurs check)",
+  "derivation": []
+}
 ```
 
 ## Integration Flow

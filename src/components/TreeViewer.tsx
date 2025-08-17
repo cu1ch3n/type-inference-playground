@@ -8,6 +8,7 @@ interface TreeViewerProps {
   steps: DerivationStep[];
   onStepClick?: (stepPath: number[]) => void;
   activeStepPath?: number[];
+  activeRuleId?: string;
   expandedByDefault?: boolean;
 }
 
@@ -15,6 +16,7 @@ export const TreeViewer = ({
   steps, 
   onStepClick, 
   activeStepPath, 
+  activeRuleId,
   expandedByDefault = true 
 }: TreeViewerProps) => {
   const initializeExpandedSteps = () => {
@@ -54,7 +56,10 @@ export const TreeViewer = ({
     const pathKey = path.join('-');
     const isExpanded = expandedSteps.has(pathKey);
     const hasChildren = step.children && step.children.length > 0;
-    const isActive = activeStepPath && activeStepPath.join('-') === pathKey;
+    // Check if active by step path OR by rule ID match
+    const isActiveByPath = activeStepPath && activeStepPath.join('-') === pathKey;
+    const isActiveByRule = activeRuleId && step.ruleId === activeRuleId;
+    const isActive = isActiveByPath || isActiveByRule;
 
     return (
       <li key={pathKey} className="relative">

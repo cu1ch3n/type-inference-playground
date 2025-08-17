@@ -11,12 +11,15 @@ interface DerivationViewerProps {
   algorithm?: TypeInferenceAlgorithm;
   onStepClick?: (stepPath: number[]) => void;
   activeStepPath?: number[];
+  activeRuleId?: string;
 }
 
-export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPath }: DerivationViewerProps) => {
+export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPath, activeRuleId }: DerivationViewerProps) => {
 
   const renderLinearStep = (step: DerivationStep, stepPath: number[]) => {
-    const isActive = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
+    const isActiveByPath = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
+    const isActiveByRule = activeRuleId && step.ruleId === activeRuleId;
+    const isActive = isActiveByPath || isActiveByRule;
 
     return (
       <div
@@ -135,6 +138,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
             steps={result.derivation}
             onStepClick={onStepClick}
             activeStepPath={activeStepPath}
+            activeRuleId={activeRuleId}
             expandedByDefault={true}
           />
         ) : (

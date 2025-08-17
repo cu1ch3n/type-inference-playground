@@ -68,17 +68,17 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
 
   if (!result) {
     return (
-      <Card className="academic-panel">
+      <Card className="academic-panel animate-fade-in">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
             Derivation
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+        <CardContent className="flex flex-col items-center justify-center h-32 sm:h-48 text-muted-foreground">
           <div className="text-center space-y-2">
-            <p className="font-medium">No derivation yet</p>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+            <p className="font-medium text-sm sm:text-base">No derivation yet</p>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground/70">
               <Zap className="w-3 h-3" />
               <span>Enter an expression to start type inference</span>
             </div>
@@ -90,7 +90,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
 
   if (!result.success) {
     return (
-      <Card className="academic-panel">
+      <Card className="academic-panel animate-fade-in">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <GitBranch className="w-4 h-4" />
@@ -98,9 +98,9 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-destructive font-medium">Type Error</p>
-            <p className="text-sm text-destructive/80 mt-1">
+          <div className="p-3 sm:p-4 bg-destructive/10 border border-destructive/20 rounded-lg animate-scale-in">
+            <p className="text-destructive font-medium text-sm sm:text-base">Type Error</p>
+            <p className="text-xs sm:text-sm text-destructive/80 mt-1 break-words">
               {result.error || 'Unknown type error'}
             </p>
           </div>
@@ -113,20 +113,20 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
   const linearSteps = flattenSteps(result.derivation);
 
   return (
-    <Card className="academic-panel">
+    <Card className="academic-panel animate-fade-in hover-lift">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
             <GitBranch className="w-4 h-4" />
             Derivation
           </CardTitle>
           {result.finalType && (
-            <div className="text-right">
-              <div className="text-xs text-muted-foreground mb-1 flex items-center justify-end gap-1">
+            <div className="text-left sm:text-right">
+              <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1 sm:justify-end">
                 <Activity className="w-3 h-3" />
                 Result Type:
               </div>
-              <Badge variant="default" className="font-math text-sm">
+              <Badge variant="default" className="font-math text-xs sm:text-sm animate-scale-in">
                 <KaTeXRenderer expression={result.finalType} />
               </Badge>
             </div>
@@ -134,16 +134,18 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
         </div>
         <Separator className="mt-4" />
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6">
         {viewMode === 'tree' ? (
-          <TreeViewer 
-            steps={result.derivation}
-            onStepClick={onStepClick}
-            activeStepId={activeStepId}
-            expandedByDefault={true}
-          />
+          <div className="animate-slide-up">
+            <TreeViewer 
+              steps={result.derivation}
+              onStepClick={onStepClick}
+              activeStepId={activeStepId}
+              expandedByDefault={true}
+            />
+          </div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-1 animate-slide-up">
             {linearSteps.map((step, index) => renderLinearStep(step, index))}
           </div>
         )}

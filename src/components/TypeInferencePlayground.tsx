@@ -8,6 +8,7 @@ import { DerivationViewer } from './DerivationViewer';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
+import { analytics, performanceMonitor } from '@/lib/analytics';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('AlgW');
@@ -19,6 +20,11 @@ export const TypeInferencePlayground = () => {
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
+  const handleAlgorithmChange = (algorithm: string) => {
+    setSelectedAlgorithm(algorithm);
+    analytics.trackAlgorithmChange(algorithm);
+  };
+
   const handleInference = async () => {
     if (!expression.trim() || !selectedAlgorithm) return;
     
@@ -26,27 +32,43 @@ export const TypeInferencePlayground = () => {
     setActiveRuleId(undefined);
     setActiveStepId(undefined);
     
+    // Analytics tracking
+    analytics.trackInferenceStart(selectedAlgorithm, expression.length);
+    const endTiming = performanceMonitor.startTiming(`inference_${selectedAlgorithm}`);
+    
     try {
       const inferenceResult = await runInference(selectedAlgorithm, expression);
       setResult(inferenceResult);
+      
+      if (inferenceResult.success) {
+        analytics.trackInferenceSuccess(selectedAlgorithm, expression.length);
+      } else {
+        analytics.trackInferenceError(selectedAlgorithm, expression.length, inferenceResult.error || 'unknown');
+      }
     } catch (error) {
       console.error('Inference error:', error);
+      analytics.trackInferenceError(selectedAlgorithm, expression.length, 'exception');
+      performanceMonitor.trackError(error as Error, 'inference');
+      
       setResult({
         success: false,
         error: 'An unexpected error occurred during type inference.',
         derivation: []
       });
     } finally {
+      endTiming();
       setIsInferring(false);
     }
   };
 
   const handleRuleClick = (ruleId: string) => {
     setActiveRuleId(activeRuleId === ruleId ? undefined : ruleId);
+    analytics.trackRuleInteraction(ruleId);
   };
 
   const handleStepClick = (stepId: string) => {
     setActiveStepId(activeStepId === stepId ? undefined : stepId);
+    analytics.trackStepInteraction(stepId);
     
     // Find the step and highlight corresponding rule
     const findStepRule = (steps: any[]): string | undefined => {
@@ -81,14 +103,14 @@ export const TypeInferencePlayground = () => {
       <Navbar />
       <div className="min-h-screen bg-background">
         {/* Main Content */}
-        <div className="container mx-auto px-6 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
+          <div className="grid grid-cols-1 xl:grid-cols-6 gap-6 sm:gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="xl:col-span-2 space-y-4 sm:space-y-6">
               <AlgorithmSelector
                 algorithms={algorithms}
                 selectedAlgorithm={selectedAlgorithm}
-                onAlgorithmChange={setSelectedAlgorithm}
+                onAlgorithmChange={handleAlgorithmChange}
               />
               
               <ExpressionInput
@@ -106,7 +128,7 @@ export const TypeInferencePlayground = () => {
             </div>
 
             {/* Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="xl:col-span-4 space-y-4 sm:space-y-6">
               {/* Derivation */}
               <DerivationViewer
                 result={result}

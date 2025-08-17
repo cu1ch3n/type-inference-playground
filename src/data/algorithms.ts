@@ -103,16 +103,16 @@ export const algorithms: TypeInferenceAlgorithm[] = [
       {
         id: "SAllL",
         name: "SAllL",
-        premises: ["B \\neq \\forall B'"],
+        premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\forall a. A \\le B \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A \\le B"
+        reduction: "\\Gamma \\vdash \\forall a.~A \\le B \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A \\le B"
       },
       {
         id: "SAllR",
         name: "SAllR",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash A \\le \\forall b. B \\longrightarrow \\Gamma, b \\vdash A \\le B"
+        reduction: "\\Gamma \\vdash A \\le \\forall b.~B \\longrightarrow \\Gamma, b \\vdash A \\le B"
       },
       {
         id: "InstLArr",
@@ -182,7 +182,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         name: "ChkAll",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash e \\Leftarrow \\forall a. A \\longrightarrow \\Gamma, a \\vdash e \\Leftarrow A"
+        reduction: "\\Gamma \\vdash e \\Leftarrow \\forall a.~A \\longrightarrow \\Gamma, a \\vdash e \\Leftarrow A"
       },
       {
         id: "ChkAbs",
@@ -238,7 +238,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         name: "InfAppAll",
         premises: [],
         conclusion: "",
-        reduction: "\\Gamma \\vdash \\forall a. A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega"
+        reduction: "\\Gamma \\vdash \\forall a.~A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega \\longrightarrow \\Gamma, \\hat{\\alpha} \\vdash [\\hat{\\alpha}/a]A ~ \\bullet e \\mathrel{\\mathrlap{\\Rightarrow}\\phantom{~}\\Rightarrow}_a \\omega"
       },
       {
         id: "InfAppArr",

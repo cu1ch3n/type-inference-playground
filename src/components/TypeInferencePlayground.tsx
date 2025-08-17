@@ -43,7 +43,6 @@ export const TypeInferencePlayground = () => {
   };
 
   const handleRuleClick = (ruleId: string) => {
-    console.log('Rule clicked:', ruleId, 'Current activeRuleId:', activeRuleId);
     const isToggling = activeRuleId === ruleId;
     setActiveRuleId(isToggling ? undefined : ruleId);
     
@@ -51,7 +50,6 @@ export const TypeInferencePlayground = () => {
       // Find the first step that uses this rule and highlight it
       const findStepByRule = (steps: any[]): string | undefined => {
         for (const step of steps) {
-          console.log('Checking step:', step.id, 'ruleId:', step.ruleId, 'target:', ruleId);
           if (step.ruleId === ruleId) return step.id;
           if (step.children) {
             const found = findStepByRule(step.children);
@@ -63,7 +61,6 @@ export const TypeInferencePlayground = () => {
       
       if (result?.derivation) {
         const stepId = findStepByRule(result.derivation);
-        console.log('Found step for rule:', ruleId, 'stepId:', stepId);
         if (stepId) setActiveStepId(stepId);
       }
     } else {
@@ -72,7 +69,6 @@ export const TypeInferencePlayground = () => {
   };
 
   const handleStepClick = (stepId: string) => {
-    console.log('Step clicked:', stepId, 'Current activeStepId:', activeStepId);
     const isToggling = activeStepId === stepId;
     setActiveStepId(isToggling ? undefined : stepId);
     
@@ -80,10 +76,7 @@ export const TypeInferencePlayground = () => {
       // Find the step and highlight corresponding rule
       const findStepRule = (steps: any[]): string | undefined => {
         for (const step of steps) {
-          if (step.id === stepId) {
-            console.log('Found step:', step.id, 'ruleId:', step.ruleId);
-            return step.ruleId;
-          }
+          if (step.id === stepId) return step.ruleId;
           if (step.children) {
             const found = findStepRule(step.children);
             if (found) return found;
@@ -94,7 +87,6 @@ export const TypeInferencePlayground = () => {
       
       if (result?.derivation) {
         const ruleId = findStepRule(result.derivation);
-        console.log('Found rule for step:', stepId, 'ruleId:', ruleId);
         if (ruleId) setActiveRuleId(ruleId);
       }
     } else {

@@ -58,8 +58,8 @@ export const TreeViewer = ({
       <li key={step.id} className="relative">
         <div
           className={`
-            flex items-center gap-2 py-1 pr-2 rounded transition-colors hover:bg-muted/40
-            ${isActive ? 'ring-2 ring-primary/50 bg-primary/5' : ''}
+            flex items-center gap-2 py-1 pr-2 rounded transition-colors
+            ${isActive ? 'bg-yellow-100 border-2 border-yellow-400' : 'hover:bg-muted/40'}
             ${onStepClick ? 'cursor-pointer' : ''}
           `}
           onClick={() => onStepClick?.(step.id)}

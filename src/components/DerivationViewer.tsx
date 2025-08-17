@@ -22,9 +22,9 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
       <div
         key={step.id}
         className={`
-          derivation-step p-2 rounded-lg font-mono
-          ${isActive ? 'ring-2 ring-primary/50 bg-primary/5' : ''}
-          ${onStepClick ? 'cursor-pointer hover:bg-muted/30' : ''}
+          derivation-step p-2 rounded-lg font-mono transition-colors
+          ${isActive ? 'bg-yellow-100 border-2 border-yellow-400' : 'hover:bg-muted/30'}
+          ${onStepClick ? 'cursor-pointer' : ''}
         `}
         onClick={() => onStepClick?.(step.id)}
       >

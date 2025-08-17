@@ -1,10 +1,10 @@
 # WASI Integration Documentation
 
 ## Overview
-The frontend loads a WASI (WebAssembly System Interface) module from `files.cuichen.cc/infer.wasm` and runs it like a command-line tool, following your type-inference-zoo implementation.
+The frontend loads a WASI (WebAssembly System Interface) module from `files.cuichen.cc/bin.wasm` and runs it like a command-line tool, following your type-inference-zoo implementation.
 
 ## WASM File Loading
-- **URL**: `https://files.cuichen.cc/infer.wasm`
+- **URL**: `https://files.cuichen.cc/bin.wasm`
 - **Type**: WASI module (wasm32-wasi target)
 - **Method**: WebAssembly.compile() + instantiate with WASI imports
 - **Status Indicator**: Shows connection status (disconnected/connecting/connected/error)
@@ -45,7 +45,7 @@ forall a. a -> a
 ```
 
 ## Integration Flow
-1. **Load**: Frontend fetches `infer.wasm` file
+1. **Load**: Frontend fetches `bin.wasm` file
 2. **Compile**: WebAssembly.compile() creates module
 3. **Run**: Instantiate with WASI imports and call `_start()`
 4. **Capture**: stdout is captured and parsed
@@ -62,7 +62,7 @@ Your GHC wasm32-wasi compilation should provide:
 ## GHC WASM Build Example
 Based on your build.yml:
 ```bash
-ghc -O2 -threaded --make Main.hs -o infer.wasm
+ghc -O2 -threaded --make Main.hs -o bin.wasm
 ```
 
 ## Status Indicator
@@ -81,7 +81,7 @@ Content-Type: application/wasm
 ```
 
 ## Testing
-1. Upload your `infer.wasm` to `files.cuichen.cc/`
+1. Upload your `bin.wasm` to `files.cuichen.cc/`
 2. Ensure proper CORS headers for cross-origin loading
 3. Test with command: `infer --alg W "(\x. x) 1"`
 4. Verify stdout output format

@@ -86,7 +86,7 @@ export class WasmTypeInference {
   private wasmUrl: string;
   private isInitialized = false;
   
-  constructor(wasmUrl = 'https://files.cuichen.cc/infer.wasm') {
+  constructor(wasmUrl = 'https://files.cuichen.cc/bin.wasm') {
     this.wasmUrl = wasmUrl;
     // eslint-disable-next-line no-console
     console.log(`WASM configured for: ${this.wasmUrl}`);

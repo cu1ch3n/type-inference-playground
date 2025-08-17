@@ -22,8 +22,8 @@ export const algorithms: TypeInferenceAlgorithm[] = [
       {
         id: "App",
         name: "App",
-        premises: ["\\Gamma \\vdash e_1 : \\tau_1 \\rightarrow \\tau_2", "\\Gamma \\vdash e_2 : \\tau_1"],
-        conclusion: "\\Gamma \\vdash e_1 ~ e_2 : \\tau_2"
+        premises: ["\\Gamma \\vdash_W e_0 : \\tau_0, S_0", "S_0\\Gamma \\vdash_W e_1 : \\tau_1, S_1", "\\tau' = newvar", "S_2 = mgu(S_1\\tau_0, \\tau_1 \\rightarrow \\tau')"],
+        conclusion: "\\Gamma \\vdash_W e_0 ~ e_1 : S_2\\tau', S_2S_1S_0"
       },
       {
         id: "Abs",

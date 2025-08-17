@@ -78,23 +78,13 @@ export const TreeViewer = ({
             )}
           </div>
           
-          {/* Expression and type */}
+          {/* Expression */}
           <div className="flex-1 min-w-0 flex items-center gap-2">
             <KaTeXRenderer 
               expression={step.expression} 
               displayMode={false}
               className="text-sm"
             />
-            {step.type && (
-              <>
-                <span className="text-muted-foreground">:</span>
-                <KaTeXRenderer 
-                  expression={step.type} 
-                  displayMode={false} 
-                  className="text-sm text-primary/80" 
-                />
-              </>
-            )}
           </div>
           
           {/* Rule badge - aligned right */}

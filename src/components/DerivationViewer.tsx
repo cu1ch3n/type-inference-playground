@@ -39,11 +39,6 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepId 
               displayMode={false}
               className="text-sm"
             />
-            {step.type && (
-              <div className="mt-1 text-xs text-muted-foreground">
-                Type: <KaTeXRenderer expression={step.type} displayMode={false} className="text-xs" />
-              </div>
-            )}
           </div>
           
           <Badge variant="secondary" className="text-xs font-medium ml-auto">

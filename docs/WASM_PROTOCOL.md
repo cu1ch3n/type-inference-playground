@@ -40,20 +40,10 @@ Your WASI module should output to stdout in JSON format matching the InferenceRe
       "id": "string (unique identifier)",
       "ruleId": "string (typing rule name)",
       "expression": "string (KaTeX expression)",
-      "type": "string (optional)",
-      "children": "DerivationStep[] (optional, for tree view)",
-      "explanation": "string (optional)"
+      "children": "DerivationStep[] (optional, for tree view)"
     }
   ],
-  "error": "string (optional, for backwards compatibility)",
-  "errors": "TypeInferenceError[] (optional)",
-  "warnings": "TypeInferenceError[] (optional)",
-  "metadata": {
-    "algorithm": "string",
-    "duration": "number (milliseconds)",
-    "steps": "number",
-    "wasmUsed": true
-  }
+  "error": "string (optional)"
 }
 ```
 

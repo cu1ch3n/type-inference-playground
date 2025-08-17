@@ -26,24 +26,14 @@ export interface DerivationStep {
   id: string;
   ruleId: string;
   expression: string;
-  type?: string;
   children?: DerivationStep[];
-  explanation?: string;
 }
 
 export interface InferenceResult {
   success: boolean;
   finalType?: string;
   derivation: DerivationStep[];
-  error?: string; // Deprecated: use errors array instead
-  errors?: import('./errors').TypeInferenceError[];
-  warnings?: import('./errors').TypeInferenceError[];
-  metadata?: {
-    algorithm: string;
-    duration: number;
-    steps: number;
-    wasmUsed: boolean;
-  };
+  error?: string;
 }
 
 export interface LambdaExpression {

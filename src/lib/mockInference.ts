@@ -11,15 +11,12 @@ export const runInference = async (algorithm: string, expression: string): Promi
     });
     
     if (wasmResult.success && wasmResult.result) {
+      const result = wasmResult.result as any;
       return {
         success: true,
-        finalType: wasmResult.result.type as string || 'unknown',
-        derivation: wasmResult.steps?.map((step, index) => ({
-          id: (index + 1).toString(),
-          ruleId: (step as any).rule || 'Unknown',
-          expression: (step as any).conclusion || `Step ${index + 1}`,
-          children: (step as any).children
-        })) || []
+        finalType: result.finalType,
+        derivation: result.derivation || [],
+        error: result.error
       };
     }
   } catch (error) {

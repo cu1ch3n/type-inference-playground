@@ -56,18 +56,22 @@ All colors MUST be HSL. Mathematical typography optimized.
     --code-font: 'Roboto Mono', 'Monaco', monospace;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 99%));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 99%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--background)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--accent)) 100%);
     
-    /* Material Design Shadows */
-    --shadow-elegant: 0 8px 16px -4px hsl(var(--primary) / 0.2);
-    --shadow-card: 0 2px 8px -2px hsl(var(--primary) / 0.12);
-    --shadow-material-1: 0 1px 3px hsl(0 0% 0% / 0.12), 0 1px 2px hsl(0 0% 0% / 0.24);
-    --shadow-material-2: 0 3px 6px hsl(0 0% 0% / 0.16), 0 3px 6px hsl(0 0% 0% / 0.23);
-    --shadow-material-3: 0 10px 20px hsl(0 0% 0% / 0.19), 0 6px 6px hsl(0 0% 0% / 0.23);
+    /* Enhanced Material Design Shadows */
+    --shadow-elegant: 0 8px 32px -8px hsl(var(--primary) / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(var(--foreground) / 0.08);
+    --shadow-material-1: 0 2px 8px -2px hsl(var(--foreground) / 0.08), 0 1px 4px -1px hsl(var(--foreground) / 0.06);
+    --shadow-material-2: 0 6px 24px -4px hsl(var(--foreground) / 0.12), 0 4px 12px -2px hsl(var(--foreground) / 0.08);
+    --shadow-material-3: 0 16px 40px -8px hsl(var(--foreground) / 0.16), 0 8px 24px -4px hsl(var(--foreground) / 0.12);
+    --shadow-glow: 0 0 40px -8px hsl(var(--primary) / 0.3);
     
-    /* Animations */
+    /* Enhanced Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --radius: 0.5rem;
 
@@ -127,12 +131,15 @@ All colors MUST be HSL. Mathematical typography optimized.
     --highlight: 45 100% 25%;
     
     /* Dark Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-card: linear-gradient(180deg, hsl(215 28% 10%), hsl(215 28% 8%));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(215 28% 10%) 0%, hsl(215 28% 8%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--background)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--accent)) 100%);
     
-    /* Dark Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
-    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.2);
+    /* Enhanced Dark Shadows */
+    --shadow-elegant: 0 16px 40px -8px hsl(0 0% 0% / 0.4);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.3);
+    --shadow-glow: 0 0 40px -8px hsl(var(--primary) / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -212,31 +219,89 @@ All colors MUST be HSL. Mathematical typography optimized.
     }
   }
   
-  /* Academic Panel Styling */
+  /* Enhanced Academic Panel Styling */
   .academic-panel {
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-card);
     transition: var(--transition-smooth);
+    backdrop-filter: blur(8px);
+    position: relative;
+  }
+  
+  .academic-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--gradient-subtle);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
   }
   
   .academic-panel:hover {
     box-shadow: var(--shadow-elegant);
+    transform: translateY(-2px);
   }
   
-  /* Derivation Step Highlighting */
+  .academic-panel:hover::before {
+    opacity: 0.5;
+  }
+  
+  /* Enhanced Derivation Step Highlighting */
   .derivation-step {
+    transition: var(--transition-spring);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .derivation-step::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--primary) / 0.05);
+    opacity: 0;
     transition: var(--transition-smooth);
-    border-radius: 0.5rem;
-    padding: 0.75rem;
+    pointer-events: none;
   }
   
   .derivation-step:hover {
     background: hsl(var(--highlight) / 0.3);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-material-1);
+  }
+  
+  .derivation-step:hover::before {
+    opacity: 1;
   }
   
   .derivation-step.active {
     background: hsl(var(--highlight) / 0.5);
     border: 2px solid hsl(var(--primary));
+    transform: translateX(8px) scale(1.02);
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  /* Modern Button Enhancements */
+  .btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    box-shadow: var(--shadow-material-1);
+    transition: var(--transition-spring);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow), var(--shadow-material-2);
+  }
+  
+  /* Glass effect for cards */
+  .glass-effect {
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
   }
 }

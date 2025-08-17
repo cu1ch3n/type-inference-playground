@@ -12,53 +12,11 @@ interface ErrorDisplayProps {
   className?: string;
 }
 
-const ErrorTypeConfig = {
-  [ErrorType.PARSING_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Parsing Error'
-  },
-  [ErrorType.TYPE_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Type Error'
-  },
-  [ErrorType.SYNTAX_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Syntax Error'
-  },
-  [ErrorType.UNIFICATION_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Unification Error'
-  },
-  [ErrorType.SCOPE_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Scope Error'
-  },
-  [ErrorType.UNSUPPORTED_FEATURE]: {
-    icon: Info,
-    color: 'secondary',
-    title: 'Unsupported Feature'
-  },
-  [ErrorType.RUNTIME_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'Runtime Error'
-  },
-  [ErrorType.WASM_ERROR]: {
-    icon: AlertTriangle,
-    color: 'destructive',
-    title: 'WASM Error'
-  },
-  [ErrorType.TIMEOUT_ERROR]: {
-    icon: Info,
-    color: 'secondary',
-    title: 'Timeout Error'
-  }
-} as const;
+const ErrorConfig = {
+  icon: AlertTriangle,
+  color: 'destructive',
+  title: 'Error'
+};
 
 export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
   errors,
@@ -70,11 +28,10 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
   return (
     <div className={`space-y-3 ${className}`}>
       {errors.map((error, index) => {
-        const config = ErrorTypeConfig[error.type] || ErrorTypeConfig[ErrorType.RUNTIME_ERROR];
-        const Icon = config.icon;
+        const Icon = ErrorConfig.icon;
 
         return (
-          <Alert key={index} variant={config.color as any} className="relative">
+          <Alert key={index} variant={ErrorConfig.color as any} className="relative">
             <Icon className="h-4 w-4" />
             
             {onDismiss && (
@@ -91,7 +48,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <AlertTitle className="text-sm font-medium">
-                  {config.title}
+                  {ErrorConfig.title}
                 </AlertTitle>
                 {error.code && (
                   <Badge variant="outline" className="text-xs">

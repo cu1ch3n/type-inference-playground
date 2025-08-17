@@ -16,7 +16,8 @@ export const runInference = async (algorithm: string, expression: string): Promi
         success: result.success || false,
         finalType: result.finalType,
         derivation: result.derivation || [],
-        error: result.error
+        error: result.error,
+        errorLatex: result.errorLatex || false
       };
     }
   } catch (error) {

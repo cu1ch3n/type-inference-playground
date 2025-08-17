@@ -1,7 +1,33 @@
 import { InferenceResult } from '@/types/inference';
+import { wasmInference } from './wasmInterface';
 
 export const runInference = async (algorithm: string, expression: string): Promise<InferenceResult> => {
-  // Simulate async processing
+  // Try WASM service first, fallback to mock if unavailable
+  try {
+    const wasmResult = await wasmInference.runInference({
+      algorithm: algorithm.toLowerCase(),
+      expression,
+      options: { showSteps: true, maxDepth: 100 }
+    });
+    
+    if (wasmResult.success && wasmResult.result) {
+      return {
+        success: true,
+        finalType: wasmResult.result.type as string || 'unknown',
+        derivation: wasmResult.steps?.map((step, index) => ({
+          id: (index + 1).toString(),
+          ruleId: (step as any).rule || 'Unknown',
+          expression: (step as any).conclusion || `Step ${index + 1}`,
+          children: (step as any).children
+        })) || []
+      };
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('WASM service unavailable, using mock:', error);
+  }
+  
+  // Fallback to mock inference
   await new Promise(resolve => setTimeout(resolve, 500));
   
   // Clean and normalize the expression

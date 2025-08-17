@@ -1,5 +1,5 @@
 // WASM Interface for Type Inference Engines
-// Currently disabled - see docs/WASM_INTEGRATION.md for setup instructions
+// Configured for wasm.zoo.cuichen.cc external service
 
 export interface WasmMessage {
   type: 'inference_request' | 'inference_response' | 'error';
@@ -23,75 +23,85 @@ export interface InferenceResponse {
 }
 
 export class WasmTypeInference {
-  private worker?: Worker;
+  private wasmServiceUrl: string;
   private isInitialized = false;
   
-  constructor() {
-    // WASM module is currently disabled
+  constructor(serviceUrl = 'https://wasm.zoo.cuichen.cc') {
+    this.wasmServiceUrl = serviceUrl;
     // eslint-disable-next-line no-console
-    console.log('WASM module is disabled. See docs/WASM_INTEGRATION.md for setup instructions.');
+    console.log(`WASM service configured for: ${this.wasmServiceUrl}`);
   }
 
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
     try {
-      // TODO: Initialize WASM worker when enabled
-      // this.worker = new Worker('/wasm/inference-worker.js');
-      // await this.setupWorkerListeners();
-      // this.isInitialized = true;
+      // Test connection to WASM service
+      const response = await fetch(`${this.wasmServiceUrl}/health`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
-      // eslint-disable-next-line no-console
-      console.warn('WASM initialization skipped - module disabled');
-      return false;
+      if (response.ok) {
+        this.isInitialized = true;
+        // eslint-disable-next-line no-console
+        console.log(`✅ WASM service connected: ${this.wasmServiceUrl}`);
+        return true;
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`WASM service not available: ${response.status}`);
+        return false;
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Failed to initialize WASM module:', error);
+      console.error('Failed to connect to WASM service:', error);
       return false;
     }
   }
 
   async runInference(request: InferenceRequest): Promise<InferenceResponse> {
     if (!this.isInitialized) {
-      throw new Error('WASM module not initialized');
+      // Try to initialize if not already done
+      const initialized = await this.initialize();
+      if (!initialized) {
+        throw new Error('WASM service not available');
+      }
     }
 
-    return new Promise((resolve, reject) => {
-      const message: WasmMessage = {
-        type: 'inference_request',
-        data: request
+    try {
+      const response = await fetch(`${this.wasmServiceUrl}/inference`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(request),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: InferenceResponse = await response.json();
+      return result;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('WASM inference error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
-
-      const timeout = setTimeout(() => {
-        reject(new Error('WASM inference timeout'));
-      }, 10000);
-
-      const handleResponse = (event: MessageEvent<WasmMessage>) => {
-        const { type, data } = event.data;
-        
-        if (type === 'inference_response') {
-          clearTimeout(timeout);
-          this.worker?.removeEventListener('message', handleResponse);
-          resolve(data as InferenceResponse);
-        } else if (type === 'error') {
-          clearTimeout(timeout);
-          this.worker?.removeEventListener('message', handleResponse);
-          const errorData = data as { message: string };
-          reject(new Error(errorData.message));
-        }
-      };
-
-      this.worker?.addEventListener('message', handleResponse);
-      this.worker?.postMessage(message);
-    });
+    }
   }
 
   destroy() {
-    if (this.worker) {
-      this.worker.terminate();
-      this.worker = undefined;
-    }
     this.isInitialized = false;
+    // eslint-disable-next-line no-console
+    console.log('WASM service connection closed');
   }
 }
 

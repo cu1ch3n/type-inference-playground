@@ -43,7 +43,29 @@ export const TypeInferencePlayground = () => {
   };
 
   const handleRuleClick = (ruleId: string) => {
-    setActiveRuleId(activeRuleId === ruleId ? undefined : ruleId);
+    const isToggling = activeRuleId === ruleId;
+    setActiveRuleId(isToggling ? undefined : ruleId);
+    
+    if (!isToggling) {
+      // Find the first step that uses this rule and highlight it
+      const findStepByRule = (steps: any[]): string | undefined => {
+        for (const step of steps) {
+          if (step.ruleId === ruleId) return step.id;
+          if (step.children) {
+            const found = findStepByRule(step.children);
+            if (found) return found;
+          }
+        }
+        return undefined;
+      };
+      
+      if (result?.derivation) {
+        const stepId = findStepByRule(result.derivation);
+        if (stepId) setActiveStepId(stepId);
+      }
+    } else {
+      setActiveStepId(undefined);
+    }
   };
 
   const handleStepClick = (stepId: string) => {

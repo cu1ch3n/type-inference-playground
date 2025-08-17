@@ -52,8 +52,12 @@ export const TypeInferencePlayground = () => {
         for (let i = 0; i < steps.length; i++) {
           const step = steps[i];
           const currentPath = [...basePath, i];
-          if (step.ruleId === ruleId) return currentPath;
-          if (step.children) {
+          console.log('Checking step at path:', currentPath, 'ruleId:', step.ruleId, 'target:', ruleId);
+          if (step.ruleId === ruleId) {
+            console.log('Found matching step at path:', currentPath);
+            return currentPath;
+          }
+          if (step.children && step.children.length > 0) {
             const found = findStepByRule(step.children, currentPath);
             if (found) return found;
           }
@@ -63,6 +67,7 @@ export const TypeInferencePlayground = () => {
       
       if (result?.derivation) {
         const stepPath = findStepByRule(result.derivation);
+        console.log('Final stepPath for rule', ruleId, ':', stepPath);
         if (stepPath) setActiveStepPath(stepPath);
       }
     } else {
@@ -71,26 +76,43 @@ export const TypeInferencePlayground = () => {
   };
 
   const handleStepClick = (stepPath: number[]) => {
+    console.log('Step clicked with path:', stepPath, 'Current activeStepPath:', activeStepPath);
     const isToggling = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
     setActiveStepPath(isToggling ? undefined : stepPath);
     
     if (!isToggling) {
       // Find the step and highlight corresponding rule
       const findStepAtPath = (steps: any[], path: number[]): any | undefined => {
+        console.log('findStepAtPath: steps length:', steps.length, 'path:', path);
+        if (!path || path.length === 0) return undefined;
+        
         let current = steps;
-        for (const index of path) {
-          if (!current[index]) return undefined;
-          if (path.indexOf(index) === path.length - 1) {
+        for (let i = 0; i < path.length; i++) {
+          const index = path[i];
+          console.log('Looking for index', index, 'in current array of length', current.length);
+          if (!current[index]) {
+            console.log('Index not found:', index);
+            return undefined;
+          }
+          
+          if (i === path.length - 1) {
+            console.log('Found step:', current[index]);
             return current[index];
           }
+          
           current = current[index].children || [];
+          console.log('Moving to children, new length:', current.length);
         }
         return undefined;
       };
       
       if (result?.derivation) {
         const step = findStepAtPath(result.derivation, stepPath);
-        if (step?.ruleId) setActiveRuleId(step.ruleId);
+        console.log('Found step at path:', stepPath, 'step:', step);
+        if (step?.ruleId) {
+          console.log('Setting activeRuleId to:', step.ruleId);
+          setActiveRuleId(step.ruleId);
+        }
       }
     } else {
       setActiveRuleId(undefined);

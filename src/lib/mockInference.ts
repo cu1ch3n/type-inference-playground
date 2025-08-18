@@ -34,7 +34,7 @@ export const runInference = async (algorithm: string, expression: string): Promi
   // Generate mock derivation based on expression pattern
   if (algorithm === 'W') {
     return generateAlgorithmWDerivation(cleanExpression);
-  } else if (algorithm === 'WorklistDK') {
+  } else if (algorithm === 'Worklist') {
     return generateWorklistDerivation(cleanExpression);
   }
   

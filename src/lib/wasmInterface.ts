@@ -24,36 +24,61 @@ export class WasmTypeInference {
   private isInitialized = false;
   private outputBuffer = '';
   
-  constructor(wasmUrl = 'https://files.cuichen.cc/bin.wasm') {
+  constructor(wasmUrl = '/bin.wasm') {
     this.wasmUrl = wasmUrl;
-    // eslint-disable-next-line no-console
-    console.log(`WASM configured for: ${this.wasmUrl}`);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log(`WASM configured for: ${this.wasmUrl}`);
+    }
   }
 
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
     try {
+      // Create AbortController with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 7000);
+      
       // Load WASM file directly
       const response = await fetch(this.wasmUrl, {
         mode: 'cors',
-        cache: 'default'
+        cache: 'default',
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch WASM: ${response.status}`);
       }
       
       const wasmBytes = await response.arrayBuffer();
+      
+      // Basic integrity check - ensure we got a valid WASM file
+      if (wasmBytes.byteLength < 8) {
+        throw new Error('Invalid WASM file: too small');
+      }
+      
+      // Check WASM magic number (0x6d736100)
+      const magicNumber = new Uint32Array(wasmBytes.slice(0, 4))[0];
+      if (magicNumber !== 0x6d736100) {
+        throw new Error('Invalid WASM file: incorrect magic number');
+      }
+      
       this.wasmModule = await WebAssembly.compile(wasmBytes);
       this.isInitialized = true;
       
-      // eslint-disable-next-line no-console
-      console.log(`✅ WASM module loaded: ${this.wasmUrl}`);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log(`✅ WASM module loaded: ${this.wasmUrl}`);
+      }
       return true;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to load WASM module:', error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to load WASM module:', error);
+      }
       return false;
     }
   }
@@ -95,7 +120,10 @@ export class WasmTypeInference {
       // Parse output as JSON or return as text
       const output = this.outputBuffer.trim();
 
-      console.log(output);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log(output);
+      }
       try {
         const result = JSON.parse(output);
         return {
@@ -112,8 +140,10 @@ export class WasmTypeInference {
         };
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('WASM inference error:', error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error('WASM inference error:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown WASM error',
@@ -124,8 +154,10 @@ export class WasmTypeInference {
   destroy() {
     this.wasmModule = null;
     this.isInitialized = false;
-    // eslint-disable-next-line no-console
-    console.log('WASM module unloaded');
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('WASM module unloaded');
+    }
   }
 }
 

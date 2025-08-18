@@ -132,15 +132,7 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background">
         {/* Main Content */}
         <div className="container mx-auto px-6 py-8">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                Type Inference Playground
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                Explore type inference algorithms through interactive derivations
-              </p>
-            </div>
+          <div className="flex justify-end items-center mb-8">
             <WasmStatusIndicator />
           </div>
           

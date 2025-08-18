@@ -378,15 +378,18 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   },
 ];
 
+const universalExamples = [
+  {
+    name: "Trivial Application",
+    expression: "(\\x. x) 1",
+    description: "Trivial function application of identity function to integer literal"
+  }
+];
+
 export const algorithmExamples = {
-  "*": [
-    {
-      name: "Trivial Application",
-      expression: "(\\x. x) 1",
-      description: "Trivial function application of identity function to integer literal"
-    }
-  ],
+  "*": universalExamples,
   "W": [
+    ...universalExamples,
     {
       name: "Identity",
       expression: "\\x. x",
@@ -397,5 +400,12 @@ export const algorithmExamples = {
       expression: "let id = (\\x. x) in (id 1, id True)",
       description: "id can be instantiated with different types"
     }
-  ]
+  ],
+  "R": universalExamples,
+  "DK": universalExamples,
+  "Contextual": universalExamples,
+  "Worklist": universalExamples,
+  "Elementary": universalExamples,
+  "Bounded": universalExamples,
+  "IU": universalExamples
 } as const;

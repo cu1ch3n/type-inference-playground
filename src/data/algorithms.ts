@@ -4,7 +4,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "W",
     name: "Algorithm W",
-    labels: ["Global", "Unification", "Hindley-Milner", "Principal Types"],
+    labels: ["Global", "Unification", "Hindley-Milner"],
     viewMode: "tree",
     paper: {
       title: "A Theory of Type Polymorphism in Programming",
@@ -42,7 +42,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "R",
     name: "Algorithm R",
-    labels: ["Global", "Unification", "Hindley-Milner", "Principal Types"],
+    labels: ["Global", "Unification", "Hindley-Milner"],
     viewMode: "tree",
     paper: {
       title: "No Unification Variable Left Behind: Fully Grounding Type Inference for the HDM System",
@@ -62,7 +62,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "DK",
     name: "Dunfield-Krishnaswami",
-    labels: ["Bidirectional", "Higher-Rank", "Polymorphism"],
+    labels: ["Global", "Unification", "Bidirectional", "System F", "Higher-Rank", "Implicit"],
     viewMode: "tree",
     paper: {
       title: "Complete and Easy Bidirectional Typechecking for Higher-rank Polymorphism",
@@ -81,8 +81,8 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   },
   {
     id: "Contextual",
-    name: "Contextual",
-    labels: ["Local", "Contextual", "Bidirectional"],
+    name: "Contextual Typing",
+    labels: ["Local", "Contextual"],
     viewMode: "tree",
     paper: {
       title: "Contextual Typing",
@@ -102,7 +102,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "Worklist",
     name: "Worklist (Dunfield-Krishnaswami)",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist"],
+    labels: ["Global", "Unification", "Bidirectional", "Worklist", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit"],
     viewMode: "linear",
     paper: {
       title: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
@@ -319,7 +319,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "Elementary",
     name: "Worklist (Elementary)",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist", "Elementary"],
+    labels: ["Global", "Unification", "Worklist", "Dunfield-Krishnaswami", "System F", "Higher-Rank", "Implicit", "Explicit Type Application"],
     viewMode: "linear",
     paper: {
       title: "Elementary Type Inference",
@@ -339,7 +339,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "Bounded",
     name: "Worklist (Bounded Quantification)",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist", "Bounded-Quantification"],
+    labels: ["Global", "Unification", "Worklist", "System Fsub", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit", "Explicit Type Application", "Bounded-Quantification"],
     viewMode: "linear",
     paper: {
       title: "Greedy Implicit Bounded Quantification",
@@ -359,7 +359,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
   {
     id: "IU",
     name: "Worklist (Intersection and Union)",
-    labels: ["Global", "Unification", "Dunfield-Krishnaswami", "Higher-Rank", "Worklist", "Intersection-Union"],
+    labels: ["Global", "Unification", "Worklist", "System F", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit", "Explicit Type Application", "Intersection-Union"],
     viewMode: "linear",
     paper: {
       title: "Bidirectional Higher-Rank Polymorphism with Intersection and Union Types",

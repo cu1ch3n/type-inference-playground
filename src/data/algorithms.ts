@@ -53,9 +53,9 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: "placeholder",
-        name: "Will be added soon",
+        name: "TBA",
         premises: [],
-        conclusion: "Rules for this algorithm will be added soon"
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
@@ -72,28 +72,10 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     },
     rules: [
       {
-        id: "Var",
-        name: "Var",
-        premises: ["x : \\sigma \\in \\Gamma", "\\tau = inst(\\sigma)"],
-        conclusion: "\\Gamma \\vdash x : \\sigma, \\emptyset"
-      },
-      {
-        id: "App",
-        name: "App",
-        premises: ["\\Gamma \\vdash e_0 : \\tau_0, S_0", "S_0\\Gamma \\vdash e_1 : \\tau_1, S_1", "\\tau' = newvar", "S_2 = mgu(S_1\\tau_0, \\tau_1 \\rightarrow \\tau')"],
-        conclusion: "\\Gamma \\vdash e_0 ~ e_1 : S_2\\tau', S_2S_1S_0"
-      },
-      {
-        id: "Abs",
-        name: "Abs",
-        premises: ["r = newvar", "\\Gamma, x : \\tau \\vdash e : \\tau', S"],
-        conclusion: "\\Gamma \\vdash \\lambda x.~e : S\\tau \\rightarrow \\tau', S"
-      },
-      {
-        id: "Let",
-        name: "Let",
-        premises: ["\\Gamma \\vdash e_0 : \\tau, S_0", "S_0\\Gamma, x : \\overline{S_0\\Gamma}(\\tau) \\vdash e_1 : \\tau', S_1"],
-        conclusion: "\\Gamma \\vdash \\text{let } x = e_0 \\text{ in } e_1 : \\tau', S_1 S_0"
+        id: "placeholder",
+        name: "TBA",
+        premises: [],
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
@@ -111,9 +93,9 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: "placeholder",
-        name: "Will be added soon",
+        name: "TBA",
         premises: [],
-        conclusion: "Rules for this algorithm will be added soon"
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
@@ -348,9 +330,9 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: "placeholder",
-        name: "Will be added soon",
+        name: "TBA",
         premises: [],
-        conclusion: "Rules for this algorithm will be added soon"
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
@@ -368,9 +350,9 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: "placeholder",
-        name: "Will be added soon",
+        name: "TBA",
         premises: [],
-        conclusion: "Rules for this algorithm will be added soon"
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
@@ -388,15 +370,22 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     rules: [
       {
         id: "placeholder",
-        name: "Will be added soon",
+        name: "TBA",
         premises: [],
-        conclusion: "Rules for this algorithm will be added soon"
+        conclusion: "\\text{Rules will be added soon.}"
       }
     ]
   },
 ];
 
 export const algorithmExamples = {
+  "*": [
+    {
+      name: "Trivial Application",
+      expression: "(\\x. x) 1",
+      description: "Trivial function application of identity function to integer literal"
+    }
+  ],
   "W": [
     {
       name: "Identity",

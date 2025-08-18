@@ -184,7 +184,7 @@ export const TypeInferencePlayground = () => {
                 <span>
                   Released under the{' '}
                   <a 
-                    href="https://opensource.org/licenses/MIT" 
+                    href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-primary hover:underline transition-colors duration-200"

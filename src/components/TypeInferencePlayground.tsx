@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Separator } from '@/components/ui/separator';
 import { Navbar } from './Navbar';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
 import { TypingRules } from './TypingRules';
-import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';

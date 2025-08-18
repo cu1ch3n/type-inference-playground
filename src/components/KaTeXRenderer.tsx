@@ -27,8 +27,8 @@ export const KaTeXRenderer = ({
         katex.render(expression, ref.current, {
           displayMode,
           throwOnError: false,
-          trust: false,
-          strict: "warn"
+          trust: true,
+          strict: false
         });
       } catch (error) {
         console.error('KaTeX rendering error:', error);

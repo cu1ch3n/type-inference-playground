@@ -132,10 +132,6 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background">
         {/* Main Content */}
         <div className="container mx-auto px-6 py-8">
-          <div className="flex justify-end items-center mb-8">
-            <WasmStatusIndicator />
-          </div>
-          
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
             <div className="lg:col-span-2 space-y-8">

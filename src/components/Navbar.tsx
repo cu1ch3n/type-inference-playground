@@ -1,5 +1,6 @@
 import { Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { WasmStatusIndicator } from './WasmStatusIndicator';
 
 export const Navbar = () => {
   return (
@@ -22,13 +23,16 @@ export const Navbar = () => {
             </h1>
           </div>
           
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo', '_blank')}
-          >
-            <Github className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-3">
+            <WasmStatusIndicator />
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo', '_blank')}
+            >
+              <Github className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

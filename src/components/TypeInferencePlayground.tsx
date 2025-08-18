@@ -131,15 +131,22 @@ export const TypeInferencePlayground = () => {
       <Navbar />
       <div className="min-h-screen bg-background">
         {/* Main Content */}
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Type Inference Playground</h1>
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                Type Inference Playground
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Explore type inference algorithms through interactive derivations
+              </p>
+            </div>
             <WasmStatusIndicator />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-8">
               <AlgorithmSelector
                 algorithms={algorithms}
                 selectedAlgorithm={selectedAlgorithm}
@@ -161,7 +168,7 @@ export const TypeInferencePlayground = () => {
             </div>
 
             {/* Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-8">
               {/* Derivation */}
               <DerivationViewer
                 result={result}
@@ -183,27 +190,33 @@ export const TypeInferencePlayground = () => {
           </div>
           
           {/* Footnote */}
-          <div className="mt-16 pt-8 border-t border-muted-foreground/20">
+          <div className="mt-20 pt-8 border-t border-muted-foreground/20">
             <div className="text-center text-sm text-muted-foreground">
-              Released under the{' '}
-              <a 
-                href="https://opensource.org/licenses/MIT" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                MIT License
-              </a>
-              .{' '}
-              Copyright © 2025{' '}
-              <a 
-                href="https://cuichen.cc" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Chen Cui
-              </a>
+              <div className="flex items-center justify-center gap-4">
+                <span>
+                  Released under the{' '}
+                  <a 
+                    href="https://opensource.org/licenses/MIT" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline transition-colors duration-200"
+                  >
+                    MIT License
+                  </a>
+                </span>
+                <span className="text-muted-foreground/50">•</span>
+                <span>
+                  Copyright © 2025{' '}
+                  <a 
+                    href="https://cuichen.cc" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline transition-colors duration-200"
+                  >
+                    Chen Cui
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
         </div>

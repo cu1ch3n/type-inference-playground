@@ -13,24 +13,24 @@ interface TypingRulesProps {
 export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesProps) => {
   return (
     <Card className="academic-panel">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4" />
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <BookOpen className="w-5 h-5 text-primary" />
           Algorithmic Rules
         </CardTitle>
       </CardHeader>
       <CardContent>
         {/* Reduction rules - single lines */}
         {rules.some(rule => rule.reduction) && (
-          <div className="space-y-2 mb-4">
+          <div className="space-y-3 mb-6">
             {rules.filter(rule => rule.reduction).map((rule) => (
               <div
                 key={rule.id}
                 className={`
-                  flex items-center justify-between p-2 rounded border transition-all duration-200
+                  flex items-center justify-between p-3 rounded-lg border transition-all duration-300 hover:scale-[1.01]
                   ${activeRuleId === rule.id 
-                    ? 'bg-highlight/30 border-primary shadow-sm' 
-                    : 'bg-rule border-border hover:bg-rule/80'
+                    ? 'bg-highlight/30 border-primary shadow-md' 
+                    : 'bg-rule border-border hover:bg-rule/80 hover:shadow-md'
                   }
                   ${onRuleClick ? 'cursor-pointer' : ''}
                 `}
@@ -56,15 +56,15 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
         {/* Traditional premise/conclusion rules - grid layout */}
         {rules.some(rule => !rule.reduction) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {rules.filter(rule => !rule.reduction).map((rule) => (
               <div
                 key={rule.id}
                 className={`
-                  p-3 rounded border transition-all duration-200
+                  p-4 rounded-lg border transition-all duration-300 hover:scale-[1.02]
                   ${activeRuleId === rule.id 
-                    ? 'bg-highlight/30 border-primary shadow-sm' 
-                    : 'bg-rule border-border hover:bg-rule/80'
+                    ? 'bg-highlight/30 border-primary shadow-md' 
+                    : 'bg-rule border-border hover:bg-rule/80 hover:shadow-md'
                   }
                   ${onRuleClick ? 'cursor-pointer' : ''}
                 `}

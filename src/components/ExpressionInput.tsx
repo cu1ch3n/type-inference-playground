@@ -49,16 +49,16 @@ export const ExpressionInput = ({
 
   return (
     <Card className="academic-panel">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Code className="w-4 h-4" />
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Code className="w-5 h-5 text-primary" />
           Input Program
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
-            <Lightbulb className="w-3 h-3" />
+          <label className="text-sm font-medium text-foreground mb-3 block flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-accent" />
             Examples
           </label>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
@@ -81,7 +81,7 @@ export const ExpressionInput = ({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">
+          <label className="text-sm font-medium text-foreground mb-3 block">
             Expression
           </label>
           <div className="relative">
@@ -89,7 +89,7 @@ export const ExpressionInput = ({
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-base bg-code min-h-[100px] resize-none pr-12" 
+              className="font-code text-base bg-code min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-colors duration-200" 
               spellCheck={false} 
             />
             <Button 
@@ -125,11 +125,11 @@ export const ExpressionInput = ({
         </div>
 
         {selectedExample && (
-          <div className="p-3 bg-algorithm rounded-lg">
-            <p className="text-sm font-medium mb-1">
+          <div className="p-4 bg-algorithm rounded-lg border border-primary/20 transition-all duration-200">
+            <p className="text-sm font-medium mb-2 text-foreground">
               {currentExamples.find(e => e.name === selectedExample)?.name}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {currentExamples.find(e => e.name === selectedExample)?.description}
             </p>
           </div>

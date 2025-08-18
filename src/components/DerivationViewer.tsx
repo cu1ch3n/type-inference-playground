@@ -67,9 +67,9 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
   if (!result) {
     return (
       <Card className="academic-panel">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <GitBranch className="w-4 h-4" />
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <GitBranch className="w-5 h-5 text-primary" />
             Derivation
           </CardTitle>
         </CardHeader>
@@ -92,10 +92,10 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
 
   return (
     <Card className="academic-panel">
-      <CardHeader>
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <GitBranch className="w-4 h-4" />
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <GitBranch className="w-5 h-5 text-primary" />
             Derivation
           </CardTitle>
           {result.finalType && (
@@ -115,9 +115,12 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
       <CardContent className="space-y-4">
         {/* Show error if present */}
         {!result.success && result.error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-destructive font-medium">Error</p>
-            <div className="text-sm text-destructive/80 mt-1">
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg transition-all duration-200">
+            <p className="text-destructive font-medium flex items-center gap-2">
+              <Activity className="w-4 h-4" />
+              Error
+            </p>
+            <div className="text-sm text-destructive/80 mt-2">
               {result.errorLatex ? (
                 <KaTeXRenderer 
                   expression={result.error} 

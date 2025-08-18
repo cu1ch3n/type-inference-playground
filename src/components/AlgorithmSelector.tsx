@@ -22,9 +22,9 @@ export const AlgorithmSelector = ({
   return (
     <div className="space-y-4">
       <Card className="academic-panel">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Zap className="w-4 h-4" />
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-medium flex items-center gap-2">
+            <Zap className="w-5 h-5 text-primary" />
             Type Inference Algorithm
           </CardTitle>
         </CardHeader>
@@ -45,9 +45,9 @@ export const AlgorithmSelector = ({
       </Card>
 
       {selected && (
-        <div className="p-4 bg-algorithm rounded-lg border">
-          <div className="mb-3">
-            <h3 className="font-medium text-sm mb-2">{selected.name}</h3>
+        <div className="p-5 bg-algorithm rounded-lg border border-primary/20 transition-all duration-200 hover:border-primary/30">
+          <div className="mb-4">
+            <h3 className="font-medium text-base mb-3 text-foreground">{selected.name}</h3>
             <AlgorithmLabels labels={selected.labels} />
           </div>
           {selected.paper && (

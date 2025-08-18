@@ -212,31 +212,41 @@ All colors MUST be HSL. Mathematical typography optimized.
     }
   }
   
+  /* Modern polished shadows */
+  --shadow-subtle: 0 1px 3px 0 hsl(var(--foreground) / 0.1), 0 1px 2px -1px hsl(var(--foreground) / 0.1);
+  --shadow-medium: 0 4px 6px -1px hsl(var(--foreground) / 0.1), 0 2px 4px -2px hsl(var(--foreground) / 0.1);
+  --shadow-large: 0 10px 15px -3px hsl(var(--foreground) / 0.1), 0 4px 6px -4px hsl(var(--foreground) / 0.1);
+
   /* Academic Panel Styling */
   .academic-panel {
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border));
-    box-shadow: var(--shadow-card);
-    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .academic-panel:hover {
-    box-shadow: var(--shadow-elegant);
+    box-shadow: var(--shadow-large);
+    transform: translateY(-1px);
   }
   
   /* Derivation Step Highlighting */
   .derivation-step {
-    transition: var(--transition-smooth);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 0.5rem;
     padding: 0.75rem;
+    box-shadow: var(--shadow-subtle);
   }
   
   .derivation-step:hover {
     background: hsl(var(--highlight) / 0.3);
+    box-shadow: var(--shadow-medium);
+    transform: scale(1.01);
   }
   
   .derivation-step.active {
     background: hsl(var(--highlight) / 0.5);
     border: 2px solid hsl(var(--primary));
+    box-shadow: var(--shadow-medium);
   }
 }

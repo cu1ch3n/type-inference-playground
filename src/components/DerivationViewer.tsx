@@ -91,7 +91,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
   const hasDerivation = result.derivation && result.derivation.length > 0;
 
   return (
-    <Card className="academic-panel">
+    <Card className="academic-panel" data-derivation-viewer>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">

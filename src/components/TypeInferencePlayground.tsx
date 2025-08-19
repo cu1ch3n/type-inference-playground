@@ -6,9 +6,11 @@ import { ExpressionInput } from './ExpressionInput';
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
+import { ShareExportButtons } from './ShareExportButtons';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
+import { getParamsFromUrl, updateUrlWithParams } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
@@ -17,8 +19,31 @@ export const TypeInferencePlayground = () => {
   const [isInferring, setIsInferring] = useState(false);
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
+  const [initialized, setInitialized] = useState(false);
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
+
+  // Initialize from URL parameters
+  useEffect(() => {
+    const { algorithm, expression: urlExpression } = getParamsFromUrl();
+    
+    if (algorithm && algorithms.find(a => a.id === algorithm)) {
+      setSelectedAlgorithm(algorithm);
+    }
+    
+    if (urlExpression) {
+      setExpression(urlExpression);
+    }
+    
+    setInitialized(true);
+  }, []);
+
+  // Update URL when algorithm or expression changes (but not during initialization)
+  useEffect(() => {
+    if (initialized) {
+      updateUrlWithParams(selectedAlgorithm, expression);
+    }
+  }, [selectedAlgorithm, expression, initialized]);
 
   const handleInference = async () => {
     if (!expression.trim() || !selectedAlgorithm) return;
@@ -116,15 +141,15 @@ export const TypeInferencePlayground = () => {
     }
   };
 
-  // Auto-run inference when algorithm or expression changes
+  // Auto-run inference when algorithm or expression changes (only after initialization)
   useEffect(() => {
-    if (expression.trim() && selectedAlgorithm) {
+    if (initialized && expression.trim() && selectedAlgorithm) {
       const timer = setTimeout(() => {
         handleInference();
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [selectedAlgorithm, expression]);
+  }, [selectedAlgorithm, expression, initialized]);
 
   return (
     <>
@@ -153,6 +178,16 @@ export const TypeInferencePlayground = () => {
                 isInferring={isInferring}
                 selectedAlgorithm={selectedAlgorithm}
               />
+              
+              {/* Share and Export Buttons */}
+              {selectedAlgorithmData && (
+                <ShareExportButtons
+                  algorithm={selectedAlgorithmData}
+                  expression={expression}
+                  result={result}
+                  disabled={isInferring}
+                />
+              )}
             </div>
 
             {/* Right Columns - Derivation and Rules */}

@@ -179,12 +179,11 @@ export const TypeInferencePlayground = () => {
                 selectedAlgorithm={selectedAlgorithm}
               />
               
-              {/* Share and Export Buttons */}
+              {/* Share Button */}
               {selectedAlgorithmData && (
                 <ShareExportButtons
                   algorithm={selectedAlgorithmData}
                   expression={expression}
-                  result={result}
                   disabled={isInferring}
                 />
               )}

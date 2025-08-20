@@ -36,12 +36,26 @@ export const Navbar = () => {
                   <Github className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}>
-                  Frontend
+              <DropdownMenuContent align="start" className="w-80">
+                <DropdownMenuItem 
+                  onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
+                  className="flex items-center gap-3 p-3 cursor-pointer"
+                >
+                  <Github className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium">Frontend</span>
+                    <span className="text-sm text-muted-foreground font-mono">cu1ch3n/type-inference-zoo-frontend</span>
+                  </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-wasm', '_blank')}>
-                  Core
+                <DropdownMenuItem 
+                  onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-wasm', '_blank')}
+                  className="flex items-center gap-3 p-3 cursor-pointer"
+                >
+                  <Github className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium">Core</span>
+                    <span className="text-sm text-muted-foreground font-mono">cu1ch3n/type-inference-zoo-wasm</span>
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

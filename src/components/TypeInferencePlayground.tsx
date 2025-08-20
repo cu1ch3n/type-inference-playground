@@ -156,59 +156,66 @@ export const TypeInferencePlayground = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background animate-fade-in">
         {/* Main Content */}
         <div className="container mx-auto px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
             {/* Left Column - Input & Algorithm */}
             <div className="lg:col-span-2 space-y-8">
-              <AlgorithmSelector
-                algorithms={algorithms}
-                selectedAlgorithm={selectedAlgorithm}
-                onAlgorithmChange={setSelectedAlgorithm}
-              />
+              <div className="animate-stagger-1">
+                <AlgorithmSelector
+                  algorithms={algorithms}
+                  selectedAlgorithm={selectedAlgorithm}
+                  onAlgorithmChange={setSelectedAlgorithm}
+                />
+              </div>
               
-              <ExpressionInput
-                expression={expression}
-                onExpressionChange={(expr) => {
-                  setExpression(expr);
-                  if (!expr.trim()) {
-                    setResult(undefined);
-                  }
-                }}
-                onInfer={handleInference}
-                isInferring={isInferring}
-                selectedAlgorithm={selectedAlgorithm}
-              />
-              
+              <div className="animate-stagger-2">
+                <ExpressionInput
+                  expression={expression}
+                  onExpressionChange={(expr) => {
+                    setExpression(expr);
+                    if (!expr.trim()) {
+                      setResult(undefined);
+                    }
+                  }}
+                  onInfer={handleInference}
+                  isInferring={isInferring}
+                  selectedAlgorithm={selectedAlgorithm}
+                />
+              </div>
             </div>
 
             {/* Right Columns - Derivation and Rules */}
             <div className="lg:col-span-4 space-y-8">
               {/* Derivation */}
-              <DerivationViewer
-                result={result}
-                algorithm={selectedAlgorithmData}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                onStepClick={handleStepClick}
-                expression={expression}
-                isInferring={isInferring}
-              />
+              <div className="animate-stagger-3">
+                <DerivationViewer
+                  result={result}
+                  algorithm={selectedAlgorithmData}
+                  activeStepPath={activeStepPath}
+                  activeRuleId={activeRuleId}
+                  onStepClick={handleStepClick}
+                  expression={expression}
+                  isInferring={isInferring}
+                />
+              </div>
               
               {/* Typing Rules */}
               {selectedAlgorithmData && (
-                <TypingRules
-                  rules={selectedAlgorithmData.rules}
-                  activeRuleId={activeRuleId}
-                  onRuleClick={handleRuleClick}
-                />
+                <div className="animate-stagger-4">
+                  <TypingRules
+                    rules={selectedAlgorithmData.rules}
+                    activeRuleId={activeRuleId}
+                    onRuleClick={handleRuleClick}
+                  />
+                </div>
               )}
             </div>
           </div>
           
           {/* Footnote */}
-          <div className="mt-20 pt-8 border-t border-muted-foreground/20">
+          <div className="mt-20 pt-8 border-t border-muted-foreground/20 animate-stagger-5">
             <div className="text-center text-sm text-muted-foreground">
               <div className="flex items-center justify-center gap-4">
                 <span>

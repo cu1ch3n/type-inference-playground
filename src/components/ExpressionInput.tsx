@@ -48,26 +48,31 @@ export const ExpressionInput = ({
   }, [expression, selectedExample, currentExamples]);
 
   return (
-    <Card className="academic-panel">
+    <Card className="academic-panel hover-scale-sm transition-smooth">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Code className="w-5 h-5 text-primary" />
+          <Code className="w-5 h-5 text-primary transition-transform duration-200 hover:scale-110" />
           Input Program
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div>
+        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <label className="text-sm font-medium text-foreground mb-3 block flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-accent" />
+            <Lightbulb className="w-4 h-4 text-accent transition-transform duration-200 hover:scale-110" />
             Examples
           </label>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
-            <SelectTrigger className="w-full bg-card">
+            <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
               <SelectValue placeholder="Choose an example..." />
             </SelectTrigger>
-            <SelectContent>
-              {currentExamples.map(example => (
-                <SelectItem key={example.name} value={example.name}>
+            <SelectContent className="animate-fade-in-scale">
+              {currentExamples.map((example, index) => (
+                <SelectItem 
+                  key={example.name} 
+                  value={example.name}
+                  className="transition-fast hover:bg-accent/50"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
                   <div className="flex flex-col items-start">
                     <span className="font-medium">{example.name}</span>
                     <span className="text-xs text-muted-foreground font-code">
@@ -80,7 +85,7 @@ export const ExpressionInput = ({
           </Select>
         </div>
 
-        <div>
+        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <label className="text-sm font-medium text-foreground mb-3 block">
             Expression
           </label>
@@ -89,7 +94,7 @@ export const ExpressionInput = ({
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-base bg-code min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-colors duration-200" 
+              className="font-code text-base bg-code min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10" 
               spellCheck={false} 
             />
             <Button 
@@ -98,34 +103,35 @@ export const ExpressionInput = ({
               size="sm" 
               className={`
                 absolute bottom-2 right-2 h-8 w-8 p-0 
-                transition-all duration-200 hover:scale-105 active:scale-95
-                ${isInferring ? 'animate-pulse' : ''}
+                btn-interactive transition-smooth
+                ${isInferring ? 'animate-pulse glow-primary' : 'hover:glow-primary'}
+                ${!expression.trim() ? 'opacity-50' : ''}
               `}
             >
               {isInferring ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <Play className="w-4 h-4" />
+                <Play className="w-4 h-4 transition-transform duration-200 hover:scale-110" />
               )}
             </Button>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <Button 
             onClick={handleClear} 
             variant="outline" 
             size="sm" 
-            className="text-xs"
+            className="text-xs btn-interactive transition-smooth"
             disabled={!expression.trim()}
           >
-            <RotateCcw className="w-3 h-3 mr-1" />
+            <RotateCcw className="w-3 h-3 mr-1 transition-transform duration-200 hover:rotate-180" />
             Clear
           </Button>
         </div>
 
         {selectedExample && (
-          <div className="p-4 bg-algorithm rounded-lg border border-primary/20 transition-all duration-200">
+          <div className="p-4 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
             <p className="text-sm font-medium mb-2 text-foreground">
               {currentExamples.find(e => e.name === selectedExample)?.name}
             </p>

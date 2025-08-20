@@ -21,21 +21,26 @@ export const AlgorithmSelector = ({
 
   return (
     <div className="space-y-4">
-      <Card className="academic-panel">
+      <Card className="academic-panel hover-scale-sm transition-smooth">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-medium flex items-center gap-2">
-            <Zap className="w-5 h-5 text-primary" />
+            <Zap className="w-5 h-5 text-primary transition-transform duration-200 hover:scale-110" />
             Type Inference Algorithm
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Select value={selectedAlgorithm} onValueChange={onAlgorithmChange}>
-            <SelectTrigger className="w-full bg-card">
+            <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
               <SelectValue placeholder="Select an algorithm..." />
             </SelectTrigger>
-            <SelectContent>
-              {algorithms.map((algorithm) => (
-                <SelectItem key={algorithm.id} value={algorithm.id}>
+            <SelectContent className="animate-fade-in-scale">
+              {algorithms.map((algorithm, index) => (
+                <SelectItem 
+                  key={algorithm.id} 
+                  value={algorithm.id}
+                  className="transition-fast hover:bg-accent/50"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
                   {algorithm.name}
                 </SelectItem>
               ))}
@@ -45,7 +50,7 @@ export const AlgorithmSelector = ({
       </Card>
 
       {selected && (
-        <div className="p-5 bg-algorithm rounded-lg border border-primary/20 transition-all duration-200 hover:border-primary/30">
+        <div className="p-5 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
           <div className="mb-4">
             <h3 className="font-medium text-base mb-3 text-foreground">{selected.name}</h3>
             <AlgorithmLabels labels={selected.labels} />
@@ -61,10 +66,10 @@ export const AlgorithmSelector = ({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-auto p-1" 
+                    className="h-auto p-1 btn-interactive hover:text-primary" 
                     onClick={() => window.open(selected.paper!.url, '_blank')}
                   >
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3 h-3 transition-transform duration-200 hover:scale-110" />
                   </Button>
                 )}
               </div>

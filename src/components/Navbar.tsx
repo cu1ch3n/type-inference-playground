@@ -37,7 +37,7 @@ export const Navbar = () => {
               variant="outline"
               size="icon"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="relative"
+              className="relative btn-interactive"
             >
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -45,14 +45,14 @@ export const Navbar = () => {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="btn-interactive">
                   <Github className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-80">
+              <DropdownMenuContent align="start" className="w-80 animate-fade-in-scale">
                 <DropdownMenuItem 
                   onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
-                  className="flex items-center gap-3 p-3 cursor-pointer"
+                  className="flex items-center gap-3 p-3 cursor-pointer transition-fast hover:bg-accent/80"
                 >
                   <Github className="w-4 h-4 text-muted-foreground" />
                   <div className="flex flex-col gap-1">
@@ -62,7 +62,7 @@ export const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-wasm', '_blank')}
-                  className="flex items-center gap-3 p-3 cursor-pointer"
+                  className="flex items-center gap-3 p-3 cursor-pointer transition-fast hover:bg-accent/80"
                 >
                   <Github className="w-4 h-4 text-muted-foreground" />
                   <div className="flex flex-col gap-1">

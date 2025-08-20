@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, Home } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon } from 'lucide-react';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
-import { Link } from 'react-router-dom';
+
 import { InferenceResult } from '@/types/inference';
 
 interface ComparisonCell {
@@ -175,17 +175,9 @@ export const Compare = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Link to="/">
-            <Button variant="outline" size="sm">
-              <Home className="h-4 w-4 mr-2" />
-              Back to Playground
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
-            <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
-          </div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+          <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -238,7 +230,7 @@ export const Compare = () => {
               <div className="space-y-2">
                 {expressions.map(expression => (
                   <div key={expression} className="flex items-center gap-2 p-2 border rounded">
-                    <KaTeXRenderer expression={expression} className="flex-1 text-sm" />
+                    <code className="flex-1 text-sm font-mono">{expression}</code>
                     <X 
                       className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
                       onClick={() => removeExpression(expression)}
@@ -308,7 +300,7 @@ export const Compare = () => {
                     {expressions.map(expression => (
                       <TableRow key={expression}>
                         <TableCell className="font-mono text-sm border-r">
-                          <KaTeXRenderer expression={expression} />
+                          <code>{expression}</code>
                         </TableCell>
                         {selectedAlgorithms.map(algorithmId => (
                           <TableCell key={`${expression}-${algorithmId}`} className="text-center">

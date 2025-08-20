@@ -37,11 +37,10 @@ export const Navbar = () => {
             <Link to="/compare">
               <Button
                 variant="outline"
-                size="sm"
-                className="btn-interactive h-8 sm:h-9 px-2 sm:px-3"
+                size="icon"
+                className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
               >
-                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                <span className="hidden sm:inline">Compare</span>
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </Link>
             <Button

@@ -3,6 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { Navbar } from './Navbar';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
+import { ExpressionHistory, useExpressionHistory } from './ExpressionHistory';
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
@@ -20,6 +21,7 @@ export const TypeInferencePlayground = () => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
   const [initialized, setInitialized] = useState(false);
+  const { addToHistory } = useExpressionHistory();
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
@@ -55,6 +57,11 @@ export const TypeInferencePlayground = () => {
     try {
       const inferenceResult = await runInference(selectedAlgorithm, expression);
       setResult(inferenceResult);
+      
+      // Add to history if inference was successful
+      if (inferenceResult.success) {
+        addToHistory(expression);
+      }
     } catch (error) {
       console.error('Inference error:', error);
       setResult({
@@ -177,6 +184,11 @@ export const TypeInferencePlayground = () => {
                 onInfer={handleInference}
                 isInferring={isInferring}
                 selectedAlgorithm={selectedAlgorithm}
+              />
+              
+              <ExpressionHistory
+                currentExpression={expression}
+                onExpressionSelect={setExpression}
               />
               
               {/* Share Button */}

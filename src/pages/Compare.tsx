@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
@@ -28,6 +28,9 @@ export const Compare = () => {
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
+  const [draggedAlgorithm, setDraggedAlgorithm] = useState<string | null>(null);
+  const [draggedExpression, setDraggedExpression] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const navigate = useNavigate();
 
   // Load shared state from URL on mount
@@ -139,6 +142,68 @@ export const Compare = () => {
   const clearAllExpressions = () => {
     setExpressions([]);
     setComparisonResults(new Map());
+  };
+
+  // Drag and Drop handlers for algorithms
+  const handleAlgorithmDragStart = (algorithmId: string, index: number) => {
+    setDraggedAlgorithm(algorithmId);
+  };
+
+  const handleAlgorithmDragEnd = () => {
+    setDraggedAlgorithm(null);
+    setDragOverIndex(null);
+  };
+
+  const handleAlgorithmDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleAlgorithmDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (!draggedAlgorithm) return;
+
+    const dragIndex = selectedAlgorithms.indexOf(draggedAlgorithm);
+    if (dragIndex === dropIndex) return;
+
+    const newAlgorithms = [...selectedAlgorithms];
+    newAlgorithms.splice(dragIndex, 1);
+    newAlgorithms.splice(dropIndex, 0, draggedAlgorithm);
+    
+    setSelectedAlgorithms(newAlgorithms);
+    setDraggedAlgorithm(null);
+    setDragOverIndex(null);
+  };
+
+  // Drag and Drop handlers for expressions
+  const handleExpressionDragStart = (expression: string, index: number) => {
+    setDraggedExpression(expression);
+  };
+
+  const handleExpressionDragEnd = () => {
+    setDraggedExpression(null);
+    setDragOverIndex(null);
+  };
+
+  const handleExpressionDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleExpressionDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (!draggedExpression) return;
+
+    const dragIndex = expressions.indexOf(draggedExpression);
+    if (dragIndex === dropIndex) return;
+
+    const newExpressions = [...expressions];
+    newExpressions.splice(dragIndex, 1);
+    newExpressions.splice(dropIndex, 0, draggedExpression);
+    
+    setExpressions(newExpressions);
+    setDraggedExpression(null);
+    setDragOverIndex(null);
   };
 
   // Auto-run comparisons when algorithms or expressions change
@@ -259,16 +324,36 @@ export const Compare = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                {selectedAlgorithms.map(algorithmId => {
+                {selectedAlgorithms.map((algorithmId, index) => {
                   const algorithm = algorithms.find(a => a.id === algorithmId);
+                  const isDragging = draggedAlgorithm === algorithmId;
+                  const isDropTarget = dragOverIndex === index && draggedAlgorithm && draggedAlgorithm !== algorithmId;
+                  
                   return (
-                    <Badge key={algorithmId} variant="secondary" className="flex items-center gap-1">
-                      {algorithm?.name || algorithmId}
-                      <X 
-                        className="h-3 w-3 cursor-pointer hover:text-destructive" 
-                        onClick={() => removeAlgorithm(algorithmId)}
-                      />
-                    </Badge>
+                    <div
+                      key={algorithmId}
+                      className={`transition-all duration-200 ${isDragging ? 'opacity-50 scale-95' : ''} ${isDropTarget ? 'scale-105' : ''}`}
+                      draggable
+                      onDragStart={() => handleAlgorithmDragStart(algorithmId, index)}
+                      onDragEnd={handleAlgorithmDragEnd}
+                      onDragOver={(e) => handleAlgorithmDragOver(e, index)}
+                      onDrop={(e) => handleAlgorithmDrop(e, index)}
+                    >
+                      <Badge 
+                        variant="secondary" 
+                        className={`flex items-center gap-1 cursor-move select-none ${isDropTarget ? 'ring-2 ring-primary' : ''}`}
+                      >
+                        <GripVertical className="h-3 w-3 text-muted-foreground" />
+                        {algorithm?.name || algorithmId}
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAlgorithm(algorithmId);
+                          }}
+                        />
+                      </Badge>
+                    </div>
                   );
                 })}
               </div>
@@ -304,15 +389,34 @@ export const Compare = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                {expressions.map(expression => (
-                  <div key={expression} className="flex items-center gap-2 p-2 border rounded">
-                    <code className="flex-1 text-sm font-code">{expression}</code>
-                    <X 
-                      className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
-                      onClick={() => removeExpression(expression)}
-                    />
-                  </div>
-                ))}
+                {expressions.map((expression, index) => {
+                  const isDragging = draggedExpression === expression;
+                  const isDropTarget = dragOverIndex === index && draggedExpression && draggedExpression !== expression;
+                  
+                  return (
+                    <div
+                      key={expression}
+                      className={`flex items-center gap-2 p-2 border rounded cursor-move select-none transition-all duration-200 ${
+                        isDragging ? 'opacity-50 scale-95' : ''
+                      } ${isDropTarget ? 'ring-2 ring-primary scale-105' : ''}`}
+                      draggable
+                      onDragStart={() => handleExpressionDragStart(expression, index)}
+                      onDragEnd={handleExpressionDragEnd}
+                      onDragOver={(e) => handleExpressionDragOver(e, index)}
+                      onDrop={(e) => handleExpressionDrop(e, index)}
+                    >
+                      <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <code className="flex-1 text-sm font-code">{expression}</code>
+                      <X 
+                        className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeExpression(expression);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
               
               <div className="flex gap-2">

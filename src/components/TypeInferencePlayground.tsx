@@ -11,7 +11,7 @@ import { ShareExportButtons } from './ShareExportButtons';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
-import { getParamsFromUrl, updateUrlWithParams } from '@/lib/shareUtils';
+import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
@@ -21,16 +21,13 @@ export const TypeInferencePlayground = () => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
   const [initialized, setInitialized] = useState(false);
-  const [hasUrlParams, setHasUrlParams] = useState(false);
   
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
-  // Initialize from URL parameters
+  // Initialize from URL parameters once, then clean the URL
   useEffect(() => {
     const { algorithm, expression: urlExpression } = getParamsFromUrl();
-    const hasParams = !!(algorithm || urlExpression);
-    setHasUrlParams(hasParams);
     
     if (algorithm && algorithms.find(a => a.id === algorithm)) {
       setSelectedAlgorithm(algorithm);
@@ -40,15 +37,14 @@ export const TypeInferencePlayground = () => {
       setExpression(urlExpression);
     }
     
+    // Clean URL after loading parameters
+    if (algorithm || urlExpression) {
+      cleanUrl();
+    }
+    
     setInitialized(true);
   }, []);
 
-  // Update URL when algorithm or expression changes (but not during initialization)
-  useEffect(() => {
-    if (initialized) {
-      updateUrlWithParams(selectedAlgorithm, expression, hasUrlParams);
-    }
-  }, [selectedAlgorithm, expression, initialized, hasUrlParams]);
 
   const handleInference = async () => {
     if (!expression.trim() || !selectedAlgorithm) return;

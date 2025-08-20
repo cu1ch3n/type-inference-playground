@@ -196,9 +196,8 @@ export const Compare = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Selected Algorithms</CardTitle>
               {selectedAlgorithms.length > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="opacity-60 hover:opacity-100 transition-smooth">
-                  <RotateCcw className="h-4 w-4 mr-1 transition-transform duration-200 hover:rotate-180" />
-                  Clear All
+                <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                  <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
                 </Button>
               )}
             </CardHeader>
@@ -242,9 +241,8 @@ export const Compare = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Test Expressions</CardTitle>
               {expressions.length > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="opacity-60 hover:opacity-100 transition-smooth">
-                  <RotateCcw className="h-4 w-4 mr-1 transition-transform duration-200 hover:rotate-180" />
-                  Clear All
+                <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                  <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
                 </Button>
               )}
             </CardHeader>

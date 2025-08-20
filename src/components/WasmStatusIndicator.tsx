@@ -43,10 +43,12 @@ export const WasmStatusIndicator = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge variant="outline" className="flex items-center gap-2 cursor-help">
-          <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
-          <span className="text-xs">{getStatusText()}</span>
-        </Badge>
+        <div className="cursor-help">
+          <Badge variant="outline" className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
+            <span className="text-xs">{getStatusText()}</span>
+          </Badge>
+        </div>
       </TooltipTrigger>
       <TooltipContent side="bottom" className="max-w-xs">
         <div className="flex flex-col gap-1">

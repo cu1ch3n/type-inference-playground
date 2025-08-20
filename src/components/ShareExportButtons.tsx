@@ -272,56 +272,110 @@ ${markdown}`;
       tempDiv.style.position = 'absolute';
       tempDiv.style.left = '-9999px';
       tempDiv.style.top = '0';
-      tempDiv.style.width = '210mm'; // A4 width
-      tempDiv.style.padding = '20mm';
+      tempDiv.style.width = '800px'; // Fixed width for better rendering
+      tempDiv.style.padding = '40px';
       tempDiv.style.backgroundColor = 'white';
       tempDiv.style.color = 'black';
       tempDiv.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-      tempDiv.style.fontSize = '12px';
-      tempDiv.style.lineHeight = '1.5';
+      tempDiv.style.fontSize = '16px'; // Larger font for better PDF quality
+      tempDiv.style.lineHeight = '1.6';
       
       const style = document.createElement('style');
       style.textContent = `
-        h1 { font-size: 20px; margin-bottom: 16px; font-weight: bold; }
-        h2 { font-size: 16px; margin: 16px 0 8px 0; font-weight: bold; }
-        code { background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-family: monospace; }
-        pre { background: #f5f5f5; padding: 12px; border-radius: 6px; overflow-x: auto; margin: 8px 0; }
-        ul, ol { margin: 8px 0; padding-left: 16px; }
-        li { margin: 3px 0; }
-        p { margin: 6px 0; }
+        h1 { font-size: 28px; margin-bottom: 20px; font-weight: bold; color: #1a1a1a; }
+        h2 { font-size: 22px; margin: 24px 0 12px 0; font-weight: bold; color: #2a2a2a; }
+        code { background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+        pre { background: #f8f9fa; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; font-family: 'Courier New', monospace; }
+        ul, ol { margin: 12px 0; padding-left: 24px; }
+        li { margin: 6px 0; font-size: 16px; }
+        p { margin: 8px 0; font-size: 16px; }
+        .katex { font-size: 18px !important; }
+        .katex-display { margin: 16px 0 !important; }
       `;
       tempDiv.appendChild(style);
       tempDiv.innerHTML = html;
       
       document.body.appendChild(tempDiv);
 
-      // Capture as canvas first
+      // Capture as high-resolution canvas
       const canvas = await html2canvas(tempDiv, {
         backgroundColor: 'white',
-        scale: 1,
+        scale: 3, // Higher scale for better quality
         logging: false,
-        useCORS: true
+        useCORS: true,
+        allowTaint: true,
+        height: tempDiv.scrollHeight,
+        width: tempDiv.scrollWidth
       });
 
       document.body.removeChild(tempDiv);
 
-      // Create PDF from canvas
+      // Create PDF with better dimensions
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 170; // A4 width minus margins
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 15;
+      const maxWidth = pageWidth - (margin * 2);
+      const maxHeight = pageHeight - (margin * 2);
+
+      // Calculate optimal dimensions
+      const imgWidth = maxWidth;
+      const imgHeight = (canvas.height * maxWidth) / canvas.width;
+
+      if (imgHeight <= maxHeight) {
+        // Single page
+        const imgData = canvas.toDataURL('image/png', 1.0); // Full quality
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+      } else {
+        // Multiple pages
+        const pageRatio = maxHeight / imgHeight;
+        const scaledWidth = imgWidth * pageRatio;
+        const scaledHeight = maxHeight;
+        
+        let currentY = 0;
+        let pageNumber = 0;
+        
+        while (currentY < canvas.height) {
+          if (pageNumber > 0) {
+            pdf.addPage();
+          }
+          
+          // Create a canvas for this page
+          const pageCanvas = document.createElement('canvas');
+          const pageCtx = pageCanvas.getContext('2d');
+          
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = Math.min(canvas.height - currentY, canvas.height * pageRatio);
+          
+          if (pageCtx) {
+            pageCtx.fillStyle = 'white';
+            pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+            
+            pageCtx.drawImage(
+              canvas,
+              0, currentY, canvas.width, pageCanvas.height,
+              0, 0, pageCanvas.width, pageCanvas.height
+            );
+          }
+          
+          const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+          pdf.addImage(pageImgData, 'PNG', margin, margin, scaledWidth, scaledHeight);
+          
+          currentY += pageCanvas.height;
+          pageNumber++;
+        }
+      }
+
       pdf.save(`${algorithm.id}-derivation.pdf`);
 
       toast({
         title: "PDF exported!",
-        description: "Derivation exported as PDF document.",
+        description: "High-quality derivation exported as PDF document.",
         duration: 3000
       });
 

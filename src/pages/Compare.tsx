@@ -230,7 +230,7 @@ export const Compare = () => {
               <div className="space-y-2">
                 {expressions.map(expression => (
                   <div key={expression} className="flex items-center gap-2 p-2 border rounded">
-                    <code className="flex-1 text-sm font-mono">{expression}</code>
+                    <code className="flex-1 text-sm font-code">{expression}</code>
                     <X 
                       className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
                       onClick={() => removeExpression(expression)}
@@ -240,13 +240,13 @@ export const Compare = () => {
               </div>
               
               <div className="flex gap-2">
-                <Input
-                  value={newExpression}
-                  onChange={(e) => setNewExpression(e.target.value)}
-                  placeholder="Enter expression (e.g., \x. x)"
-                  onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                  className="flex-1"
-                />
+                 <Input
+                   value={newExpression}
+                   onChange={(e) => setNewExpression(e.target.value)}
+                   placeholder="Enter expression (e.g., \x. x)"
+                   onKeyDown={(e) => e.key === 'Enter' && addExpression()}
+                   className="flex-1 font-code"
+                 />
                 <Button onClick={addExpression} size="sm">
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -281,16 +281,7 @@ export const Compare = () => {
                         const algorithm = algorithms.find(a => a.id === algorithmId);
                         return (
                           <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                            <div className="space-y-1">
-                              <div className="font-semibold">{algorithm?.name || algorithmId}</div>
-                              <div className="flex flex-wrap gap-1 justify-center">
-                                {algorithm?.labels.slice(0, 2).map(label => (
-                                  <Badge key={label} variant="outline" className="text-xs">
-                                    {label}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
+                            <div className="font-semibold">{algorithm?.name || algorithmId}</div>
                           </TableHead>
                         );
                       })}
@@ -299,9 +290,9 @@ export const Compare = () => {
                   <TableBody>
                     {expressions.map(expression => (
                       <TableRow key={expression}>
-                        <TableCell className="font-mono text-sm border-r">
-                          <code>{expression}</code>
-                        </TableCell>
+                         <TableCell className="font-code text-sm border-r">
+                           <code>{expression}</code>
+                         </TableCell>
                         {selectedAlgorithms.map(algorithmId => (
                           <TableCell key={`${expression}-${algorithmId}`} className="text-center">
                             {renderCell(algorithmId, expression)}

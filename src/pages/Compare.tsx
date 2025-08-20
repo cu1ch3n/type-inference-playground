@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -391,7 +391,10 @@ export const Compare = () => {
         
         <div className="container mx-auto px-4 py-6 animate-stagger-1">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+            <div className="flex items-center gap-3">
+              <GitCompare className="w-6 h-6 text-primary" />
+              <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+            </div>
             <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
           </div>
 

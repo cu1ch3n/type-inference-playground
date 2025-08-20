@@ -1,4 +1,5 @@
-import { Github, Sun, Moon } from 'lucide-react';
+import { Github, Sun, Moon, BarChart3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 import { 
@@ -33,6 +34,16 @@ export const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <Link to="/compare">
+              <Button
+                variant="outline"
+                size="sm"
+                className="btn-interactive h-8 sm:h-9 px-2 sm:px-3"
+              >
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Compare</span>
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="icon"

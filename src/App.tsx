@@ -18,13 +18,15 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/help" element={<Help />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="transition-smooth">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/help" element={<Help />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>

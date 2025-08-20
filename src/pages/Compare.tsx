@@ -237,18 +237,18 @@ export const Compare = () => {
   const availableAlgorithms = algorithms.filter(alg => !selectedAlgorithms.includes(alg.id));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-fade-in">
       <Navbar />
       
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 animate-stagger-1">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
           <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 animate-stagger-2">
           {/* Algorithm Selection */}
-          <Card>
+          <Card className="academic-panel hover-scale-sm transition-smooth">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Selected Algorithms</CardTitle>
               {selectedAlgorithms.length > 0 && (
@@ -293,7 +293,7 @@ export const Compare = () => {
           </Card>
 
           {/* Expression Management */}
-          <Card>
+          <Card className="academic-panel hover-scale-sm transition-smooth">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Test Expressions</CardTitle>
               {expressions.length > 0 && (
@@ -332,7 +332,7 @@ export const Compare = () => {
         </div>
 
         {/* Comparison Table */}
-        <Card>
+        <Card className="academic-panel animate-stagger-3">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Comparison Results</CardTitle>

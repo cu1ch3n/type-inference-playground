@@ -169,8 +169,7 @@ ${markdown}`;
   };
 
   const handleExportPNG = async () => {
-    const markdown = createRenderableContent();
-    if (!markdown) {
+    if (!result?.success || !result.derivation.length) {
       toast({
         title: "Cannot export",
         description: "No derivation available to export.",
@@ -179,50 +178,25 @@ ${markdown}`;
       return;
     }
 
-    try {
-      // Create a temporary div to render the content
-      const tempDiv = document.createElement('div');
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.left = '-9999px';
-      tempDiv.style.top = '0';
-      tempDiv.style.width = '800px';
-      tempDiv.style.padding = '40px';
-      tempDiv.style.backgroundColor = 'white';
-      tempDiv.style.color = 'black';
-      tempDiv.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-      tempDiv.style.fontSize = '14px';
-      tempDiv.style.lineHeight = '1.6';
-      
-      // Convert markdown to HTML and render it
-      const html = await marked(markdown);
-      tempDiv.innerHTML = html;
-      
-      // Style the HTML content
-      const style = document.createElement('style');
-      style.textContent = `
-        h1 { font-size: 24px; margin-bottom: 20px; font-weight: bold; }
-        h2 { font-size: 18px; margin: 20px 0 10px 0; font-weight: bold; }
-        code { background: #f5f5f5; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
-        pre { background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto; }
-        ul, ol { margin: 10px 0; padding-left: 20px; }
-        li { margin: 4px 0; }
-      `;
-      tempDiv.appendChild(style);
-      
-      document.body.appendChild(tempDiv);
+    const target = document.querySelector('[data-derivation-viewer]') as HTMLElement | null;
+    if (!target) {
+      toast({ title: "Export failed", description: "Derivation area not found.", variant: "destructive" });
+      return;
+    }
 
-      // Capture the content as canvas
-      const canvas = await html2canvas(tempDiv, {
-        backgroundColor: 'white',
-        scale: 2, // Higher resolution
+    // Hide export controls during capture
+    const hideStyle = document.createElement('style');
+    hideStyle.textContent = `.export-controls{display:none!important}`;
+    document.head.appendChild(hideStyle);
+
+    try {
+      const canvas = await html2canvas(target, {
+        backgroundColor: '#ffffff',
+        scale: 2,
         logging: false,
         useCORS: true
       });
 
-      // Remove the temporary div
-      document.body.removeChild(tempDiv);
-
-      // Convert canvas to blob and download
       canvas.toBlob((blob) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
@@ -233,28 +207,19 @@ ${markdown}`;
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
-          
-          toast({
-            title: "PNG exported!",
-            description: "Derivation exported as PNG image.",
-            duration: 3000
-          });
+          toast({ title: "PNG exported!", description: "Derivation exported as PNG image.", duration: 3000 });
         }
       }, 'image/png');
-
     } catch (error) {
       console.error('PNG export failed:', error);
-      toast({
-        title: "Export failed",
-        description: "Could not export as PNG. Please try again.",
-        variant: "destructive"
-      });
+      toast({ title: "Export failed", description: "Could not export as PNG. Please try again.", variant: "destructive" });
+    } finally {
+      document.head.removeChild(hideStyle);
     }
   };
 
   const handleExportPDF = async () => {
-    const markdown = createRenderableContent();
-    if (!markdown) {
+    if (!result?.success || !result.derivation.length) {
       toast({
         title: "Cannot export",
         description: "No derivation available to export.",
@@ -263,129 +228,64 @@ ${markdown}`;
       return;
     }
 
+    const target = document.querySelector('[data-derivation-viewer]') as HTMLElement | null;
+    if (!target) {
+      toast({ title: "Export failed", description: "Derivation area not found.", variant: "destructive" });
+      return;
+    }
+
+    // Hide export controls during capture
+    const hideStyle = document.createElement('style');
+    hideStyle.textContent = `.export-controls{display:none!important}`;
+    document.head.appendChild(hideStyle);
+
     try {
-      // Convert markdown to HTML
-      const html = await marked(markdown);
-      
-      // Create a temporary div to measure content
-      const tempDiv = document.createElement('div');
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.left = '-9999px';
-      tempDiv.style.top = '0';
-      tempDiv.style.width = '800px'; // Fixed width for better rendering
-      tempDiv.style.padding = '40px';
-      tempDiv.style.backgroundColor = 'white';
-      tempDiv.style.color = 'black';
-      tempDiv.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-      tempDiv.style.fontSize = '16px'; // Larger font for better PDF quality
-      tempDiv.style.lineHeight = '1.6';
-      
-      const style = document.createElement('style');
-      style.textContent = `
-        h1 { font-size: 28px; margin-bottom: 20px; font-weight: bold; color: #1a1a1a; }
-        h2 { font-size: 22px; margin: 24px 0 12px 0; font-weight: bold; color: #2a2a2a; }
-        code { background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
-        pre { background: #f8f9fa; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; font-family: 'Courier New', monospace; }
-        ul, ol { margin: 12px 0; padding-left: 24px; }
-        li { margin: 6px 0; font-size: 16px; }
-        p { margin: 8px 0; font-size: 16px; }
-        .katex { font-size: 18px !important; }
-        .katex-display { margin: 16px 0 !important; }
-      `;
-      tempDiv.appendChild(style);
-      tempDiv.innerHTML = html;
-      
-      document.body.appendChild(tempDiv);
-
-      // Capture as high-resolution canvas
-      const canvas = await html2canvas(tempDiv, {
-        backgroundColor: 'white',
-        scale: 3, // Higher scale for better quality
+      const canvas = await html2canvas(target, {
+        backgroundColor: '#ffffff',
+        scale: 3,
         logging: false,
-        useCORS: true,
-        allowTaint: true,
-        height: tempDiv.scrollHeight,
-        width: tempDiv.scrollWidth
+        useCORS: true
       });
 
-      document.body.removeChild(tempDiv);
-
-      // Create PDF with better dimensions
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 15;
-      const maxWidth = pageWidth - (margin * 2);
-      const maxHeight = pageHeight - (margin * 2);
+      const margin = 10; // mm
+      const contentWidth = pageWidth - margin * 2;
+      const contentHeight = pageHeight - margin * 2;
 
-      // Calculate optimal dimensions
-      const imgWidth = maxWidth;
-      const imgHeight = (canvas.height * maxWidth) / canvas.width;
+      const imgWidth = contentWidth;
+      const pxPerMm = canvas.width / imgWidth; // pixels per mm when fitted to width
+      const pageHeightPx = contentHeight * pxPerMm; // how many pixels fit on one page height
 
-      if (imgHeight <= maxHeight) {
-        // Single page
-        const imgData = canvas.toDataURL('image/png', 1.0); // Full quality
-        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
-      } else {
-        // Multiple pages
-        const pageRatio = maxHeight / imgHeight;
-        const scaledWidth = imgWidth * pageRatio;
-        const scaledHeight = maxHeight;
-        
-        let currentY = 0;
-        let pageNumber = 0;
-        
-        while (currentY < canvas.height) {
-          if (pageNumber > 0) {
-            pdf.addPage();
-          }
-          
-          // Create a canvas for this page
-          const pageCanvas = document.createElement('canvas');
-          const pageCtx = pageCanvas.getContext('2d');
-          
-          pageCanvas.width = canvas.width;
-          pageCanvas.height = Math.min(canvas.height - currentY, canvas.height * pageRatio);
-          
-          if (pageCtx) {
-            pageCtx.fillStyle = 'white';
-            pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-            
-            pageCtx.drawImage(
-              canvas,
-              0, currentY, canvas.width, pageCanvas.height,
-              0, 0, pageCanvas.width, pageCanvas.height
-            );
-          }
-          
-          const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-          pdf.addImage(pageImgData, 'PNG', margin, margin, scaledWidth, scaledHeight);
-          
-          currentY += pageCanvas.height;
-          pageNumber++;
+      let y = 0;
+      let pageIndex = 0;
+      while (y < canvas.height) {
+        const sliceHeight = Math.min(pageHeightPx, canvas.height - y);
+        const pageCanvas = document.createElement('canvas');
+        const ctx = pageCanvas.getContext('2d');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sliceHeight;
+        if (ctx) {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+          ctx.drawImage(canvas, 0, y, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
         }
+        const imgData = pageCanvas.toDataURL('image/png', 1.0);
+        if (pageIndex > 0) pdf.addPage();
+        const sliceHeightMm = sliceHeight / pxPerMm;
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, sliceHeightMm);
+        y += sliceHeight;
+        pageIndex++;
       }
 
       pdf.save(`${algorithm.id}-derivation.pdf`);
-
-      toast({
-        title: "PDF exported!",
-        description: "High-quality derivation exported as PDF document.",
-        duration: 3000
-      });
-
+      toast({ title: "PDF exported!", description: "Derivation exported as PDF document.", duration: 3000 });
     } catch (error) {
       console.error('PDF export failed:', error);
-      toast({
-        title: "Export failed",
-        description: "Could not export as PDF. Please try again.",
-        variant: "destructive"
-      });
+      toast({ title: "Export failed", description: "Could not export as PDF. Please try again.", variant: "destructive" });
+    } finally {
+      document.head.removeChild(hideStyle);
     }
   };
 

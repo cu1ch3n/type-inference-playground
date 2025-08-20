@@ -114,12 +114,14 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
               </div>
             )}
             {algorithm && expression && (
-              <ShareExportButtons
-                algorithm={algorithm}
-                expression={expression}
-                result={result}
-                disabled={isInferring}
-              />
+              <div className="export-controls">
+                <ShareExportButtons
+                  algorithm={algorithm}
+                  expression={expression}
+                  result={result}
+                  disabled={isInferring}
+                />
+              </div>
             )}
           </div>
         </div>

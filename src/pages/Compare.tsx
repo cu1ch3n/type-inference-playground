@@ -10,6 +10,8 @@ import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
+import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
+import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 import { InferenceResult } from '@/types/inference';
 
@@ -25,6 +27,29 @@ export const Compare = () => {
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
+
+  // Load shared state from URL on mount
+  useEffect(() => {
+    const { algorithms: sharedAlgorithms, expressions: sharedExpressions } = getCompareParamsFromUrl();
+    
+    if (sharedAlgorithms.length > 0 || sharedExpressions.length > 0) {
+      // Validate algorithms exist
+      const validAlgorithms = sharedAlgorithms.filter(id => 
+        algorithms.some(alg => alg.id === id)
+      );
+      
+      if (validAlgorithms.length > 0) {
+        setSelectedAlgorithms(validAlgorithms);
+      }
+      
+      if (sharedExpressions.length > 0) {
+        setExpressions(sharedExpressions);
+      }
+      
+      // Clean URL after loading
+      cleanUrl();
+    }
+  }, []);
 
   const getCellKey = (algorithmId: string, expression: string) => `${algorithmId}:${expression}`;
 
@@ -277,8 +302,13 @@ export const Compare = () => {
 
         {/* Comparison Table */}
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Comparison Results</CardTitle>
+            <CompareShareExportButtons
+              selectedAlgorithms={selectedAlgorithms}
+              expressions={expressions}
+              comparisonResults={comparisonResults}
+            />
           </CardHeader>
           <CardContent>
             {selectedAlgorithms.length === 0 || expressions.length === 0 ? (

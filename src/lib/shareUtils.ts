@@ -2,6 +2,8 @@ export const cleanUrl = () => {
   const url = new URL(window.location.href);
   url.searchParams.delete('algorithm');
   url.searchParams.delete('program');
+  url.searchParams.delete('algorithms');
+  url.searchParams.delete('expressions');
   window.history.replaceState({}, '', url.toString());
 };
 
@@ -13,6 +15,20 @@ export const getParamsFromUrl = () => {
   const expression = url.searchParams.get('program') ? decodeURIComponent(url.searchParams.get('program')!) : '';
   
   return { algorithm, expression };
+};
+
+export const getCompareParamsFromUrl = () => {
+  if (typeof window === 'undefined') return { algorithms: [], expressions: [] };
+  
+  const url = new URL(window.location.href);
+  const algorithmsParam = url.searchParams.get('algorithms');
+  const expressionsParam = url.searchParams.get('expressions');
+  
+  const algorithms = algorithmsParam ? algorithmsParam.split(',') : [];
+  const expressions = expressionsParam ? 
+    expressionsParam.split(',').map(expr => decodeURIComponent(expr)) : [];
+  
+  return { algorithms, expressions };
 };
 
 export const shareCurrentState = async (algorithm: string, expression: string) => {

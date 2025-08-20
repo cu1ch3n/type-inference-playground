@@ -25,6 +25,22 @@ export const ShareExportButtons = ({
   const { toast } = useToast();
   const [isSharing, setIsSharing] = React.useState(false);
 
+  // Ensure webfonts (e.g., KaTeX) are loaded before capture for crisp output
+  const waitForFontsReady = async (timeout = 2000) => {
+    try {
+      if ('fonts' in document) {
+        await Promise.race([
+          (document as any).fonts.ready,
+          new Promise((res) => setTimeout(res, timeout)),
+        ]);
+      } else {
+        await new Promise((res) => setTimeout(res, 500));
+      }
+      // Give layout a tick to settle
+      await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+    } catch {}
+  };
+
   const handleShare = async () => {
     if (!expression.trim()) {
       toast({
@@ -190,11 +206,17 @@ ${markdown}`;
     document.head.appendChild(hideStyle);
 
     try {
+      await waitForFontsReady();
+      const bg = getComputedStyle(target).backgroundColor || '#ffffff';
+      const scale = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
       const canvas = await html2canvas(target, {
-        backgroundColor: '#ffffff',
-        scale: 2,
+        backgroundColor: bg === 'rgba(0, 0, 0, 0)' ? '#ffffff' : bg,
+        scale,
         logging: false,
-        useCORS: true
+        useCORS: true,
+        foreignObjectRendering: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
       });
 
       canvas.toBlob((blob) => {
@@ -240,11 +262,17 @@ ${markdown}`;
     document.head.appendChild(hideStyle);
 
     try {
+      await waitForFontsReady();
+      const bg = getComputedStyle(target).backgroundColor || '#ffffff';
+      const scale = Math.max(3, window.devicePixelRatio || 1);
       const canvas = await html2canvas(target, {
-        backgroundColor: '#ffffff',
-        scale: 3,
+        backgroundColor: bg === 'rgba(0, 0, 0, 0)' ? '#ffffff' : bg,
+        scale,
         logging: false,
-        useCORS: true
+        useCORS: true,
+        foreignObjectRendering: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
       });
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });

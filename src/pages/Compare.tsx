@@ -488,7 +488,7 @@ export const Compare = () => {
           <Card className="academic-panel animate-stagger-3">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Comparison Results</CardTitle>
+                <CardTitle>Comparison</CardTitle>
                 <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation on the main page</p>
               </div>
               <CompareShareExportButtons

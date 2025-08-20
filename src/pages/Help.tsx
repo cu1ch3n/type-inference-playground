@@ -93,11 +93,11 @@ export const Help = () => {
                   <span className="text-sm text-muted-foreground">Boolean literals</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="font-code text-sm">\\x. x</Badge>
+                  <Badge variant="outline" className="font-code text-sm">\x. x</Badge>
                   <span className="text-sm text-muted-foreground">Lambda abstraction</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="font-code text-sm">(\\x -&gt; x) 1</Badge>
+                  <Badge variant="outline" className="font-code text-sm">(\x x) 1</Badge>
                   <span className="text-sm text-muted-foreground">Function application</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -105,15 +105,15 @@ export const Help = () => {
                   <span className="text-sm text-muted-foreground">Type annotation</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Badge variant="outline" className="font-code text-sm">/\\a. (\\x -&gt; x) : a -&gt; a</Badge>
+                  <Badge variant="outline" className="font-code text-sm">/\a. (\x. x) : a -&gt; a</Badge>
                   <span className="text-sm text-muted-foreground">Type abstraction</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Badge variant="outline" className="font-code text-sm">(\\a. (\\x -&gt; x) : a -&gt; a) @Int 3</Badge>
+                  <Badge variant="outline" className="font-code text-sm">(\a. (\x. x) : a -&gt; a) @Int 3</Badge>
                   <span className="text-sm text-muted-foreground">Type application</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Badge variant="outline" className="font-code text-sm">let id = \\x. x in id 1</Badge>
+                  <Badge variant="outline" className="font-code text-sm">let id = \x. x in id 1</Badge>
                   <span className="text-sm text-muted-foreground">Let binding</span>
                 </div>
               </div>

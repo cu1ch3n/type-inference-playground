@@ -182,14 +182,14 @@ export const CompareShareExportButtons = ({
             className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
           >
             <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-xs sm:text-sm">Full Table (with types)</span>
+            <span className="text-xs sm:text-sm">Markdown</span>
           </DropdownMenuItem>
           <DropdownMenuItem 
             onClick={() => handleExportMarkdown(false)}
             className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
           >
             <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-xs sm:text-sm">Status Only</span>
+            <span className="text-xs sm:text-sm">Markdown (Status Only)</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

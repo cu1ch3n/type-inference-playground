@@ -67,7 +67,7 @@ export const ShareExportButtons = ({
     const indent = '  '.repeat(depth);
     return steps.map(step => {
       const bullet = depth === 0 ? '-' : '-';
-      const line = `${indent}${bullet} [${step.ruleId}] $${step.expression}$`;
+      const line = `${indent}${bullet} [${step.ruleId}] $${step.expression.trim()}$`;
       const childrenMarkdown = step.children ? 
         derivationToMarkdown(step.children, depth + 1) : '';
       return childrenMarkdown ? `${line}\n${childrenMarkdown}` : line;
@@ -87,7 +87,7 @@ export const ShareExportButtons = ({
 
     const flatSteps = flattenSteps(steps);
     return flatSteps.map((step, index) => 
-      `${index + 1}. [${step.ruleId}] $${step.expression}$`
+      `${index + 1}. [${step.ruleId}] $${step.expression.trim()}$`
     ).join('\n');
   };
 
@@ -109,10 +109,10 @@ export const ShareExportButtons = ({
     const fullMarkdown = `# ${algorithm.name} - Type Derivation
 
 ## Expression
-\`${expression}\`
+\`${expression.trim()}\`
 
 ## Final Type
-$${result.finalType || 'Unknown'}$
+$${result.finalType?.trim() || 'Unknown'}$
 
 ## Derivation Steps
 ${markdown}`;

@@ -121,6 +121,10 @@ export class WasmTypeInference {
     }
   }
 
+  getWasmUrl(): string {
+    return this.wasmUrl;
+  }
+
   destroy() {
     this.wasmModule = null;
     this.isInitialized = false;

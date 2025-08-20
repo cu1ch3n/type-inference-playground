@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, Trash2 } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw } from 'lucide-react';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
@@ -196,8 +196,8 @@ export const Compare = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Selected Algorithms</CardTitle>
               {selectedAlgorithms.length > 0 && (
-                <Button variant="outline" size="sm" onClick={clearAllAlgorithms}>
-                  <Trash2 className="h-4 w-4 mr-1" />
+                <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="opacity-60 hover:opacity-100 transition-smooth">
+                  <RotateCcw className="h-4 w-4 mr-1 transition-transform duration-200 hover:rotate-180" />
                   Clear All
                 </Button>
               )}
@@ -242,8 +242,8 @@ export const Compare = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Test Expressions</CardTitle>
               {expressions.length > 0 && (
-                <Button variant="outline" size="sm" onClick={clearAllExpressions}>
-                  <Trash2 className="h-4 w-4 mr-1" />
+                <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="opacity-60 hover:opacity-100 transition-smooth">
+                  <RotateCcw className="h-4 w-4 mr-1 transition-transform duration-200 hover:rotate-180" />
                   Clear All
                 </Button>
               )}

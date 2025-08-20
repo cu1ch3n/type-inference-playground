@@ -191,11 +191,12 @@ export const TypeInferencePlayground = () => {
                 onExpressionSelect={setExpression}
               />
               
-              {/* Share Button */}
+              {/* Share & Export Buttons */}
               {selectedAlgorithmData && (
                 <ShareExportButtons
                   algorithm={selectedAlgorithmData}
                   expression={expression}
+                  result={result}
                   disabled={isInferring}
                 />
               )}

@@ -200,10 +200,24 @@ ${markdown}`;
       return;
     }
 
-    // Hide export controls during capture
-    const hideStyle = document.createElement('style');
-    hideStyle.textContent = `.export-controls{display:none!important}`;
-    document.head.appendChild(hideStyle);
+    // Hide export controls and fix styling for html2canvas during capture
+    const exportStyle = document.createElement('style');
+    exportStyle.textContent = `
+      .export-controls{display:none!important}
+      ul, ol {list-style:none!important; margin:0!important; padding:0!important}
+      .tree-view ul {border-left:2px solid #e2e8f0!important}
+      .tree-view li {margin:0!important; padding:0!important}
+      .katex {font-size:14px!important}
+      .academic-panel {background:#ffffff!important; border:1px solid #e2e8f0!important}
+      .card {background:#ffffff!important}
+      .bg-highlight\\/30 {background-color:#fef3c7!important}
+      .border-primary {border-color:#3b82f6!important}
+      .text-primary {color:#3b82f6!important}
+      .bg-muted\\/40 {background-color:#f8fafc!important}
+      .text-muted-foreground {color:#64748b!important}
+      .border-muted-foreground\\/20 {border-color:#cbd5e1!important}
+    `;
+    document.head.appendChild(exportStyle);
 
     try {
       await waitForFontsReady();
@@ -236,7 +250,7 @@ ${markdown}`;
       console.error('PNG export failed:', error);
       toast({ title: "Export failed", description: "Could not export as PNG. Please try again.", variant: "destructive" });
     } finally {
-      document.head.removeChild(hideStyle);
+      document.head.removeChild(exportStyle);
     }
   };
 
@@ -256,10 +270,24 @@ ${markdown}`;
       return;
     }
 
-    // Hide export controls during capture
-    const hideStyle = document.createElement('style');
-    hideStyle.textContent = `.export-controls{display:none!important}`;
-    document.head.appendChild(hideStyle);
+    // Hide export controls and fix styling for html2canvas during capture
+    const exportStyle = document.createElement('style');
+    exportStyle.textContent = `
+      .export-controls{display:none!important}
+      ul, ol {list-style:none!important; margin:0!important; padding:0!important}
+      .tree-view ul {border-left:2px solid #e2e8f0!important}
+      .tree-view li {margin:0!important; padding:0!important}
+      .katex {font-size:14px!important}
+      .academic-panel {background:#ffffff!important; border:1px solid #e2e8f0!important}
+      .card {background:#ffffff!important}
+      .bg-highlight\\/30 {background-color:#fef3c7!important}
+      .border-primary {border-color:#3b82f6!important}
+      .text-primary {color:#3b82f6!important}
+      .bg-muted\\/40 {background-color:#f8fafc!important}
+      .text-muted-foreground {color:#64748b!important}
+      .border-muted-foreground\\/20 {border-color:#cbd5e1!important}
+    `;
+    document.head.appendChild(exportStyle);
 
     try {
       await waitForFontsReady();
@@ -313,7 +341,7 @@ ${markdown}`;
       console.error('PDF export failed:', error);
       toast({ title: "Export failed", description: "Could not export as PDF. Please try again.", variant: "destructive" });
     } finally {
-      document.head.removeChild(hideStyle);
+      document.head.removeChild(exportStyle);
     }
   };
 

@@ -96,25 +96,25 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
   return (
     <Card className="academic-panel" data-derivation-viewer>
       <CardHeader className="pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <CardTitle className="flex items-center gap-2 text-lg">
               <GitBranch className="w-5 h-5 text-primary" />
               Derivation
             </CardTitle>
             {result.finalType && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 <Separator orientation="vertical" className="h-6 hidden sm:block" />
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Type:</span>
-                  <Badge variant="secondary" className="font-math">
+                <span className="text-sm text-muted-foreground hidden sm:inline">Type:</span>
+                <div className="min-w-0 max-w-[50vw] sm:max-w-none">
+                  <Badge variant="secondary" className="font-math truncate">
                     <KaTeXRenderer expression={result.finalType} />
                   </Badge>
                 </div>
               </div>
             )}
           </div>
-          <div className="flex items-center sm:justify-end">
+          <div className="flex items-center gap-2 flex-shrink-0 whitespace-nowrap">
             {algorithm && expression && (
               <ShareExportButtons
                 algorithm={algorithm}

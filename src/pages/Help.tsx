@@ -76,7 +76,7 @@ export const Help = () => {
           <Card className="academic-panel hover-scale-sm transition-smooth">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
-                <Code2 className="w-6 h-6 text-accent" />
+                <Code2 className="w-6 h-6 text-primary" />
                 Terms
               </CardTitle>
             </CardHeader>

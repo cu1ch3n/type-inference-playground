@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, Trash2 } from 'lucide-react';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
@@ -104,6 +104,23 @@ export const Compare = () => {
     });
   };
 
+  const clearAllAlgorithms = () => {
+    setSelectedAlgorithms([]);
+    setComparisonResults(new Map());
+  };
+
+  const clearAllExpressions = () => {
+    setExpressions([]);
+    setComparisonResults(new Map());
+  };
+
+  // Auto-run comparisons when algorithms or expressions change
+  useEffect(() => {
+    if (selectedAlgorithms.length > 0 && expressions.length > 0) {
+      runAllComparisons();
+    }
+  }, [selectedAlgorithms, expressions, runAllComparisons]);
+
   const renderCell = (algorithmId: string, expression: string) => {
     const key = getCellKey(algorithmId, expression);
     const cell = comparisonResults.get(key);
@@ -111,14 +128,7 @@ export const Compare = () => {
     if (!cell) {
       return (
         <div className="flex items-center justify-center h-16">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => runComparison(algorithmId, expression)}
-            className="text-xs"
-          >
-            Run
-          </Button>
+          <span className="text-muted-foreground text-xs">Pending...</span>
         </div>
       );
     }
@@ -183,8 +193,14 @@ export const Compare = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Algorithm Selection */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Selected Algorithms</CardTitle>
+              {selectedAlgorithms.length > 0 && (
+                <Button variant="outline" size="sm" onClick={clearAllAlgorithms}>
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Clear All
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
@@ -223,8 +239,14 @@ export const Compare = () => {
 
           {/* Expression Management */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Test Expressions</CardTitle>
+              {expressions.length > 0 && (
+                <Button variant="outline" size="sm" onClick={clearAllExpressions}>
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Clear All
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -257,11 +279,8 @@ export const Compare = () => {
 
         {/* Comparison Table */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader>
             <CardTitle>Comparison Results</CardTitle>
-            <Button onClick={runAllComparisons} disabled={selectedAlgorithms.length === 0 || expressions.length === 0}>
-              Run All Comparisons
-            </Button>
           </CardHeader>
           <CardContent>
             {selectedAlgorithms.length === 0 || expressions.length === 0 ? (

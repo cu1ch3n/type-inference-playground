@@ -160,7 +160,20 @@ export const TypeInferencePlayground = () => {
         {/* Main Content */}
         <div className="container mx-auto px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
-            {/* Left Column - Input & Algorithm */}
+            {/* Left Column - Derivation Result */}
+            <div className="lg:col-span-4 space-y-8">
+              <DerivationViewer
+                result={result}
+                algorithm={selectedAlgorithmData}
+                activeStepPath={activeStepPath}
+                activeRuleId={activeRuleId}
+                onStepClick={handleStepClick}
+                expression={expression}
+                isInferring={isInferring}
+              />
+            </div>
+
+            {/* Right Column - Input & Algorithm & Rules */}
             <div className="lg:col-span-2 space-y-8">
               <AlgorithmSelector
                 algorithms={algorithms}
@@ -179,21 +192,6 @@ export const TypeInferencePlayground = () => {
                 onInfer={handleInference}
                 isInferring={isInferring}
                 selectedAlgorithm={selectedAlgorithm}
-              />
-              
-            </div>
-
-            {/* Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 space-y-8">
-              {/* Derivation */}
-              <DerivationViewer
-                result={result}
-                algorithm={selectedAlgorithmData}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                onStepClick={handleStepClick}
-                expression={expression}
-                isInferring={isInferring}
               />
               
               {/* Typing Rules */}

@@ -15,20 +15,19 @@ export const Navbar = () => {
   return (
     <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
       <div className="container mx-auto px-4 sm:px-6 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded flex items-center justify-center flex-shrink-0">
               <span className="text-primary-foreground font-bold text-xs sm:text-sm">λ</span>
             </div>
-            <h1 className="text-sm sm:text-lg font-semibold truncate">
+            <h1 className="text-sm sm:text-lg font-semibold min-w-0">
               <a 
                 href="https://zoo.cuichen.cc" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors block truncate"
               >
-                <span className="hidden sm:inline">Type Inference Zoo</span>
-                <span className="sm:hidden">TI Zoo</span>
+                Type Inference Zoo
               </a>
             </h1>
           </div>
@@ -73,15 +72,8 @@ export const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="hidden sm:block">
-              <WasmStatusIndicator />
-            </div>
+            <WasmStatusIndicator />
           </div>
-        </div>
-        
-        {/* Mobile WASM Status - shown below on small screens */}
-        <div className="sm:hidden mt-2 flex justify-center">
-          <WasmStatusIndicator />
         </div>
       </div>
     </nav>

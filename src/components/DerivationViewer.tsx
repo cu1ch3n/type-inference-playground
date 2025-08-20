@@ -101,84 +101,93 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
             <GitBranch className="w-5 h-5 text-primary" />
             Derivation
           </CardTitle>
-          <div className="flex items-center gap-4">
-            {result.finalType && (
-              <div className="text-right">
-                <div className="text-xs text-muted-foreground mb-1 flex items-center justify-end gap-1">
-                  <Activity className="w-3 h-3" />
-                  Result Type:
+          {algorithm && expression && (
+            <div className="export-controls">
+              <ShareExportButtons
+                algorithm={algorithm}
+                expression={expression}
+                result={result}
+                disabled={isInferring}
+              />
+            </div>
+          )}
+        </div>
+        <Separator className="mt-4" />
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-6">
+          {/* Result Type Section - Left Side */}
+          {result.finalType && (
+            <div className="w-64 shrink-0">
+              <div className="space-y-3">
+                <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Activity className="w-4 h-4" />
+                  Result Type
                 </div>
-                <Badge variant="default" className="font-math text-sm">
-                  <KaTeXRenderer expression={result.finalType} />
-                </Badge>
+                <div className="p-4 bg-muted/30 rounded-lg border">
+                  <Badge variant="default" className="font-math text-base px-3 py-1">
+                    <KaTeXRenderer expression={result.finalType} />
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Derivation Section - Right Side */}
+          <div className="flex-1 space-y-4">
+            {/* Show error if present */}
+            {!result.success && result.error && (
+              <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg transition-all duration-200">
+                <p className="text-destructive font-medium flex items-center gap-2">
+                  <Activity className="w-4 h-4" />
+                  Error
+                </p>
+                <div className="text-sm text-destructive/80 mt-2">
+                  {result.errorLatex ? (
+                    <KaTeXRenderer 
+                      expression={result.error} 
+                      displayMode={false}
+                      className="text-destructive/80"
+                    />
+                  ) : (
+                    <pre className="font-mono whitespace-pre-wrap text-destructive/80">{result.error}</pre>
+                  )}
+                </div>
               </div>
             )}
-            {algorithm && expression && (
-              <div className="export-controls">
-                <ShareExportButtons
-                  algorithm={algorithm}
-                  expression={expression}
-                  result={result}
-                  disabled={isInferring}
-                />
+            
+            {/* Show derivation if available */}
+            {hasDerivation && (
+              <>
+                {!result.success && (
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Partial derivation before error:
+                  </div>
+                )}
+                {viewMode === 'tree' ? (
+                  <TreeViewer 
+                    steps={result.derivation}
+                    onStepClick={onStepClick}
+                    activeStepPath={activeStepPath}
+                    activeRuleId={activeRuleId}
+                    expandedByDefault={true}
+                  />
+                ) : (
+                  <div className="space-y-1">
+                    {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
+                  </div>
+                )}
+              </>
+            )}
+            
+            {/* Show message if no derivation available */}
+            {!hasDerivation && result.success && (
+              <div className="flex flex-col items-center justify-center h-32 text-muted-foreground">
+                <p className="text-sm">No derivation steps available</p>
               </div>
             )}
           </div>
         </div>
-        <Separator className="mt-4" />
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Show error if present */}
-        {!result.success && result.error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg transition-all duration-200">
-            <p className="text-destructive font-medium flex items-center gap-2">
-              <Activity className="w-4 h-4" />
-              Error
-            </p>
-            <div className="text-sm text-destructive/80 mt-2">
-              {result.errorLatex ? (
-                <KaTeXRenderer 
-                  expression={result.error} 
-                  displayMode={false}
-                  className="text-destructive/80"
-                />
-              ) : (
-                <pre className="font-mono whitespace-pre-wrap text-destructive/80">{result.error}</pre>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {/* Show derivation if available */}
-        {hasDerivation && (
-          <>
-            {!result.success && (
-              <div className="text-sm text-muted-foreground mb-2">
-                Partial derivation before error:
-              </div>
-            )}
-            {viewMode === 'tree' ? (
-              <TreeViewer 
-                steps={result.derivation}
-                onStepClick={onStepClick}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                expandedByDefault={true}
-              />
-            ) : (
-              <div className="space-y-1">
-                {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
-              </div>
-            )}
-          </>
-        )}
-        
-        {/* Show message if no derivation available */}
-        {!hasDerivation && result.success && (
-          <div className="flex flex-col items-center justify-center h-32 text-muted-foreground">
-            <p className="text-sm">No derivation steps available</p>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

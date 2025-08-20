@@ -10,6 +10,14 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     historyApiFallback: true,
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        404: './public/404.html'
+      }
+    }
+  },
   plugins: [
     react(),
     mode === 'development' &&

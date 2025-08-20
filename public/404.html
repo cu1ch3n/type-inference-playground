@@ -21,7 +21,9 @@
   </head>
 
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Redirect to main app with the current path
+      window.location.href = '/' + window.location.pathname.slice(1) + window.location.search + window.location.hash;
+    </script>
   </body>
 </html>

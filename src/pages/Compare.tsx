@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Plus, X, Check, X as CrossIcon, RotateCcw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
@@ -27,6 +28,7 @@ export const Compare = () => {
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
+  const navigate = useNavigate();
 
   // Load shared state from URL on mount
   useEffect(() => {
@@ -146,13 +148,22 @@ export const Compare = () => {
     }
   }, [selectedAlgorithms, expressions, runAllComparisons]);
 
+  const handleCellDoubleClick = (algorithmId: string, expression: string) => {
+    const url = `/?algorithm=${algorithmId}&program=${encodeURIComponent(expression)}`;
+    navigate(url);
+  };
+
   const renderCell = (algorithmId: string, expression: string) => {
     const key = getCellKey(algorithmId, expression);
     const cell = comparisonResults.get(key);
 
     if (!cell) {
       return (
-        <div className="flex items-center justify-center h-16">
+        <div 
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+          title="Double-click to view detailed derivation"
+        >
           <span className="text-muted-foreground text-xs">Pending...</span>
         </div>
       );
@@ -160,7 +171,11 @@ export const Compare = () => {
 
     if (cell.loading) {
       return (
-        <div className="flex items-center justify-center h-16">
+        <div 
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+          title="Double-click to view detailed derivation"
+        >
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
         </div>
       );
@@ -168,7 +183,11 @@ export const Compare = () => {
 
     if (!cell.result) {
       return (
-        <div className="flex items-center justify-center h-16">
+        <div 
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+          title="Double-click to view detailed derivation"
+        >
           <span className="text-muted-foreground text-xs">No result</span>
         </div>
       );
@@ -176,7 +195,11 @@ export const Compare = () => {
 
     if (!cell.result.success) {
       return (
-        <div className="flex items-center justify-center h-16">
+        <div 
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+          title="Double-click to view detailed derivation"
+        >
           <CrossIcon className="h-5 w-5 text-destructive" />
         </div>
       );
@@ -184,7 +207,11 @@ export const Compare = () => {
 
     if (cell.result.finalType) {
       return (
-        <div className="flex flex-col items-center justify-center h-16 gap-1 p-2">
+        <div 
+          className="flex flex-col items-center justify-center h-16 gap-1 p-2 cursor-pointer hover:bg-accent/50 transition-colors"
+          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+          title="Double-click to view detailed derivation"
+        >
           <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
           <div className="text-xs max-w-full overflow-hidden">
             <KaTeXRenderer 
@@ -197,7 +224,11 @@ export const Compare = () => {
     }
 
     return (
-      <div className="flex items-center justify-center h-16">
+      <div 
+        className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+        onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
+        title="Double-click to view detailed derivation"
+      >
         <Check className="h-5 w-5 text-green-500" />
       </div>
     );
@@ -213,6 +244,7 @@ export const Compare = () => {
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
           <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
+          <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation on the main page</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">

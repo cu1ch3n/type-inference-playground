@@ -94,7 +94,7 @@ export const ExpressionInput = ({
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-base bg-code min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10" 
+              className="font-code text-sm sm:text-base bg-code min-h-[100px] sm:min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
             <Button 
@@ -102,16 +102,16 @@ export const ExpressionInput = ({
               disabled={!expression.trim() || isInferring} 
               size="sm" 
               className={`
-                absolute bottom-2 right-2 h-8 w-8 p-0 
-                btn-interactive transition-smooth
+                absolute bottom-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 
+                btn-interactive transition-smooth touch-manipulation
                 ${isInferring ? 'animate-pulse glow-primary' : 'hover:glow-primary'}
                 ${!expression.trim() ? 'opacity-50' : ''}
               `}
             >
               {isInferring ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
               ) : (
-                <Play className="w-4 h-4 transition-transform duration-200 hover:scale-110" />
+                <Play className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:scale-110" />
               )}
             </Button>
           </div>

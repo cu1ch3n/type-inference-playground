@@ -158,10 +158,10 @@ export const TypeInferencePlayground = () => {
       <Navbar />
       <div className="min-h-screen bg-background animate-fade-in">
         {/* Main Content */}
-        <div className="container mx-auto px-6 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 max-w-7xl mx-auto">
-            {/* Left Column - Input & Algorithm */}
-            <div className="lg:col-span-2 space-y-8">
+        <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
+          <div className="grid grid-cols-1 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
+            {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
+            <div className="xl:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="animate-stagger-1">
                 <AlgorithmSelector
                   algorithms={algorithms}
@@ -186,8 +186,8 @@ export const TypeInferencePlayground = () => {
               </div>
             </div>
 
-            {/* Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 space-y-8">
+            {/* Mobile: Stack below, Desktop: Right Columns - Derivation and Rules */}
+            <div className="xl:col-span-4 space-y-4 sm:space-y-6 lg:space-y-8">
               {/* Derivation */}
               <div className="animate-stagger-3">
                 <DerivationViewer
@@ -215,9 +215,9 @@ export const TypeInferencePlayground = () => {
           </div>
           
           {/* Footnote */}
-          <div className="mt-20 pt-8 border-t border-muted-foreground/20 animate-stagger-5">
-            <div className="text-center text-sm text-muted-foreground">
-              <div className="flex items-center justify-center gap-4">
+          <div className="mt-12 sm:mt-16 lg:mt-20 pt-6 sm:pt-8 border-t border-muted-foreground/20 animate-stagger-5">
+            <div className="text-center text-xs sm:text-sm text-muted-foreground">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <span>
                   Released under the{' '}
                   <a 
@@ -229,7 +229,7 @@ export const TypeInferencePlayground = () => {
                     MIT License
                   </a>
                 </span>
-                <span className="text-muted-foreground/50">•</span>
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
                 <span>
                   Copyright © 2025{' '}
                   <a 

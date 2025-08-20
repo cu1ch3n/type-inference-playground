@@ -179,11 +179,11 @@ All colors MUST be HSL. Mathematical typography optimized.
   /* Mobile responsive KaTeX */
   @media (max-width: 768px) {
     .katex {
-      font-size: 0.9em !important;
+      font-size: 0.85em !important;
     }
     
     .katex-display {
-      font-size: 1em !important;
+      font-size: 0.9em !important;
       margin: 0.5em 0 !important;
     }
     
@@ -209,6 +209,49 @@ All colors MUST be HSL. Mathematical typography optimized.
     .math-text.overflow-x-auto::-webkit-scrollbar-thumb {
       background-color: hsl(var(--muted-foreground) / 0.5);
       border-radius: 2px;
+    }
+    
+    /* Mobile-specific improvements */
+    .academic-panel {
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    
+    /* Better touch targets */
+    .touch-manipulation {
+      touch-action: manipulation;
+    }
+    
+    /* Mobile card padding */
+    .card {
+      @apply p-3;
+    }
+  }
+  
+  /* Enhanced mobile breakpoints */
+  @media (max-width: 640px) {
+    /* Smaller text for very small screens */
+    .katex {
+      font-size: 0.8em !important;
+    }
+    
+    /* Tighter spacing on small screens */
+    .space-y-4 > * + * {
+      margin-top: 1rem;
+    }
+    
+    /* Compact button styling */
+    button {
+      min-height: 44px; /* Ensure good touch targets */
+    }
+  }
+  
+  /* Tablet optimizations */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+      max-width: 100%;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
   }
   

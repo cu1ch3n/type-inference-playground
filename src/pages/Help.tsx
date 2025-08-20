@@ -2,10 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Code2 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
-
 export const Help = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Navbar />
       
       <div className="container mx-auto px-4 py-6">
@@ -122,17 +120,8 @@ export const Help = () => {
         </div>
 
         {/* Additional Information */}
-        <Card className="mt-6 academic-panel">
-          <CardContent className="pt-6">
-            <div className="text-center text-sm text-muted-foreground">
-              <p>Use these syntax patterns in the expression input to test different type inference algorithms.</p>
-              <p className="mt-2">For more complex examples, check the algorithm-specific examples in the main playground.</p>
-            </div>
-          </CardContent>
-        </Card>
+        
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Help;

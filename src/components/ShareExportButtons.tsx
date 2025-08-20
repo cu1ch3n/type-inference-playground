@@ -214,8 +214,10 @@ ${markdown}`;
         scale,
         logging: false,
         useCORS: true,
-        foreignObjectRendering: true
+        foreignObjectRendering: false
       });
+
+      console.log('[Export PNG] canvas size', canvas.width, canvas.height, 'scale', scale);
 
       canvas.toBlob((blob) => {
         if (blob) {
@@ -262,14 +264,16 @@ ${markdown}`;
     try {
       await waitForFontsReady();
       const bg = getComputedStyle(target).backgroundColor || '#ffffff';
-      const scale = Math.max(3, window.devicePixelRatio || 1);
+      const scale = Math.min(2, Math.max(1.5, window.devicePixelRatio || 1));
       const canvas = await html2canvas(target, {
         backgroundColor: bg === 'rgba(0, 0, 0, 0)' ? '#ffffff' : bg,
         scale,
         logging: false,
         useCORS: true,
-        foreignObjectRendering: true
+        foreignObjectRendering: false
       });
+
+      console.log('[Export PDF] canvas size', canvas.width, canvas.height, 'scale', scale);
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();

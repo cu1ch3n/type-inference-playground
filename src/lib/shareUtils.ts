@@ -1,7 +1,14 @@
-export const updateUrlWithParams = (algorithm: string, expression: string) => {
+export const updateUrlWithParams = (algorithm: string, expression: string, forceUpdate = false) => {
   const url = new URL(window.location.href);
+  const hasExistingParams = url.searchParams.has('algorithm') || url.searchParams.has('program');
   
-  if (algorithm) {
+  // Only update URL if we have meaningful content or if we're forcing an update (like sharing)
+  // or if there were already parameters in the URL
+  if (!forceUpdate && !hasExistingParams && (!algorithm || algorithm === 'W') && !expression.trim()) {
+    return;
+  }
+  
+  if (algorithm && algorithm !== 'W') {
     url.searchParams.set('algorithm', algorithm);
   } else {
     url.searchParams.delete('algorithm');

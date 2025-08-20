@@ -21,6 +21,7 @@ export const TypeInferencePlayground = () => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
   const [initialized, setInitialized] = useState(false);
+  const [hasUrlParams, setHasUrlParams] = useState(false);
   
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
@@ -28,6 +29,8 @@ export const TypeInferencePlayground = () => {
   // Initialize from URL parameters
   useEffect(() => {
     const { algorithm, expression: urlExpression } = getParamsFromUrl();
+    const hasParams = !!(algorithm || urlExpression);
+    setHasUrlParams(hasParams);
     
     if (algorithm && algorithms.find(a => a.id === algorithm)) {
       setSelectedAlgorithm(algorithm);
@@ -43,9 +46,9 @@ export const TypeInferencePlayground = () => {
   // Update URL when algorithm or expression changes (but not during initialization)
   useEffect(() => {
     if (initialized) {
-      updateUrlWithParams(selectedAlgorithm, expression);
+      updateUrlWithParams(selectedAlgorithm, expression, hasUrlParams);
     }
-  }, [selectedAlgorithm, expression, initialized]);
+  }, [selectedAlgorithm, expression, initialized, hasUrlParams]);
 
   const handleInference = async () => {
     if (!expression.trim() || !selectedAlgorithm) return;

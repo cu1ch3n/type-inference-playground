@@ -214,9 +214,7 @@ ${markdown}`;
         scale,
         logging: false,
         useCORS: true,
-        foreignObjectRendering: true,
-        scrollX: 0,
-        scrollY: -window.scrollY,
+        foreignObjectRendering: true
       });
 
       canvas.toBlob((blob) => {
@@ -270,9 +268,7 @@ ${markdown}`;
         scale,
         logging: false,
         useCORS: true,
-        foreignObjectRendering: true,
-        scrollX: 0,
-        scrollY: -window.scrollY,
+        foreignObjectRendering: true
       });
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });

@@ -71,7 +71,7 @@ export const CompareShareExportButtons = ({
 
   const getCellKey = (algorithmId: string, expression: string) => `${algorithmId}:${expression}`;
 
-  const handleExportMarkdown = () => {
+  const handleExportMarkdown = (includeTypes: boolean = true) => {
     if (selectedAlgorithms.length === 0 || expressions.length === 0) {
       toast({
         title: "Cannot export",
@@ -109,7 +109,7 @@ export const CompareShareExportButtons = ({
           row += ' No result |';
         } else if (!cell.result.success) {
           row += ' ❌ Error |';
-        } else if (cell.result.finalType) {
+        } else if (includeTypes && cell.result.finalType) {
           row += ` ✅ $$${cell.result.finalType}$$ |`;
         } else {
           row += ' ✅ Success |';
@@ -122,7 +122,7 @@ export const CompareShareExportButtons = ({
     navigator.clipboard.writeText(markdown).then(() => {
       toast({
         title: "Exported to clipboard!",
-        description: "Markdown comparison table copied to clipboard.",
+        description: `Markdown comparison table ${includeTypes ? '(with types)' : '(status only)'} copied to clipboard.`,
         duration: 3000
       });
     }).catch(() => {
@@ -131,7 +131,7 @@ export const CompareShareExportButtons = ({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'algorithm-comparison.md';
+      a.download = `algorithm-comparison${includeTypes ? '-full' : '-status'}.md`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -139,7 +139,7 @@ export const CompareShareExportButtons = ({
       
       toast({
         title: "File downloaded!",
-        description: "Markdown comparison table downloaded as file.",
+        description: `Markdown comparison table ${includeTypes ? '(with types)' : '(status only)'} downloaded as file.`,
         duration: 3000
       });
     });
@@ -178,11 +178,18 @@ export const CompareShareExportButtons = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-popover border-border w-44 sm:w-48 animate-fade-in-scale">
           <DropdownMenuItem 
-            onClick={handleExportMarkdown}
+            onClick={() => handleExportMarkdown(true)}
             className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
           >
             <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-xs sm:text-sm">Export as Markdown</span>
+            <span className="text-xs sm:text-sm">Full Table (with types)</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => handleExportMarkdown(false)}
+            className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
+          >
+            <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="text-xs sm:text-sm">Status Only</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

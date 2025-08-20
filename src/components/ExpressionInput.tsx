@@ -94,9 +94,21 @@ export const ExpressionInput = ({
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-sm sm:text-base bg-code min-h-[100px] sm:min-h-[120px] resize-none pr-12 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              className="font-code text-sm sm:text-base bg-code min-h-[100px] sm:min-h-[120px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
+            {/* Clear button - top right */}
+            {expression.trim() && (
+              <Button 
+                onClick={handleClear} 
+                variant="ghost" 
+                size="sm" 
+                className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              >
+                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:rotate-180" />
+              </Button>
+            )}
+            {/* Play button - bottom right */}
             <Button 
               onClick={onInfer} 
               disabled={!expression.trim() || isInferring} 
@@ -115,19 +127,6 @@ export const ExpressionInput = ({
               )}
             </Button>
           </div>
-        </div>
-
-        <div className="flex gap-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          <Button 
-            onClick={handleClear} 
-            variant="outline" 
-            size="sm" 
-            className="text-xs btn-interactive transition-smooth"
-            disabled={!expression.trim()}
-          >
-            <RotateCcw className="w-3 h-3 mr-1 transition-transform duration-200 hover:rotate-180" />
-            Clear
-          </Button>
         </div>
 
         {selectedExample && (

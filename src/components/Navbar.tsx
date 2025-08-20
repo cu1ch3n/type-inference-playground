@@ -1,5 +1,11 @@
 import { Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 
 export const Navbar = () => {
@@ -24,13 +30,21 @@ export const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
-            >
-              <Github className="w-4 h-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Github className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}>
+                  Frontend
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-wasm', '_blank')}>
+                  Core
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <WasmStatusIndicator />
           </div>
         </div>

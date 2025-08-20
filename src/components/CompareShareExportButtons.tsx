@@ -82,7 +82,7 @@ export const CompareShareExportButtons = ({
     }
 
     // Create markdown table
-    let markdown = '# Algorithm Comparison Results\n\n';
+    let markdown = '';
     
     // Table header
     const algorithmNames = selectedAlgorithms.map(id => {
@@ -110,7 +110,7 @@ export const CompareShareExportButtons = ({
         } else if (!cell.result.success) {
           row += ' ❌ Error |';
         } else if (cell.result.finalType) {
-          row += ` ✅ \`${cell.result.finalType}\` |`;
+          row += ` ✅ $$${cell.result.finalType}$$ |`;
         } else {
           row += ' ✅ Success |';
         }
@@ -118,12 +118,6 @@ export const CompareShareExportButtons = ({
       
       markdown += row + '\n';
     });
-
-    markdown += '\n## Legend\n';
-    markdown += '- ✅ Success\n';
-    markdown += '- ❌ Error\n';
-    markdown += '- Pending: Not yet computed\n';
-    markdown += '- Loading...: Currently computing\n';
 
     navigator.clipboard.writeText(markdown).then(() => {
       toast({

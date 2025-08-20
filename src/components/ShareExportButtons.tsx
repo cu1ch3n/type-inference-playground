@@ -1,13 +1,10 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Share2, Check, Download, FileText, Image, FileDown } from 'lucide-react';
+import { Share2, Check, Download, FileText } from 'lucide-react';
 import { shareCurrentState } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
 import { InferenceResult, TypeInferenceAlgorithm, DerivationStep } from '@/types/inference';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { marked } from 'marked';
 
 interface ShareExportButtonsProps {
   algorithm: TypeInferenceAlgorithm;
@@ -24,22 +21,6 @@ export const ShareExportButtons = ({
 }: ShareExportButtonsProps) => {
   const { toast } = useToast();
   const [isSharing, setIsSharing] = React.useState(false);
-
-  // Ensure webfonts (e.g., KaTeX) are loaded before capture for crisp output
-  const waitForFontsReady = async (timeout = 2000) => {
-    try {
-      if ('fonts' in document) {
-        await Promise.race([
-          (document as any).fonts.ready,
-          new Promise((res) => setTimeout(res, timeout)),
-        ]);
-      } else {
-        await new Promise((res) => setTimeout(res, 500));
-      }
-      // Give layout a tick to settle
-      await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
-    } catch {}
-  };
 
   const handleShare = async () => {
     if (!expression.trim()) {
@@ -162,189 +143,6 @@ ${markdown}`;
     });
   };
 
-  const createRenderableContent = () => {
-    if (!result?.success || !result.derivation.length) return null;
-
-    const isLinear = algorithm.viewMode === 'linear';
-    const markdown = isLinear ? 
-      derivationToLinearMarkdown(result.derivation) :
-      derivationToMarkdown(result.derivation);
-    
-    const fullMarkdown = `# ${algorithm.name} - Type Derivation
-
-## Expression
-\`${expression.trim()}\`
-
-## Final Type
-$${result.finalType?.trim() || 'Unknown'}$
-
-## Derivation Steps
-${markdown}`;
-
-    return fullMarkdown;
-  };
-
-  const handleExportPNG = async () => {
-    if (!result?.success || !result.derivation.length) {
-      toast({
-        title: "Cannot export",
-        description: "No derivation available to export.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const target = document.querySelector('[data-derivation-viewer]') as HTMLElement | null;
-    if (!target) {
-      toast({ title: "Export failed", description: "Derivation area not found.", variant: "destructive" });
-      return;
-    }
-
-    // Hide export controls and fix styling for html2canvas during capture
-    const exportStyle = document.createElement('style');
-    exportStyle.textContent = `
-      .export-controls{display:none!important}
-      ul, ol {list-style:none!important; margin:0!important; padding:0!important}
-      .tree-view ul {border-left:2px solid #e2e8f0!important}
-      .tree-view li {margin:0!important; padding:0!important}
-      .katex {font-size:14px!important}
-      .academic-panel {background:#ffffff!important; border:1px solid #e2e8f0!important}
-      .card {background:#ffffff!important}
-      .bg-highlight\\/30 {background-color:#fef3c7!important}
-      .border-primary {border-color:#3b82f6!important}
-      .text-primary {color:#3b82f6!important}
-      .bg-muted\\/40 {background-color:#f8fafc!important}
-      .text-muted-foreground {color:#64748b!important}
-      .border-muted-foreground\\/20 {border-color:#cbd5e1!important}
-    `;
-    document.head.appendChild(exportStyle);
-
-    try {
-      await waitForFontsReady();
-      const bg = getComputedStyle(target).backgroundColor || '#ffffff';
-      const scale = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
-      const canvas = await html2canvas(target, {
-        backgroundColor: bg === 'rgba(0, 0, 0, 0)' ? '#ffffff' : bg,
-        scale,
-        logging: false,
-        useCORS: true,
-        foreignObjectRendering: false
-      });
-
-      console.log('[Export PNG] canvas size', canvas.width, canvas.height, 'scale', scale);
-
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `${algorithm.id}-derivation.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-          toast({ title: "PNG exported!", description: "Derivation exported as PNG image.", duration: 3000 });
-        }
-      }, 'image/png');
-    } catch (error) {
-      console.error('PNG export failed:', error);
-      toast({ title: "Export failed", description: "Could not export as PNG. Please try again.", variant: "destructive" });
-    } finally {
-      document.head.removeChild(exportStyle);
-    }
-  };
-
-  const handleExportPDF = async () => {
-    if (!result?.success || !result.derivation.length) {
-      toast({
-        title: "Cannot export",
-        description: "No derivation available to export.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const target = document.querySelector('[data-derivation-viewer]') as HTMLElement | null;
-    if (!target) {
-      toast({ title: "Export failed", description: "Derivation area not found.", variant: "destructive" });
-      return;
-    }
-
-    // Hide export controls and fix styling for html2canvas during capture
-    const exportStyle = document.createElement('style');
-    exportStyle.textContent = `
-      .export-controls{display:none!important}
-      ul, ol {list-style:none!important; margin:0!important; padding:0!important}
-      .tree-view ul {border-left:2px solid #e2e8f0!important}
-      .tree-view li {margin:0!important; padding:0!important}
-      .katex {font-size:14px!important}
-      .academic-panel {background:#ffffff!important; border:1px solid #e2e8f0!important}
-      .card {background:#ffffff!important}
-      .bg-highlight\\/30 {background-color:#fef3c7!important}
-      .border-primary {border-color:#3b82f6!important}
-      .text-primary {color:#3b82f6!important}
-      .bg-muted\\/40 {background-color:#f8fafc!important}
-      .text-muted-foreground {color:#64748b!important}
-      .border-muted-foreground\\/20 {border-color:#cbd5e1!important}
-    `;
-    document.head.appendChild(exportStyle);
-
-    try {
-      await waitForFontsReady();
-      const bg = getComputedStyle(target).backgroundColor || '#ffffff';
-      const scale = Math.min(2, Math.max(1.5, window.devicePixelRatio || 1));
-      const canvas = await html2canvas(target, {
-        backgroundColor: bg === 'rgba(0, 0, 0, 0)' ? '#ffffff' : bg,
-        scale,
-        logging: false,
-        useCORS: true,
-        foreignObjectRendering: false
-      });
-
-      console.log('[Export PDF] canvas size', canvas.width, canvas.height, 'scale', scale);
-
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 10; // mm
-      const contentWidth = pageWidth - margin * 2;
-      const contentHeight = pageHeight - margin * 2;
-
-      const imgWidth = contentWidth;
-      const pxPerMm = canvas.width / imgWidth; // pixels per mm when fitted to width
-      const pageHeightPx = contentHeight * pxPerMm; // how many pixels fit on one page height
-
-      let y = 0;
-      let pageIndex = 0;
-      while (y < canvas.height) {
-        const sliceHeight = Math.min(pageHeightPx, canvas.height - y);
-        const pageCanvas = document.createElement('canvas');
-        const ctx = pageCanvas.getContext('2d');
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = sliceHeight;
-        if (ctx) {
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-          ctx.drawImage(canvas, 0, y, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-        }
-        const imgData = pageCanvas.toDataURL('image/png', 1.0);
-        if (pageIndex > 0) pdf.addPage();
-        const sliceHeightMm = sliceHeight / pxPerMm;
-        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, sliceHeightMm);
-        y += sliceHeight;
-        pageIndex++;
-      }
-
-      pdf.save(`${algorithm.id}-derivation.pdf`);
-      toast({ title: "PDF exported!", description: "Derivation exported as PDF document.", duration: 3000 });
-    } catch (error) {
-      console.error('PDF export failed:', error);
-      toast({ title: "Export failed", description: "Could not export as PDF. Please try again.", variant: "destructive" });
-    } finally {
-      document.head.removeChild(exportStyle);
-    }
-  };
-
   return (
     <div className="flex gap-2">
       <Button
@@ -381,20 +179,6 @@ ${markdown}`;
           >
             <FileText className="w-4 h-4 mr-2" />
             Export as Markdown
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={handleExportPNG}
-            className="cursor-pointer hover:bg-accent"
-          >
-            <Image className="w-4 h-4 mr-2" />
-            Export as PNG
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={handleExportPDF}
-            className="cursor-pointer hover:bg-accent"
-          >
-            <FileDown className="w-4 h-4 mr-2" />
-            Export as PDF
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

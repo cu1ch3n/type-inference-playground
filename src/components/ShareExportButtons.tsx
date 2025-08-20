@@ -144,20 +144,20 @@ ${markdown}`;
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
+    <div className="flex gap-2">
       <Button
         onClick={handleShare}
         variant="outline"
         size="sm"
         disabled={disabled || isSharing || !expression.trim()}
-        className="btn-interactive w-full sm:w-auto flex-1 sm:flex-none min-h-[44px] touch-manipulation"
+        className="btn-interactive touch-manipulation text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9"
       >
         {isSharing ? (
-          <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+          <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
         ) : (
-          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
         )}
-        <span className="text-xs sm:text-sm">{isSharing ? 'Copied!' : 'Share'}</span>
+        <span>{isSharing ? 'Copied!' : 'Share'}</span>
       </Button>
 
       <DropdownMenu>
@@ -166,19 +166,19 @@ ${markdown}`;
             variant="outline"
             size="sm"
             disabled={disabled || !result?.success}
-            className="btn-interactive w-full sm:w-auto flex-1 sm:flex-none min-h-[44px] touch-manipulation"
+            className="btn-interactive touch-manipulation text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9"
           >
-            <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
-            <span className="text-xs sm:text-sm">Export</span>
+            <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+            <span>Export</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-popover border-border w-48 animate-fade-in-scale">
+        <DropdownMenuContent align="end" className="bg-popover border-border w-44 sm:w-48 animate-fade-in-scale">
           <DropdownMenuItem 
             onClick={handleExportMarkdown}
-            className="cursor-pointer hover:bg-accent p-3 touch-manipulation"
+            className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
           >
             <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm">Export as Markdown</span>
+            <span className="text-xs sm:text-sm">Export as Markdown</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

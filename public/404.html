@@ -22,8 +22,8 @@
 
   <body>
     <script>
-      // Redirect to main app with the current path
-      window.location.href = '/' + window.location.pathname.slice(1) + window.location.search + window.location.hash;
+      // Redirect to main app and let React Router handle the routing
+      window.location.replace('/' + window.location.search + window.location.hash);
     </script>
   </body>
 </html>

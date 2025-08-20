@@ -97,13 +97,13 @@ export const ExpressionInput = ({
               className="font-code text-sm sm:text-base bg-code min-h-[100px] sm:min-h-[120px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
-            {/* Clear button - top left */}
+            {/* Clear button - top right */}
             {expression.trim() && (
               <Button 
                 onClick={handleClear} 
                 variant="ghost" 
                 size="sm" 
-                className="absolute top-2 left-2 h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-60 hover:opacity-100 transition-smooth"
               >
                 <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:rotate-180" />
               </Button>

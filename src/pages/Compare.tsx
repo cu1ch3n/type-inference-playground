@@ -244,7 +244,6 @@ export const Compare = () => {
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
           <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
-          <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation on the main page</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -335,7 +334,10 @@ export const Compare = () => {
         {/* Comparison Table */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Comparison Results</CardTitle>
+            <div>
+              <CardTitle>Comparison Results</CardTitle>
+              <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation on the main page</p>
+            </div>
             <CompareShareExportButtons
               selectedAlgorithms={selectedAlgorithms}
               expressions={expressions}

@@ -150,14 +150,14 @@ ${markdown}`;
         variant="outline"
         size="sm"
         disabled={disabled || isSharing || !expression.trim()}
-        className="btn-interactive touch-manipulation text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9"
+        className="btn-interactive touch-manipulation h-8 w-8 sm:w-auto sm:h-9 p-0 sm:px-3"
       >
         {isSharing ? (
-          <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+          <Check className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
         ) : (
-          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
         )}
-        <span>{isSharing ? 'Copied!' : 'Share'}</span>
+        <span className="hidden sm:inline text-sm">{isSharing ? 'Copied!' : 'Share'}</span>
       </Button>
 
       <DropdownMenu>
@@ -166,10 +166,10 @@ ${markdown}`;
             variant="outline"
             size="sm"
             disabled={disabled || !result?.success}
-            className="btn-interactive touch-manipulation text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9"
+            className="btn-interactive touch-manipulation h-8 w-8 sm:w-auto sm:h-9 p-0 sm:px-3"
           >
-            <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-            <span>Export</span>
+            <Download className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
+            <span className="hidden sm:inline text-sm">Export</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-popover border-border w-44 sm:w-48 animate-fade-in-scale">

@@ -1,4 +1,4 @@
-import { Github, Sun, Moon, BarChart3, HelpCircle } from 'lucide-react';
+import { Github, Sun, Moon, GitCompare, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -65,7 +65,7 @@ export const Navbar = () => {
                   }}
                   className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
                 >
-                  <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <GitCompare className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -80,7 +80,7 @@ export const Navbar = () => {
                   onClick={() => setHelpModalOpen(true)}
                   className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
                 >
-                  <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

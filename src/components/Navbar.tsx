@@ -117,16 +117,9 @@ export const Navbar = () => {
             </Tooltip>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="btn-interactive h-8 sm:h-9 px-2 sm:px-3">
-                      <Github className="w-3 h-3 sm:w-4 sm:h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>GitHub repositories</p>
-                  </TooltipContent>
-                </Tooltip>
+                <Button variant="outline" size="icon" className="btn-interactive h-8 sm:h-9 px-2 sm:px-3">
+                  <Github className="w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 sm:w-96 animate-fade-in-scale">
                 <DropdownMenuItem 

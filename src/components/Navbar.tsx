@@ -2,6 +2,7 @@ import { Github, Sun, Moon, BarChart3, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
+import { useState } from 'react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +10,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
+import { HelpModal } from './HelpModal';
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
 
   return (
     <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
@@ -43,15 +46,14 @@ export const Navbar = () => {
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </Link>
-            <Link to="/help">
-              <Button
-                variant="outline"
-                size="icon"
-                className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
-              >
-                <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setHelpModalOpen(true)}
+              className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
+            >
+              <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+            </Button>
             <Button
               variant="outline"
               size="icon"
@@ -102,6 +104,8 @@ export const Navbar = () => {
           <WasmStatusIndicator />
         </div>
       </div>
+      
+      <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
     </nav>
   );
 };

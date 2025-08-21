@@ -1,23 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Code2 } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
-export const Help = () => {
-  return <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <div className="flex items-center gap-3">
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+interface HelpModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const HelpModal = ({ open, onOpenChange }: HelpModalProps) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
             <BookOpen className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold">Quick Reference</h1>
-          </div>
-          <p className="text-muted-foreground">
+            Quick Reference
+          </DialogTitle>
+          <p className="text-muted-foreground text-left">
             Syntax reference for type inference expressions and types
           </p>
-        </div>
+        </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           {/* Types Reference */}
           <Card className="academic-panel hover-scale-sm transition-smooth">
             <CardHeader>
@@ -118,10 +128,7 @@ export const Help = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Additional Information */}
-        
-      </div>
-    </div>;
+      </DialogContent>
+    </Dialog>
+  );
 };
-export default Help;

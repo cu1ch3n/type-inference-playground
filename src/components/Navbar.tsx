@@ -68,7 +68,7 @@ export const Navbar = () => {
                   <Github className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-72 sm:w-80 animate-fade-in-scale">
+              <DropdownMenuContent align="end" className="w-80 sm:w-96 animate-fade-in-scale">
                 <DropdownMenuItem 
                   onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
                   className="flex items-center gap-3 p-3 cursor-pointer transition-fast hover:bg-accent/80"

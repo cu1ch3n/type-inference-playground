@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { wasmInference } from '@/lib/wasmInterface';
 
 type WasmStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
@@ -40,9 +45,16 @@ export const WasmStatusIndicator = () => {
   };
 
   return (
-    <Badge variant="outline" className="flex items-center gap-2">
-      <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
-      <span className="text-xs">{getStatusText()}</span>
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant="outline" className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
+          <span className="text-xs">{getStatusText()}</span>
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p className="font-mono text-xs">{wasmInference.getWasmUrl()}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };

@@ -3,7 +3,6 @@ import { Separator } from '@/components/ui/separator';
 import { Navbar } from './Navbar';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
-
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
@@ -12,8 +11,11 @@ import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
+import { useKeyboardShortcuts, KEYBOARD_SHORTCUTS } from '@/hooks/useKeyboardShortcuts';
+import { useToast } from '@/hooks/use-toast';
 
 export const TypeInferencePlayground = () => {
+  const { toast } = useToast();
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
   const [expression, setExpression] = useState<string>('');
   const [result, setResult] = useState<InferenceResult | undefined>();
@@ -24,6 +26,65 @@ export const TypeInferencePlayground = () => {
   
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      ...KEYBOARD_SHORTCUTS.RUN_INFERENCE,
+      action: () => {
+        if (!isInferring && expression.trim()) {
+          handleInference();
+          toast({
+            description: "Running inference... (Ctrl+Enter)",
+            duration: 2000,
+          });
+        }
+      }
+    },
+    {
+      ...KEYBOARD_SHORTCUTS.FOCUS_INPUT,
+      action: () => {
+        const textarea = document.querySelector('[data-expression-input]') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+          textarea.select();
+        }
+      }
+    },
+    {
+      ...KEYBOARD_SHORTCUTS.CLEAR_INPUT,
+      action: () => {
+        setExpression('');
+        toast({
+          description: "Expression cleared",
+          duration: 1500,
+        });
+      }
+    },
+    {
+      ...KEYBOARD_SHORTCUTS.SHARE_LINK,
+      action: async () => {
+        if (selectedAlgorithmData && expression) {
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('algorithm', selectedAlgorithmData.id);
+            url.searchParams.set('program', encodeURIComponent(expression.trim()));
+            await navigator.clipboard.writeText(url.toString());
+            toast({
+              description: "Link copied to clipboard",
+              duration: 2000,
+            });
+          } catch (error) {
+            toast({
+              description: "Failed to copy link",
+              variant: "destructive",
+              duration: 2000,
+            });
+          }
+        }
+      }
+    }
+  ]);
 
   // Initialize from URL parameters once, then clean the URL
   useEffect(() => {
@@ -156,7 +217,7 @@ export const TypeInferencePlayground = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background animate-fade-in">
+      <div className="min-h-screen bg-background animate-fade-in transition-smooth">
         {/* Main Content */}
         <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
           <div className="grid grid-cols-1 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
@@ -214,33 +275,44 @@ export const TypeInferencePlayground = () => {
             </div>
           </div>
           
-          {/* Footnote */}
+          {/* Enhanced Footer with keyboard shortcuts */}
           <div className="mt-12 sm:mt-16 lg:mt-20 pt-6 sm:pt-8 border-t border-muted-foreground/20 animate-stagger-5">
-            <div className="text-center text-xs sm:text-sm text-muted-foreground">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-                <span>
-                  Released under the{' '}
-                  <a 
-                    href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
-                    MIT License
-                  </a>
-                </span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span>
-                  Copyright © 2025{' '}
-                  <a 
-                    href="https://cuichen.cc" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
-                    Chen Cui
-                  </a>
-                </span>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="text-xs sm:text-sm text-muted-foreground">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                  <span>
+                    Released under the{' '}
+                    <a 
+                      href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline transition-colors duration-200"
+                    >
+                      MIT License
+                    </a>
+                  </span>
+                  <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                  <span>
+                    Copyright © 2025{' '}
+                    <a 
+                      href="https://cuichen.cc" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline transition-colors duration-200"
+                    >
+                      Chen Cui
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                <p className="font-medium mb-1">Keyboard Shortcuts:</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                  <span><kbd className="px-1 py-0.5 bg-muted rounded text-xs">Ctrl+Enter</kbd> Run</span>
+                  <span><kbd className="px-1 py-0.5 bg-muted rounded text-xs">/</kbd> Focus</span>
+                  <span><kbd className="px-1 py-0.5 bg-muted rounded text-xs">Ctrl+S</kbd> Share</span>
+                  <span><kbd className="px-1 py-0.5 bg-muted rounded text-xs">Ctrl+Shift+⌫</kbd> Clear</span>
+                </div>
               </div>
             </div>
           </div>

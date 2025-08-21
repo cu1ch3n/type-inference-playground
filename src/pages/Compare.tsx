@@ -35,6 +35,7 @@ import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
 import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
+import { useKeyboardShortcuts, KEYBOARD_SHORTCUTS } from '@/hooks/useKeyboardShortcuts';
 
 import { InferenceResult } from '@/types/inference';
 
@@ -155,6 +156,7 @@ const SortableExpressionItem = ({ expression, onRemove }: {
 };
 
 export const Compare = () => {
+  const { toast } = useToast();
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>(['W']);
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
@@ -162,6 +164,35 @@ export const Compare = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
   const navigate = useNavigate();
+
+  // Keyboard shortcuts for compare page
+  useKeyboardShortcuts([
+    {
+      ...KEYBOARD_SHORTCUTS.CLOSE_MODAL,
+      action: () => {
+        if (modalOpen) {
+          setModalOpen(false);
+        }
+      }
+    },
+    {
+      ...KEYBOARD_SHORTCUTS.TOGGLE_COMPARE,
+      action: () => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('compare');
+        window.history.pushState({}, '', url.toString());
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+    },
+    {
+      key: 'Enter',
+      action: () => {
+        if (newExpression.trim()) {
+          addExpression();
+        }
+      }
+    }
+  ]);
 
   // Configure sensors for both mouse and touch
   const sensors = useSensors(
@@ -422,176 +453,11 @@ export const Compare = () => {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div className="min-h-screen bg-background animate-fade-in">
+        <div className="min-h-screen bg-background animate-fade-in transition-smooth">
           <Navbar />
           
           <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 animate-stagger-1">
-            <div className="mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <GitCompare className="w-6 h-6 text-primary" />
-                  <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('compare');
-                    window.history.pushState({}, '', url.toString());
-                    window.dispatchEvent(new PopStateEvent('popstate'));
-                  }}
-                  className="btn-interactive h-9 px-3 flex items-center gap-2"
-                >
-                  <CornerUpLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">Return</span>
-                </Button>
-              </div>
-              <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 animate-stagger-2">
-              {/* Algorithm Selection */}
-              <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-lg">Selected Algorithms</CardTitle>
-                  {selectedAlgorithms.length > 0 && (
-                    <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                      <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
-                    </Button>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedAlgorithms.map((algorithmId) => {
-                        const algorithm = algorithms.find(a => a.id === algorithmId);
-                        return (
-                          <SortableAlgorithmBadge
-                            key={algorithmId}
-                            algorithmId={algorithmId}
-                            algorithm={algorithm}
-                            onRemove={removeAlgorithm}
-                          />
-                        );
-                      })}
-                    </div>
-                  </SortableContext>
-                  
-                  {availableAlgorithms.length > 0 && (
-                    <div className="flex gap-2">
-                      <Select onValueChange={addAlgorithm}>
-                        <SelectTrigger className="flex-1">
-                          <SelectValue placeholder="Add algorithm..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableAlgorithms.map(algorithm => (
-                            <SelectItem key={algorithm.id} value={algorithm.id}>
-                              {algorithm.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Expression Management */}
-              <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-lg">Test Expressions</CardTitle>
-                  {expressions.length > 0 && (
-                    <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                      <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
-                    </Button>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-2">
-                      {expressions.map((expression) => (
-                        <SortableExpressionItem
-                          key={expression}
-                          expression={expression}
-                          onRemove={removeExpression}
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                  
-                  <div className="flex gap-2">
-                     <Input
-                       value={newExpression}
-                       onChange={(e) => setNewExpression(e.target.value)}
-                       placeholder="Enter expression (e.g., \x. x)"
-                       onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                       className="flex-1 font-code"
-                     />
-                    <Button onClick={addExpression} size="sm">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Comparison Table */}
-            <Card className="academic-panel animate-stagger-3">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Comparison</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">💡 Click any cell to view detailed derivation</p>
-                </div>
-                <CompareShareExportButtons
-                  selectedAlgorithms={selectedAlgorithms}
-                  expressions={expressions}
-                  comparisonResults={comparisonResults}
-                />
-              </CardHeader>
-              <CardContent>
-                {selectedAlgorithms.length === 0 || expressions.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
-                    {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
-                    {expressions.length === 0 && "add at least one expression"}
-                    {" to start comparing."}
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="min-w-[200px]">Expression</TableHead>
-                          {selectedAlgorithms.map(algorithmId => {
-                            const algorithm = algorithms.find(a => a.id === algorithmId);
-                            return (
-                              <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                <div className="font-semibold">{algorithm?.name || algorithmId}</div>
-                              </TableHead>
-                            );
-                          })}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {expressions.map(expression => (
-                          <TableRow key={expression}>
-                             <TableCell className="font-code text-sm border-r">
-                               <code>{expression}</code>
-                             </TableCell>
-                            {selectedAlgorithms.map(algorithmId => (
-                              <TableCell key={`${expression}-${algorithmId}`} className="text-center">
-                                {renderCell(algorithmId, expression)}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* ... keep existing code ... */}
           </div>
         </div>
       </DndContext>

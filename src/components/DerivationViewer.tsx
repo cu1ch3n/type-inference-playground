@@ -94,7 +94,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
   const hasDerivation = result.derivation && result.derivation.length > 0;
 
   return (
-    <Card className="academic-panel" data-derivation-viewer>
+    <Card className="academic-panel animate-fade-in" data-derivation-viewer>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
@@ -103,7 +103,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
               Derivation
             </CardTitle>
             {result.finalType && (
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 animate-scale-in" style={{ animationDelay: '200ms' }}>
                 <Separator orientation="vertical" className="h-6 hidden sm:block" />
                 <span className="text-sm text-muted-foreground hidden sm:inline">Type:</span>
                 <div className="min-w-0 max-w-[50vw] sm:max-w-none">
@@ -130,7 +130,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
       <CardContent className="space-y-4">
         {/* Show error if present */}
         {!result.success && result.error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg transition-all duration-200">
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg animate-slide-in-right" style={{ animationDelay: '100ms' }}>
             <p className="text-destructive font-medium flex items-center gap-2">
               <Activity className="w-4 h-4" />
               Error
@@ -157,19 +157,25 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
                 Partial derivation before error:
               </div>
             )}
-            {viewMode === 'tree' ? (
-              <TreeViewer 
-                steps={result.derivation}
-                onStepClick={onStepClick}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                expandedByDefault={true}
-              />
-            ) : (
-              <div className="space-y-1">
-                {linearSteps.map(({step, path}) => renderLinearStep(step, path))}
-              </div>
-            )}
+            <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+              {viewMode === 'tree' ? (
+                <TreeViewer 
+                  steps={result.derivation}
+                  onStepClick={onStepClick}
+                  activeStepPath={activeStepPath}
+                  activeRuleId={activeRuleId}
+                  expandedByDefault={true}
+                />
+              ) : (
+                <div className="space-y-1">
+                  {linearSteps.map(({step, path}, index) => (
+                    <div key={path.join('-')} className="animate-fade-in" style={{ animationDelay: `${300 + index * 50}ms` }}>
+                      {renderLinearStep(step, path)}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </>
         )}
         

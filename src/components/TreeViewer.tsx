@@ -125,9 +125,11 @@ export const TreeViewer = ({
   return (
     <div className="tree-view">
       <ul className="space-y-0.5">
-        {steps.map((step, index) => 
-          renderTreeNode(step, [index], index === steps.length - 1)
-        )}
+        {steps.map((step, index) => (
+          <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {renderTreeNode(step, [index], index === steps.length - 1)}
+          </div>
+        ))}
       </ul>
     </div>
   );

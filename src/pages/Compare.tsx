@@ -298,8 +298,8 @@ export const Compare = () => {
   }, [selectedAlgorithms, expressions, runAllComparisons]);
 
   const handleCellDoubleClick = (algorithmId: string, expression: string) => {
-    const url = `/?algorithm=${algorithmId}&program=${encodeURIComponent(expression)}`;
-    navigate(url);
+    // Navigate to main page with algorithm and expression parameters
+    navigate(`/?algorithm=${algorithmId}&program=${encodeURIComponent(expression)}`);
   };
 
   const renderCell = (algorithmId: string, expression: string) => {

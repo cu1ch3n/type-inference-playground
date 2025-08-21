@@ -76,16 +76,6 @@ export const DerivationModal = ({
         <Separator className="my-4" />
         
         <div className="space-y-6">
-          {/* Final Type Display */}
-          {result?.finalType && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Final Type:</span>
-              <Badge variant="secondary" className="font-math">
-                <KaTeXRenderer expression={result.finalType} />
-              </Badge>
-            </div>
-          )}
-
           {/* Derivation Viewer */}
           <DerivationViewer
             result={result}

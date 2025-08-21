@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, ArrowLeft } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, CornerUpLeft } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -407,7 +407,7 @@ export const Compare = () => {
                 }}
                 className="btn-interactive h-9 px-3 flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <CornerUpLeft className="w-4 h-4" />
                 <span className="hidden sm:inline">Return</span>
               </Button>
             </div>

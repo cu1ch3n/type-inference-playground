@@ -320,7 +320,7 @@ export const Compare = () => {
     }
   }, [selectedAlgorithms, expressions, runAllComparisons]);
 
-  const handleCellDoubleClick = (algorithmId: string, expression: string) => {
+  const handleCellClick = (algorithmId: string, expression: string) => {
     const key = getCellKey(algorithmId, expression);
     const cell = comparisonResults.get(key);
     
@@ -340,8 +340,8 @@ export const Compare = () => {
       return (
         <div 
           className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
-          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-          title="Double-click to view detailed derivation"
+          onClick={() => handleCellClick(algorithmId, expression)}
+          title="Click to view detailed derivation"
         >
           <span className="text-muted-foreground text-xs">Pending...</span>
         </div>
@@ -352,8 +352,8 @@ export const Compare = () => {
       return (
         <div 
           className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
-          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-          title="Double-click to view detailed derivation"
+          onClick={() => handleCellClick(algorithmId, expression)}
+          title="Click to view detailed derivation"
         >
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
         </div>
@@ -364,8 +364,8 @@ export const Compare = () => {
       return (
         <div 
           className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
-          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-          title="Double-click to view detailed derivation"
+          onClick={() => handleCellClick(algorithmId, expression)}
+          title="Click to view detailed derivation"
         >
           <span className="text-muted-foreground text-xs">No result</span>
         </div>
@@ -376,8 +376,8 @@ export const Compare = () => {
       return (
         <div 
           className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
-          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-          title="Double-click to view detailed derivation"
+          onClick={() => handleCellClick(algorithmId, expression)}
+          title="Click to view detailed derivation"
         >
           <CrossIcon className="h-5 w-5 text-destructive" />
         </div>
@@ -388,8 +388,8 @@ export const Compare = () => {
       return (
         <div 
           className="flex flex-col items-center justify-center h-16 gap-1 p-2 cursor-pointer hover:bg-accent/50 transition-colors"
-          onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-          title="Double-click to view detailed derivation"
+          onClick={() => handleCellClick(algorithmId, expression)}
+          title="Click to view detailed derivation"
         >
           <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
           <div className="text-xs max-w-full overflow-hidden">
@@ -405,8 +405,8 @@ export const Compare = () => {
     return (
       <div 
         className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
-        onDoubleClick={() => handleCellDoubleClick(algorithmId, expression)}
-        title="Double-click to view detailed derivation"
+        onClick={() => handleCellClick(algorithmId, expression)}
+        title="Click to view detailed derivation"
       >
         <Check className="h-5 w-5 text-green-500" />
       </div>
@@ -541,7 +541,7 @@ export const Compare = () => {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle>Comparison</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation in a modal</p>
+                  <p className="text-xs text-muted-foreground mt-1">💡 Click any cell to view detailed derivation</p>
                 </div>
                 <CompareShareExportButtons
                   selectedAlgorithms={selectedAlgorithms}

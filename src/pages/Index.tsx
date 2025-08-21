@@ -1,25 +1,11 @@
 import { TypeInferencePlayground } from '@/components/TypeInferencePlayground';
 import Compare from './Compare';
-import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Index = () => {
-  const [isCompareMode, setIsCompareMode] = useState(false);
-
-  useEffect(() => {
-    const updateCompareMode = () => {
-      const params = new URLSearchParams(window.location.search);
-      setIsCompareMode(params.get('compare') === 'true');
-    };
-
-    updateCompareMode();
-
-    // Listen for URL changes (back/forward buttons, manual URL changes)
-    window.addEventListener('popstate', updateCompareMode);
-    
-    return () => {
-      window.removeEventListener('popstate', updateCompareMode);
-    };
-  }, []);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const isCompareMode = params.get('compare') === 'true';
 
   return isCompareMode ? <Compare /> : <TypeInferencePlayground />;
 };

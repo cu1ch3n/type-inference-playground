@@ -306,8 +306,6 @@ export const TypeInferencePlayground = () => {
                     Chen Cui
                   </a>
                 </span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <KeyboardShortcutsHelp />
               </div>
             </div>
           </div>

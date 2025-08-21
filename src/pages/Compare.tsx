@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, CornerUpLeft } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, CornerUpLeft, Search } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -160,6 +160,7 @@ export const Compare = () => {
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>(['W']);
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
+  const [algorithmSearch, setAlgorithmSearch] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
@@ -341,6 +342,16 @@ export const Compare = () => {
         duration: 1500,
       });
     },
+    onFocusInput: () => {
+      // Focus search input if available, otherwise focus expression input
+      const searchInput = document.querySelector('input[placeholder="Search algorithms..."]') as HTMLInputElement;
+      const expressionInput = document.querySelector('input[placeholder="Add expression..."]') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.focus();
+      } else if (expressionInput) {
+        expressionInput.focus();
+      }
+    },
     onShare: async () => {
       if (selectedAlgorithms.length > 0 || expressions.length > 0) {
         try {
@@ -478,6 +489,20 @@ export const Compare = () => {
   };
 
   const availableAlgorithms = algorithms.filter(alg => !selectedAlgorithms.includes(alg.id));
+  
+  // Filter algorithms based on search query
+  const filteredAlgorithms = availableAlgorithms.filter(algorithm => {
+    if (!algorithmSearch.trim()) return true;
+    
+    const searchLower = algorithmSearch.toLowerCase();
+    const nameMatch = algorithm.name.toLowerCase().includes(searchLower);
+    const idMatch = algorithm.id.toLowerCase().includes(searchLower);
+    const labelsMatch = algorithm.labels?.some(label => 
+      label.toLowerCase().includes(searchLower)
+    );
+    
+    return nameMatch || idMatch || labelsMatch;
+  });
 
   return (
     <>
@@ -544,19 +569,91 @@ export const Compare = () => {
                   </SortableContext>
                   
                   {availableAlgorithms.length > 0 && (
-                    <div className="flex gap-2">
-                      <Select onValueChange={addAlgorithm}>
-                        <SelectTrigger className="flex-1">
-                          <SelectValue placeholder="Add algorithm..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableAlgorithms.map(algorithm => (
-                            <SelectItem key={algorithm.id} value={algorithm.id}>
-                              {algorithm.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <div className="space-y-3">
+                      {/* Search Input */}
+                      <div className="relative">
+                        <Input
+                          placeholder="Search algorithms..."
+                          value={algorithmSearch}
+                          onChange={(e) => setAlgorithmSearch(e.target.value)}
+                          className="pl-8 transition-smooth focus:border-primary"
+                        />
+                        <div className="absolute left-2.5 top-1/2 transform -translate-y-1/2">
+                          <Search className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        {algorithmSearch && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setAlgorithmSearch('')}
+                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 opacity-60 hover:opacity-100"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
+                      
+                      {/* Algorithm List */}
+                      <div className="max-h-48 overflow-y-auto space-y-1">
+                        {filteredAlgorithms.length > 0 ? (
+                          filteredAlgorithms.map((algorithm, index) => (
+                            <div
+                              key={algorithm.id}
+                              onClick={() => {
+                                addAlgorithm(algorithm.id);
+                                setAlgorithmSearch('');
+                              }}
+                              className="p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-accent/50 hover:border-primary/50 list-item-hover animate-fade-in"
+                              style={{ animationDelay: `${index * 0.05}s` }}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-sm text-foreground">
+                                    {algorithm.name}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    {algorithm.id}
+                                  </div>
+                                  {algorithm.labels && algorithm.labels.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-2">
+                                      {algorithm.labels.slice(0, 3).map((label) => (
+                                        <Badge key={label} variant="outline" className="text-xs">
+                                          {label}
+                                        </Badge>
+                                      ))}
+                                      {algorithm.labels.length > 3 && (
+                                        <Badge variant="outline" className="text-xs">
+                                          +{algorithm.labels.length - 3}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                                <Plus className="h-4 w-4 text-primary flex-shrink-0 ml-2" />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-center py-8 text-muted-foreground">
+                            <div className="space-y-2">
+                              <Search className="h-8 w-8 mx-auto opacity-50" />
+                              <p className="text-sm">
+                                {algorithmSearch ? 'No algorithms match your search' : 'No more algorithms available'}
+                              </p>
+                              {algorithmSearch && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setAlgorithmSearch('')}
+                                  className="text-xs"
+                                >
+                                  Clear search
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </CardContent>
@@ -585,11 +682,11 @@ export const Compare = () => {
                     </div>
                   </SortableContext>
                   
-                  <div className="flex gap-2">
+                   <div className="flex gap-2">
                      <Input
                        value={newExpression}
                        onChange={(e) => setNewExpression(e.target.value)}
-                       placeholder="Enter expression (e.g., \x. x)"
+                       placeholder="Add expression..."
                        onKeyDown={(e) => e.key === 'Enter' && addExpression()}
                        className="flex-1 font-code"
                      />
@@ -641,9 +738,9 @@ export const Compare = () => {
                       <TableBody>
                         {expressions.map(expression => (
                           <TableRow key={expression}>
-                             <TableCell className="font-code text-sm border-r">
-                               <code>{expression}</code>
-                             </TableCell>
+                            <TableCell className="font-code text-sm border-r">
+                              <code>{expression}</code>
+                            </TableCell>
                             {selectedAlgorithms.map(algorithmId => (
                               <TableCell key={`${expression}-${algorithmId}`} className="text-center">
                                 {renderCell(algorithmId, expression)}

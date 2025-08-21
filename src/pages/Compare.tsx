@@ -31,6 +31,7 @@ import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
+import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
 import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 import { 
@@ -138,6 +139,8 @@ export const Compare = () => {
   const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
   const [newExpression, setNewExpression] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
   const navigate = useNavigate();
 
   // Configure sensors for both mouse and touch
@@ -298,8 +301,15 @@ export const Compare = () => {
   }, [selectedAlgorithms, expressions, runAllComparisons]);
 
   const handleCellDoubleClick = (algorithmId: string, expression: string) => {
-    // Navigate to main page with algorithm and expression parameters
-    navigate(`/?algorithm=${algorithmId}&program=${encodeURIComponent(expression)}`);
+    const key = getCellKey(algorithmId, expression);
+    const cell = comparisonResults.get(key);
+    
+    setModalData({
+      algorithmId,
+      expression,
+      result: cell?.result
+    });
+    setModalOpen(true);
   };
 
   const renderCell = (algorithmId: string, expression: string) => {
@@ -517,7 +527,7 @@ export const Compare = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Comparison</CardTitle>
-                <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation on the main page</p>
+                <p className="text-xs text-muted-foreground mt-1">💡 Double-click any cell to view detailed derivation in a modal</p>
               </div>
               <CompareShareExportButtons
                 selectedAlgorithms={selectedAlgorithms}
@@ -570,6 +580,17 @@ export const Compare = () => {
           </Card>
         </div>
       </div>
+      
+      {/* Derivation Modal */}
+      {modalData && (
+        <DerivationModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          algorithmId={modalData.algorithmId}
+          expression={modalData.expression}
+          result={modalData.result}
+        />
+      )}
     </DndContext>
   );
 };

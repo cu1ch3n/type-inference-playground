@@ -48,36 +48,36 @@ export const AlgorithmSelector = ({
         </div>
         
         <div className="relative">
-          <div className="max-h-80 overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-60 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}
                 onClick={() => onAlgorithmChange(algorithm.id)}
-                className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:border-primary/50 hover-scale-sm ${
+                className={`p-2.5 rounded-lg border cursor-pointer transition-all duration-200 hover:border-primary/50 hover-scale-sm ${
                   selectedAlgorithm === algorithm.id 
                     ? 'bg-algorithm border-primary/40 shadow-sm' 
                     : 'bg-card border-border/50'
                 }`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="space-y-2">
-                  <h3 className="font-medium text-sm text-foreground">{algorithm.name}</h3>
-                  <div className="scale-90 origin-left">
+                <div className="space-y-1.5">
+                  <h3 className="font-medium text-sm text-foreground leading-tight">{algorithm.name}</h3>
+                  <div className="scale-75 origin-left -ml-1">
                     <AlgorithmLabels labels={algorithm.labels} />
                   </div>
                   
                   {algorithm.paper && (
-                    <div className="pt-2 border-t border-border/30">
+                    <div className="pt-1.5 border-t border-border/30">
                       <div className="flex items-start justify-between gap-2">
                         <div className="text-xs text-muted-foreground leading-tight flex-1 min-w-0">
-                          <div className="font-medium truncate">{algorithm.paper.title} ({algorithm.paper.year})</div>
-                          <div className="truncate">{algorithm.paper.authors.join(', ')}</div>
+                          <div className="font-medium truncate text-xs">{algorithm.paper.title} ({algorithm.paper.year})</div>
+                          <div className="truncate text-xs">{algorithm.paper.authors.join(', ')}</div>
                         </div>
                         {algorithm.paper.url && (
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-auto p-1 btn-interactive hover:text-primary flex-shrink-0" 
+                            className="h-auto p-0.5 btn-interactive hover:text-primary flex-shrink-0" 
                             onClick={(e) => {
                               e.stopPropagation();
                               window.open(algorithm.paper!.url, '_blank');
@@ -94,17 +94,15 @@ export const AlgorithmSelector = ({
             ))}
             
             {filteredAlgorithms.length === 0 && (
-              <div className="text-center py-6 text-sm text-muted-foreground">
+              <div className="text-center py-4 text-sm text-muted-foreground">
                 No algorithms found matching "{searchTerm}"
               </div>
             )}
           </div>
           
-          {/* Scroll indicators */}
-          {filteredAlgorithms.length > 4 && (
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none flex items-end justify-center pb-1">
-              <div className="text-xs text-muted-foreground/60">Scroll for more</div>
-            </div>
+          {/* Subtle scroll gradient */}
+          {filteredAlgorithms.length > 5 && (
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-card to-transparent pointer-events-none" />
           )}
         </div>
       </CardContent>

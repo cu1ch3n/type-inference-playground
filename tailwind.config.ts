@@ -201,6 +201,37 @@ export default {
 						opacity: '1',
 						transform: 'translateY(0)'
 					}
+				},
+				// Loading animations
+				'loading-shimmer': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
+				},
+				'loading-dots': {
+					'0%, 20%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.2)' },
+					'80%, 100%': { transform: 'scale(1)' }
+				},
+				// Page transition animations
+				'page-enter': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(20px) scale(0.98)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0) scale(1)'
+					}
+				},
+				'page-exit': {
+					'0%': {
+						opacity: '1',
+						transform: 'translateY(0) scale(1)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'translateY(-20px) scale(0.98)'
+					}
 				}
 			},
 			animation: {
@@ -222,7 +253,15 @@ export default {
 				'stagger-2': 'stagger-fade-in 0.5s ease-out 0.2s both',
 				'stagger-3': 'stagger-fade-in 0.5s ease-out 0.3s both',
 				'stagger-4': 'stagger-fade-in 0.5s ease-out 0.4s both',
-				'stagger-5': 'stagger-fade-in 0.5s ease-out 0.5s both'
+				'stagger-5': 'stagger-fade-in 0.5s ease-out 0.5s both',
+				// Loading animations
+				'loading-shimmer': 'loading-shimmer 2s ease-in-out infinite',
+				'loading-dots-1': 'loading-dots 1.4s ease-in-out infinite',
+				'loading-dots-2': 'loading-dots 1.4s ease-in-out 0.2s infinite',
+				'loading-dots-3': 'loading-dots 1.4s ease-in-out 0.4s infinite',
+				// Page transitions
+				'page-enter': 'page-enter 0.4s ease-out',
+				'page-exit': 'page-exit 0.3s ease-in'
 			}
 		}
 	},

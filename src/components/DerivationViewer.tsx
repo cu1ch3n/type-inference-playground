@@ -47,7 +47,10 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
             />
           </div>
           
-          <Badge variant="secondary" className="text-xs font-medium ml-auto">
+      <Badge 
+        variant="secondary" 
+        className="text-xs font-medium ml-auto transition-smooth hover:scale-105"
+      >
             {step.ruleId}
           </Badge>
         </div>
@@ -66,6 +69,33 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
     steps.forEach((step, index) => visit(step, [index]));
     return result;
   };
+
+  if (isInferring) {
+    return (
+      <Card className="academic-panel">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <GitBranch className="w-5 h-5 text-primary" />
+            Derivation
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+          <div className="text-center space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-1"></div>
+              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-2"></div>
+              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-3"></div>
+            </div>
+            <p className="font-medium animate-pulse">Running type inference...</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+              <Activity className="w-3 h-3 animate-pulse" />
+              <span>Analyzing expression types</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!result) {
     return (

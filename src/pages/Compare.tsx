@@ -339,11 +339,11 @@ export const Compare = () => {
     if (!cell) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
-          <span className="text-muted-foreground text-xs">Pending...</span>
+          <span className="text-muted-foreground text-xs animate-pulse">Pending...</span>
         </div>
       );
     }
@@ -351,11 +351,15 @@ export const Compare = () => {
     if (cell.loading) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-1"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-2"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-3"></div>
+          </div>
         </div>
       );
     }
@@ -387,7 +391,7 @@ export const Compare = () => {
     if (cell.result.finalType) {
       return (
         <div 
-          className="flex flex-col items-center justify-center h-16 gap-1 p-2 cursor-pointer hover:bg-accent/50 transition-colors"
+          className="flex flex-col items-center justify-center h-16 gap-1 p-2 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
@@ -422,7 +426,7 @@ export const Compare = () => {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div className="min-h-screen bg-background animate-fade-in">
+        <div className="min-h-screen bg-background animate-page-enter">
           <Navbar />
           
           <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 animate-stagger-1">

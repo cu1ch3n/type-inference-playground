@@ -13,9 +13,9 @@ export const KeyboardShortcutsHelp = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="h-8 w-8 sm:h-9 sm:w-9 p-0 opacity-60 hover:opacity-100 transition-smooth btn-interactive"
+          className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
           title="Keyboard shortcuts"
         >
           <Keyboard className="w-4 h-4" />

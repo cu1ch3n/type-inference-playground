@@ -611,9 +611,6 @@ export const Compare = () => {
                                   <div className="font-medium text-sm text-foreground">
                                     {algorithm.name}
                                   </div>
-                                  <div className="text-xs text-muted-foreground mt-1">
-                                    {algorithm.id}
-                                  </div>
                                   {algorithm.labels && algorithm.labels.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-2">
                                       {algorithm.labels.slice(0, 3).map((label) => (

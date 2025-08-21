@@ -25,27 +25,41 @@ export const Navbar = () => {
               <span className="text-primary-foreground font-bold text-xs sm:text-sm">λ</span>
             </div>
             <h1 className="text-sm sm:text-lg font-semibold min-w-0">
-              <a 
-                href="https://zoo.cuichen.cc" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors block truncate"
+              <button
+                onClick={() => {
+                  const url = new URL(window.location.href);
+                  url.search = '';
+                  window.history.pushState({}, '', url.toString());
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                className="hover:text-primary transition-colors block truncate text-left"
               >
                 Type Inference Zoo
-              </a>
+              </button>
             </h1>
           </div>
           
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <Link to="/compare">
-              <Button
-                variant="outline"
-                size="icon"
-                className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
-              >
-                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                const url = new URL(window.location.href);
+                const isCurrentlyCompare = url.searchParams.get('compare') === 'true';
+                
+                if (isCurrentlyCompare) {
+                  url.searchParams.delete('compare');
+                } else {
+                  url.searchParams.set('compare', 'true');
+                }
+                
+                window.history.pushState({}, '', url.toString());
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
+            >
+              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+            </Button>
             <Button
               variant="outline"
               size="icon"

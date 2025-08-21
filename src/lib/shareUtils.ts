@@ -31,6 +31,33 @@ export const getCompareParamsFromUrl = () => {
   return { algorithms, expressions };
 };
 
+export const shareCompareState = async (algorithms: string[], expressions: string[]) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('compare', 'true');
+  
+  if (algorithms.length > 0) {
+    url.searchParams.set('algorithms', algorithms.join(','));
+  } else {
+    url.searchParams.delete('algorithms');
+  }
+  
+  if (expressions.length > 0) {
+    url.searchParams.set('expressions', expressions.map(expr => encodeURIComponent(expr.trim())).join(','));
+  } else {
+    url.searchParams.delete('expressions');
+  }
+  
+  const shareUrl = url.toString();
+  
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    return { success: true, url: shareUrl };
+  } catch (error) {
+    console.error('Failed to copy to clipboard:', error);
+    return { success: false, url: shareUrl, error };
+  }
+};
+
 export const shareCurrentState = async (algorithm: string, expression: string) => {
   const url = new URL(window.location.href);
   url.searchParams.set('algorithm', algorithm);

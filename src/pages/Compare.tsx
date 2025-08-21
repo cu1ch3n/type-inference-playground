@@ -515,8 +515,8 @@ export const Compare = () => {
         <div className="min-h-screen bg-background animate-page-enter">
           <Navbar />
           
-          <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 animate-stagger-1">
-            <div className="mb-6">
+          <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 animate-stagger-1">
+            <div className="mb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <GitCompare className="w-6 h-6 text-primary" />
@@ -540,18 +540,18 @@ export const Compare = () => {
               <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 animate-stagger-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3 animate-stagger-2">
               {/* Algorithm Selection */}
               <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-lg">Selected Algorithms</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between pb-3">
+                  <CardTitle className="text-base">Selected Algorithms</CardTitle>
                   {selectedAlgorithms.length > 0 && (
                     <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
                       <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
                     </Button>
                   )}
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
                     <div className="flex flex-wrap gap-2">
                       {selectedAlgorithms.map((algorithmId) => {
@@ -580,15 +580,15 @@ export const Compare = () => {
 
               {/* Expression Management */}
               <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-lg">Test Expressions</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between pb-3">
+                  <CardTitle className="text-base">Test Expressions</CardTitle>
                   {expressions.length > 0 && (
                     <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
                       <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
                     </Button>
                   )}
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
                     <div className="space-y-2">
                       {expressions.map((expression) => (

@@ -51,18 +51,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Code className="w-5 h-5 text-primary transition-transform duration-200 hover:scale-110" />
-          Input Program
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3 pt-4">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <label className="text-sm font-medium text-foreground mb-3 block flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-accent transition-transform duration-200 hover:scale-110" />
-            Examples
-          </label>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
             <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
               <SelectValue placeholder="Choose an example..." />
@@ -88,24 +78,21 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
         </div>
 
         <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <label className="text-sm font-medium text-foreground mb-3 flex items-center justify-between">
-            <span>Expression</span>
+          <div className="relative">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => setHelpModalOpen(true)}
-              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              className="absolute top-2 left-2 h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth z-10"
             >
               <HelpCircle className="w-3 h-3" />
             </Button>
-          </label>
-          <div className="relative">
             <Textarea 
               ref={ref}
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-sm sm:text-base bg-code min-h-[120px] sm:min-h-[100px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              className="font-code text-sm sm:text-base bg-code min-h-[80px] sm:min-h-[80px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
             {/* Clear button - top right */}

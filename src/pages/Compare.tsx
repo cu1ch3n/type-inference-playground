@@ -457,7 +457,192 @@ export const Compare = () => {
           <Navbar />
           
           <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 animate-stagger-1">
-            {/* ... keep existing code ... */}
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-stagger-2">
+              <div className="flex items-center gap-3">
+                <GitCompare className="h-6 w-6 text-primary" />
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Algorithm Comparison</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/')}
+                  className="gap-2"
+                >
+                  <CornerUpLeft className="h-4 w-4" />
+                  Back to Playground
+                </Button>
+                <CompareShareExportButtons 
+                  selectedAlgorithms={selectedAlgorithms}
+                  expressions={expressions}
+                  comparisonResults={comparisonResults}
+                />
+              </div>
+            </div>
+
+            {/* Algorithm Selection */}
+            <Card className="mb-6 animate-stagger-3">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Selected Algorithms</span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={clearAllAlgorithms}
+                      disabled={selectedAlgorithms.length === 0}
+                    >
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Clear All
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2">
+                    <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
+                      {selectedAlgorithms.map(algorithmId => {
+                        const algorithm = algorithms.find(alg => alg.id === algorithmId);
+                        return (
+                          <SortableAlgorithmBadge
+                            key={algorithmId}
+                            algorithmId={algorithmId}
+                            algorithm={algorithm}
+                            onRemove={removeAlgorithm}
+                          />
+                        );
+                      })}
+                    </SortableContext>
+                  </div>
+                  <div className="flex gap-2">
+                    <Select onValueChange={addAlgorithm} value="">
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Add algorithm..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableAlgorithms.map(algorithm => (
+                          <SelectItem key={algorithm.id} value={algorithm.id}>
+                            {algorithm.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Expression Management */}
+            <Card className="mb-6 animate-stagger-4">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Test Expressions</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearAllExpressions}
+                    disabled={expressions.length === 0}
+                  >
+                    <RotateCcw className="h-4 w-4 mr-1" />
+                    Clear All
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
+                      {expressions.map(expression => (
+                        <SortableExpressionItem
+                          key={expression}
+                          expression={expression}
+                          onRemove={removeExpression}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Enter lambda expression..."
+                      value={newExpression}
+                      onChange={(e) => setNewExpression(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          addExpression();
+                        }
+                      }}
+                      className="flex-1"
+                    />
+                    <Button onClick={addExpression} disabled={!newExpression.trim()}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Comparison Table */}
+            {selectedAlgorithms.length > 0 && expressions.length > 0 && (
+              <Card className="animate-stagger-5">
+                <CardHeader>
+                  <CardTitle>Comparison Results</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Click any cell to view detailed derivation
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="sticky left-0 bg-background z-10 min-w-[200px]">Expression</TableHead>
+                          {selectedAlgorithms.map(algorithmId => {
+                            const algorithm = algorithms.find(alg => alg.id === algorithmId);
+                            return (
+                              <TableHead key={algorithmId} className="text-center min-w-[120px]">
+                                {algorithm?.name || algorithmId}
+                              </TableHead>
+                            );
+                          })}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {expressions.map(expression => (
+                          <TableRow key={expression}>
+                            <TableCell className="sticky left-0 bg-background z-10 font-mono text-sm border-r">
+                              {expression}
+                            </TableCell>
+                            {selectedAlgorithms.map(algorithmId => (
+                              <TableCell key={`${algorithmId}-${expression}`} className="p-0 border-l">
+                                {renderCell(algorithmId, expression)}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {selectedAlgorithms.length === 0 && (
+              <Card className="animate-stagger-5">
+                <CardContent className="text-center py-12">
+                  <p className="text-muted-foreground">Select algorithms to start comparing</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {expressions.length === 0 && selectedAlgorithms.length > 0 && (
+              <Card className="animate-stagger-5">
+                <CardContent className="text-center py-12">
+                  <p className="text-muted-foreground">Add expressions to start comparing</p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </DndContext>

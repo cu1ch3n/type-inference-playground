@@ -88,7 +88,16 @@ export const Navbar = () => {
                 <p>Help & quick reference</p>
               </TooltipContent>
             </Tooltip>
-            <KeyboardShortcutsHelp />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <KeyboardShortcutsHelp />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Keyboard shortcuts</p>
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

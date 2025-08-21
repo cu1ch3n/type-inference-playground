@@ -37,6 +37,7 @@ import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { AlgorithmSelector } from '@/components/AlgorithmSelector';
 
 import { InferenceResult } from '@/types/inference';
 
@@ -567,91 +568,13 @@ export const Compare = () => {
                     </div>
                   </SortableContext>
                   
-                  {availableAlgorithms.length > 0 && (
-                    <div className="space-y-3">
-                      {/* Search Input */}
-                      <div className="relative">
-                        <Input
-                          placeholder="Search algorithms..."
-                          value={algorithmSearch}
-                          onChange={(e) => setAlgorithmSearch(e.target.value)}
-                          className="pl-8 transition-smooth focus:border-primary"
-                        />
-                        <div className="absolute left-2.5 top-1/2 transform -translate-y-1/2">
-                          <Search className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        {algorithmSearch && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setAlgorithmSearch('')}
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 opacity-60 hover:opacity-100"
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        )}
-                      </div>
-                      
-                      {/* Algorithm List */}
-                      <div className="max-h-48 overflow-y-auto space-y-1">
-                        {filteredAlgorithms.length > 0 ? (
-                          filteredAlgorithms.map((algorithm, index) => (
-                            <div
-                              key={algorithm.id}
-                              onClick={() => {
-                                addAlgorithm(algorithm.id);
-                                setAlgorithmSearch('');
-                              }}
-                              className="p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:bg-accent/50 hover:border-primary/50 list-item-hover animate-fade-in"
-                              style={{ animationDelay: `${index * 0.05}s` }}
-                            >
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-medium text-sm text-foreground">
-                                    {algorithm.name}
-                                  </div>
-                                  {algorithm.labels && algorithm.labels.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 mt-2">
-                                      {algorithm.labels.slice(0, 3).map((label) => (
-                                        <Badge key={label} variant="outline" className="text-xs">
-                                          {label}
-                                        </Badge>
-                                      ))}
-                                      {algorithm.labels.length > 3 && (
-                                        <Badge variant="outline" className="text-xs">
-                                          +{algorithm.labels.length - 3}
-                                        </Badge>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                                <Plus className="h-4 w-4 text-primary flex-shrink-0 ml-2" />
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="text-center py-8 text-muted-foreground">
-                            <div className="space-y-2">
-                              <Search className="h-8 w-8 mx-auto opacity-50" />
-                              <p className="text-sm">
-                                {algorithmSearch ? 'No algorithms match your search' : 'No more algorithms available'}
-                              </p>
-                              {algorithmSearch && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => setAlgorithmSearch('')}
-                                  className="text-xs"
-                                >
-                                  Clear search
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  <AlgorithmSelector
+                    algorithms={availableAlgorithms}
+                    onAlgorithmChange={(algorithmId) => {
+                      addAlgorithm(algorithmId);
+                      setAlgorithmSearch('');
+                    }}
+                  />
                 </CardContent>
               </Card>
 

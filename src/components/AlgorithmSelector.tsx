@@ -42,7 +42,7 @@ export const AlgorithmSelector = ({
         </div>
         
         <div className="relative">
-          <div className="max-h-48 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-60 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}

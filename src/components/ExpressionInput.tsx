@@ -51,11 +51,20 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardContent className="space-y-3 pt-4">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Code className="w-4 h-4 text-primary" />
+          Input Program
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3 pt-0">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
             <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
-              <SelectValue placeholder="Choose an example..." />
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-3.5 h-3.5 text-muted-foreground" />
+                <SelectValue placeholder="Choose an example..." />
+              </div>
             </SelectTrigger>
             <SelectContent className="animate-fade-in-scale">
               {currentExamples.map((example, index) => (
@@ -92,7 +101,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-sm sm:text-base bg-code min-h-[80px] sm:min-h-[80px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              className="font-code text-xs sm:text-sm bg-code min-h-[90px] sm:min-h-[100px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
             {/* Clear button - top right */}
@@ -128,10 +137,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
         </div>
 
         {selectedExample && (
-          <div className="p-4 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
-            <p className="text-sm font-medium mb-2 text-foreground">
-              {currentExamples.find(e => e.name === selectedExample)?.name}
-            </p>
+          <div className="p-3 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
             <p className="text-xs text-muted-foreground leading-relaxed">
               {currentExamples.find(e => e.name === selectedExample)?.description}
             </p>

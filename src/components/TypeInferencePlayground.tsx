@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { Navbar } from './Navbar';
+import { Navbar } from '@/components/Navbar';
+import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
@@ -21,6 +25,9 @@ export const TypeInferencePlayground = () => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
   const [initialized, setInitialized] = useState(false);
+  const expressionInputRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
@@ -153,6 +160,63 @@ export const TypeInferencePlayground = () => {
     }
   }, [selectedAlgorithm, expression, initialized]);
 
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    onRunInference: () => {
+      if (expression.trim() && !isInferring) {
+        handleInference();
+        toast({
+          description: "Running type inference...",
+          duration: 1500,
+        });
+      }
+    },
+    onClearInput: () => {
+      setExpression('');
+      setResult(undefined);
+      toast({
+        description: "Expression cleared",
+        duration: 1500,
+      });
+    },
+    onFocusInput: () => {
+      expressionInputRef.current?.focus();
+    },
+    onShare: async () => {
+      if (expression.trim()) {
+        try {
+          const url = new URL(window.location.href);
+          url.searchParams.set('algorithm', selectedAlgorithm);
+          url.searchParams.set('expression', expression);
+          await navigator.clipboard.writeText(url.toString());
+          toast({
+            description: "Link copied to clipboard",
+            duration: 2000,
+          });
+        } catch {
+          toast({
+            description: "Failed to copy link",
+            variant: "destructive",
+            duration: 2000,
+          });
+        }
+      }
+    },
+    onToggleCompare: () => {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('compare')) {
+        url.searchParams.delete('compare');
+      } else {
+        url.searchParams.set('compare', 'true');
+      }
+      navigate(url.pathname + url.search);
+      toast({
+        description: url.searchParams.has('compare') ? "Switched to compare mode" : "Switched to single mode",
+        duration: 1500,
+      });
+    }
+  });
+
   return (
     <>
       <Navbar />
@@ -172,6 +236,7 @@ export const TypeInferencePlayground = () => {
               
               <div className="animate-stagger-2 hover-scale-sm">
                 <ExpressionInput
+                  ref={expressionInputRef}
                   expression={expression}
                   onExpressionChange={(expr) => {
                     setExpression(expr);
@@ -241,6 +306,8 @@ export const TypeInferencePlayground = () => {
                     Chen Cui
                   </a>
                 </span>
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                <KeyboardShortcutsHelp />
               </div>
             </div>
           </div>

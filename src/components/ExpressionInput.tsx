@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,13 +15,13 @@ interface ExpressionInputProps {
   selectedAlgorithm: string;
 }
 
-export const ExpressionInput = ({
+export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputProps>(({
   expression,
   onExpressionChange,
   onInfer,
   isInferring,
   selectedAlgorithm
-}: ExpressionInputProps) => {
+}, ref) => {
   const [selectedExample, setSelectedExample] = useState<string>('');
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const currentExamples = algorithmExamples[selectedAlgorithm] || [];
@@ -101,6 +101,7 @@ export const ExpressionInput = ({
           </label>
           <div className="relative">
             <Textarea 
+              ref={ref}
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
@@ -154,4 +155,4 @@ export const ExpressionInput = ({
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
     </Card>
   );
-};
+});

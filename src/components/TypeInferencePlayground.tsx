@@ -223,9 +223,9 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background animate-page-enter">
         {/* Main Content */}
         <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
-            {/* Column 1: Algorithm Selection (narrow) */}
-            <div className="xl:col-span-3 space-y-4 sm:space-y-6 lg:space-y-8">
+          <div className="grid grid-cols-1 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
+            {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
+            <div className="xl:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="animate-stagger-1 hover-scale-sm">
                 <AlgorithmSelector
                   algorithms={algorithms}
@@ -233,10 +233,7 @@ export const TypeInferencePlayground = () => {
                   onAlgorithmChange={setSelectedAlgorithm}
                 />
               </div>
-            </div>
-
-            {/* Column 2: Input & Rules */}
-            <div className="xl:col-span-4 space-y-4 sm:space-y-6 lg:space-y-8">
+              
               <div className="animate-stagger-2 hover-scale-sm">
                 <ExpressionInput
                   ref={expressionInputRef}
@@ -252,21 +249,11 @@ export const TypeInferencePlayground = () => {
                   selectedAlgorithm={selectedAlgorithm}
                 />
               </div>
-              
-              {/* Typing Rules */}
-              {selectedAlgorithmData && (
-                <div className="animate-stagger-4 hover-scale-sm">
-                  <TypingRules
-                    rules={selectedAlgorithmData.rules}
-                    activeRuleId={activeRuleId}
-                    onRuleClick={handleRuleClick}
-                  />
-                </div>
-              )}
             </div>
 
-            {/* Column 3: Derivation */}
-            <div className="xl:col-span-5 space-y-4 sm:space-y-6 lg:space-y-8">
+            {/* Mobile: Stack below, Desktop: Right Columns - Derivation and Rules */}
+            <div className="xl:col-span-4 space-y-4 sm:space-y-6 lg:space-y-8">
+              {/* Derivation */}
               <div className="animate-stagger-3 hover-scale-sm">
                 <DerivationViewer
                   result={result}
@@ -278,6 +265,17 @@ export const TypeInferencePlayground = () => {
                   isInferring={isInferring}
                 />
               </div>
+              
+              {/* Typing Rules */}
+              {selectedAlgorithmData && (
+                <div className="animate-stagger-4 hover-scale-sm">
+                  <TypingRules
+                    rules={selectedAlgorithmData.rules}
+                    activeRuleId={activeRuleId}
+                    onRuleClick={handleRuleClick}
+                  />
+                </div>
+              )}
             </div>
           </div>
           

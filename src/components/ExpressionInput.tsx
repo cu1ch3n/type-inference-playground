@@ -105,7 +105,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-sm sm:text-base bg-code min-h-[140px] sm:min-h-[120px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              className="font-code text-sm sm:text-base bg-code min-h-[120px] sm:min-h-[100px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
             {/* Clear button - top right */}

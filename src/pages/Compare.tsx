@@ -520,7 +520,6 @@ export const Compare = () => {
                 <div className="flex items-center gap-3">
                   <GitCompare className="w-6 h-6 text-primary" />
                   <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
-                  <KeyboardShortcutsHelp />
                 </div>
                 <Button
                   variant="outline"

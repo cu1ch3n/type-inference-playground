@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/tooltip';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { HelpModal } from './HelpModal';
+import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp';
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
@@ -87,6 +88,7 @@ export const Navbar = () => {
                 <p>Help & quick reference</p>
               </TooltipContent>
             </Tooltip>
+            <KeyboardShortcutsHelp />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

@@ -394,7 +394,7 @@ export const Compare = () => {
       <div className="min-h-screen bg-background animate-fade-in">
         <Navbar />
         
-        <div className="container mx-auto px-4 py-6 animate-stagger-1">
+        <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 animate-stagger-1">
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

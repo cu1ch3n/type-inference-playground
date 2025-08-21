@@ -30,25 +30,19 @@ export const AlgorithmSelector = ({
 
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <Zap className="w-5 h-5 text-primary transition-transform duration-200 hover:scale-110" />
-          Type Inference Algorithm
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 pt-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
           <Input
             placeholder="Search algorithms..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-card transition-smooth hover:border-primary/50"
+            className="pl-8 h-8 text-sm bg-card transition-smooth hover:border-primary/50"
           />
         </div>
         
         <div className="relative">
-          <div className="max-h-24 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-32 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}

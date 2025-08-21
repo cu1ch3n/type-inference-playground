@@ -68,28 +68,6 @@ All colors MUST be HSL. Mathematical typography optimized.
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Modern polished shadows */
-    --shadow-subtle: 0 1px 3px 0 hsl(var(--foreground) / 0.1), 0 1px 2px -1px hsl(var(--foreground) / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(var(--foreground) / 0.1), 0 2px 4px -2px hsl(var(--foreground) / 0.1);
-    --shadow-large: 0 10px 15px -3px hsl(var(--foreground) / 0.1), 0 4px 6px -4px hsl(var(--foreground) / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(var(--foreground) / 0.1), 0 8px 10px -6px hsl(var(--foreground) / 0.1);
-    
-    /* Enhanced spacing system */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-    --spacing-2xl: 3rem;
-    --spacing-3xl: 4rem;
-    
-    /* Modern border radius */
-    --radius-sm: 0.375rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    --radius-2xl: 1.5rem;
 
     --radius: 0.5rem;
 
@@ -277,27 +255,10 @@ All colors MUST be HSL. Mathematical typography optimized.
     }
   }
   
-    /* Modern polished shadows */
-    --shadow-subtle: 0 1px 3px 0 hsl(var(--foreground) / 0.1), 0 1px 2px -1px hsl(var(--foreground) / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(var(--foreground) / 0.1), 0 2px 4px -2px hsl(var(--foreground) / 0.1);
-    --shadow-large: 0 10px 15px -3px hsl(var(--foreground) / 0.1), 0 4px 6px -4px hsl(var(--foreground) / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(var(--foreground) / 0.1), 0 8px 10px -6px hsl(var(--foreground) / 0.1);
-    
-    /* Enhanced spacing system */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-    --spacing-2xl: 3rem;
-    --spacing-3xl: 4rem;
-    
-    /* Modern border radius */
-    --radius-sm: 0.375rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    --radius-2xl: 1.5rem;
+  /* Modern polished shadows */
+  --shadow-subtle: 0 1px 3px 0 hsl(var(--foreground) / 0.1), 0 1px 2px -1px hsl(var(--foreground) / 0.1);
+  --shadow-medium: 0 4px 6px -1px hsl(var(--foreground) / 0.1), 0 2px 4px -2px hsl(var(--foreground) / 0.1);
+  --shadow-large: 0 10px 15px -3px hsl(var(--foreground) / 0.1), 0 4px 6px -4px hsl(var(--foreground) / 0.1);
 
   /* Smooth transition classes */
   .transition-smooth {
@@ -355,233 +316,36 @@ All colors MUST be HSL. Mathematical typography optimized.
     box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
   }
 
-  /* Enhanced Academic Panel Styling */
+  /* Academic Panel Styling */
   .academic-panel {
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border));
-    box-shadow: var(--shadow-card);
-    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-medium);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(8px);
   }
   
   .academic-panel:hover {
     box-shadow: var(--shadow-large);
-    transform: translateY(-2px);
-    border-color: hsl(var(--primary) / 0.2);
+    transform: translateY(-1px);
   }
   
-  /* Enhanced card styling */
-  .enhanced-card {
-    background: var(--gradient-card);
-    border: 1px solid hsl(var(--border) / 0.8);
-    box-shadow: var(--shadow-medium);
-    border-radius: var(--radius-xl);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-  }
-  
-  .enhanced-card:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-3px);
-    border-color: hsl(var(--primary) / 0.3);
-  }
-  
-  .enhanced-card:hover::before {
-    opacity: 1;
-  }
-  
-  .enhanced-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  /* Loading skeleton animations */
-  .loading-skeleton {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--muted)) 25%,
-      hsl(var(--muted-foreground) / 0.1) 50%,
-      hsl(var(--muted)) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-  
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-  
-  /* Enhanced button interactions */
-  .btn-enhanced {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .btn-enhanced::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      hsl(var(--primary-foreground) / 0.2),
-      transparent
-    );
-    transition: left 0.5s ease;
-  }
-  
-  .btn-enhanced:hover::before {
-    left: 100%;
-  }
-  
-  /* Floating label animations */
-  .floating-label {
-    position: relative;
-  }
-  
-  .floating-label input:focus + label,
-  .floating-label input:not(:placeholder-shown) + label {
-    transform: translateY(-1.5rem) scale(0.85);
-    color: hsl(var(--primary));
-  }
-  
-  .floating-label label {
-    position: absolute;
-    left: 0.75rem;
-    top: 0.75rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    transform-origin: left top;
-  }
-  
-  /* Ripple effect */
-  .ripple {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .ripple::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: hsl(var(--primary) / 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-  
-  .ripple:active::before {
-    width: 300px;
-    height: 300px;
-  }
-  
-  /* Enhanced Derivation Step Highlighting */
+  /* Derivation Step Highlighting */
   .derivation-step {
-    position: relative;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
     box-shadow: var(--shadow-subtle);
-    background: hsl(var(--card));
-    border: 1px solid transparent;
   }
   
   .derivation-step:hover {
-    background: hsl(var(--accent) / 0.5);
+    background: hsl(var(--highlight) / 0.3);
     box-shadow: var(--shadow-medium);
     transform: scale(1.01);
-    border-color: hsl(var(--primary) / 0.2);
   }
   
   .derivation-step.active {
-    background: hsl(var(--highlight) / 0.3);
+    background: hsl(var(--highlight) / 0.5);
     border: 2px solid hsl(var(--primary));
-    box-shadow: var(--shadow-large);
-    transform: scale(1.02);
-  }
-  
-  .derivation-step.active::before {
-    content: '';
-    position: absolute;
-    left: -2px;
-    top: 50%;
-    width: 4px;
-    height: 60%;
-    background: hsl(var(--primary));
-    border-radius: 0 2px 2px 0;
-    transform: translateY(-50%);
-  }
-  
-  /* Pulse animation for active elements */
-  .pulse-active {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-  
-  /* Enhanced scroll indicators */
-  .scroll-indicator {
-    position: relative;
-  }
-  
-  .scroll-indicator::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-    background: linear-gradient(
-      to bottom,
-      hsl(var(--primary) / 0.3),
-      hsl(var(--primary) / 0.1),
-      hsl(var(--primary) / 0.3)
-    );
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .scroll-indicator:hover::after {
-    opacity: 1;
-  }
-  
-  /* Enhanced focus styles */
-  .focus-enhanced:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
-    border-color: hsl(var(--primary));
-  }
-  
-  .focus-enhanced:focus-within {
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
-    border-color: hsl(var(--primary));
-  }
-  
-  /* Glass morphism effect */
-  .glass {
-    background: hsl(var(--card) / 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.3);
-  }
-  
-  .glass-strong {
-    background: hsl(var(--card) / 0.9);
-    backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid hsl(var(--border) / 0.5);
+    box-shadow: var(--shadow-medium);
   }
 }

@@ -101,18 +101,11 @@ export const ExpressionInput = ({
           </label>
           <div className="relative">
             <Textarea 
-              data-expression-input
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-sm sm:text-base bg-code min-h-[140px] sm:min-h-[120px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation focus-enhanced" 
-              spellCheck={false}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                  e.preventDefault();
-                  onInfer();
-                }
-              }}
+              className="font-code text-sm sm:text-base bg-code min-h-[140px] sm:min-h-[120px] resize-none pr-20 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              spellCheck={false} 
             />
             {/* Clear button - top right */}
             {expression.trim() && (
@@ -132,7 +125,7 @@ export const ExpressionInput = ({
               size="sm" 
               className={`
                 absolute bottom-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 
-                btn-enhanced transition-smooth touch-manipulation
+                btn-interactive transition-smooth touch-manipulation
                 ${isInferring ? 'animate-pulse glow-primary' : 'hover:glow-primary'}
                 ${!expression.trim() ? 'opacity-50' : ''}
               `}

@@ -74,25 +74,12 @@ export default {
 				'gradient-primary': 'var(--gradient-primary)',
 				'gradient-card': 'var(--gradient-card)'
 			},
-			spacing: {
-				'xs': 'var(--spacing-xs)',
-				'sm': 'var(--spacing-sm)', 
-				'md': 'var(--spacing-md)',
-				'lg': 'var(--spacing-lg)',
-				'xl': 'var(--spacing-xl)',
-				'2xl': 'var(--spacing-2xl)',
-				'3xl': 'var(--spacing-3xl)'
-			},
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
 				'card': 'var(--shadow-card)',
 				'material-1': 'var(--shadow-material-1)',
 				'material-2': 'var(--shadow-material-2)',
-				'material-3': 'var(--shadow-material-3)',
-				'subtle': 'var(--shadow-subtle)',
-				'medium': 'var(--shadow-medium)', 
-				'large': 'var(--shadow-large)',
-				'xl': 'var(--shadow-xl)'
+				'material-3': 'var(--shadow-material-3)'
 			},
 			fontFamily: {
 				'sans': ['Roboto', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
@@ -107,10 +94,7 @@ export default {
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)',
-				xs: 'var(--radius-sm)',
-				xl: 'var(--radius-xl)',
-				'2xl': 'var(--radius-2xl)'
+				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
 				'accordion-down': {

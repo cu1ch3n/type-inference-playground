@@ -42,15 +42,15 @@ export const AlgorithmSelector = ({
         </div>
         
         <div className="relative">
-          <div className="max-h-32 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-40 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}
                 onClick={() => onAlgorithmChange(algorithm.id)}
-                className={`p-2.5 rounded-lg border cursor-pointer transition-all duration-200 hover:border-primary/50 hover-scale-sm ${
+                className={`p-2.5 rounded-lg border cursor-pointer transition-all duration-200 hover:border-primary/50 ${
                   selectedAlgorithm === algorithm.id 
                     ? 'bg-algorithm border-primary/40 shadow-sm' 
-                    : 'bg-card border-border/50'
+                    : 'bg-card border-border/50 hover:bg-accent/30'
                 }`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
@@ -98,12 +98,9 @@ export const AlgorithmSelector = ({
             )}
           </div>
           
-          {/* Shadow indicators for scrolling */}
-          {filteredAlgorithms.length > 1 && (
-            <>
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none shadow-inner" />
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-border/20 to-transparent pointer-events-none" />
-            </>
+          {/* Subtle scroll indicators */}
+          {filteredAlgorithms.length > 2 && (
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
           )}
         </div>
       </CardContent>

@@ -33,6 +33,11 @@ import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
 import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import { InferenceResult } from '@/types/inference';
 
@@ -396,20 +401,27 @@ export const Compare = () => {
                 <GitCompare className="w-6 h-6 text-primary" />
                 <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const url = new URL(window.location.href);
-                  url.searchParams.delete('compare');
-                  window.history.pushState({}, '', url.toString());
-                  window.dispatchEvent(new PopStateEvent('popstate'));
-                }}
-                className="btn-interactive h-9 px-3 flex items-center gap-2"
-              >
-                <CornerUpLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Return</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const url = new URL(window.location.href);
+                      url.searchParams.delete('compare');
+                      window.history.pushState({}, '', url.toString());
+                      window.dispatchEvent(new PopStateEvent('popstate'));
+                    }}
+                    className="btn-interactive h-9 px-3 flex items-center gap-2"
+                  >
+                    <CornerUpLeft className="w-4 h-4" />
+                    <span className="hidden sm:inline">Return</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Return to main page</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
             <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
           </div>

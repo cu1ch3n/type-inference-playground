@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { algorithmExamples } from '@/data/algorithms';
+import { HelpModal } from './HelpModal';
 
 interface ExpressionInputProps {
   expression: string;
@@ -23,6 +23,7 @@ export const ExpressionInput = ({
   selectedAlgorithm
 }: ExpressionInputProps) => {
   const [selectedExample, setSelectedExample] = useState<string>('');
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const currentExamples = algorithmExamples[selectedAlgorithm] || [];
 
   const handleExampleSelect = (exampleName: string) => {
@@ -89,11 +90,14 @@ export const ExpressionInput = ({
         <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <label className="text-sm font-medium text-foreground mb-3 flex items-center justify-between">
             <span>Expression</span>
-            <Link to="/help">
-              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                <HelpCircle className="w-3 h-3" />
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setHelpModalOpen(true)}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+            >
+              <HelpCircle className="w-3 h-3" />
+            </Button>
           </label>
           <div className="relative">
             <Textarea 
@@ -146,6 +150,8 @@ export const ExpressionInput = ({
           </div>
         )}
       </CardContent>
+      
+      <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
     </Card>
   );
 };

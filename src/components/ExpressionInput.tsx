@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Play, RotateCcw, Code, Lightbulb, Loader2, BookOpen } from 'lucide-react';
+import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle } from 'lucide-react';
 import { algorithmExamples } from '@/data/algorithms';
 import { HelpModal } from './HelpModal';
 
@@ -96,7 +96,7 @@ export const ExpressionInput = ({
               onClick={() => setHelpModalOpen(true)}
               className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
             >
-              <BookOpen className="w-3 h-3" />
+              <HelpCircle className="w-3 h-3" />
             </Button>
           </label>
           <div className="relative">

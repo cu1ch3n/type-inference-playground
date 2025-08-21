@@ -7,7 +7,6 @@ import { ExpressionInput } from './ExpressionInput';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
@@ -16,7 +15,6 @@ import { algorithms } from '@/data/algorithms';
 import { runInference } from '@/lib/mockInference';
 import { InferenceResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
-
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
   const [expression, setExpression] = useState<string>('');
@@ -27,43 +25,38 @@ export const TypeInferencePlayground = () => {
   const [initialized, setInitialized] = useState(false);
   const expressionInputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
-  const { toast } = useToast();
-  
-
+  const {
+    toast
+  } = useToast();
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
   // Initialize from URL parameters once, then clean the URL
   useEffect(() => {
-    const { algorithm, expression: urlExpression } = getParamsFromUrl();
-    
+    const {
+      algorithm,
+      expression: urlExpression
+    } = getParamsFromUrl();
     if (algorithm && algorithms.find(a => a.id === algorithm)) {
       setSelectedAlgorithm(algorithm);
     }
-    
     if (urlExpression) {
       setExpression(urlExpression);
     }
-    
+
     // Clean URL after loading parameters
     if (algorithm || urlExpression) {
       cleanUrl();
     }
-    
     setInitialized(true);
   }, []);
-
-
   const handleInference = async () => {
     if (!expression.trim() || !selectedAlgorithm) return;
-    
     setIsInferring(true);
     setActiveRuleId(undefined);
     setActiveStepPath(undefined);
-    
     try {
       const inferenceResult = await runInference(selectedAlgorithm, expression);
       setResult(inferenceResult);
-      
     } catch (error) {
       console.error('Inference error:', error);
       setResult({
@@ -75,15 +68,13 @@ export const TypeInferencePlayground = () => {
       setIsInferring(false);
     }
   };
-
   const handleRuleClick = (ruleId: string) => {
     const isToggling = activeRuleId === ruleId;
     setActiveRuleId(isToggling ? undefined : ruleId);
-    
     if (!isToggling) {
       // Always clear step selection when clicking a rule
       setActiveStepPath(undefined);
-      
+
       // Check if this rule is actually used in the derivation
       const isRuleUsedInDerivation = (steps: any[]): boolean => {
         for (const step of steps) {
@@ -92,7 +83,6 @@ export const TypeInferencePlayground = () => {
         }
         return false;
       };
-      
       if (result?.derivation) {
         if (isRuleUsedInDerivation(result.derivation)) {
           // Rule is used in derivation - set it as active (this will highlight all matching steps)
@@ -111,10 +101,8 @@ export const TypeInferencePlayground = () => {
       setActiveRuleId(undefined);
     }
   };
-
   const handleStepClick = (stepPath: number[]) => {
     const isToggling = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
-    
     if (isToggling) {
       // Toggling off - clear everything
       setActiveStepPath(undefined);
@@ -122,25 +110,21 @@ export const TypeInferencePlayground = () => {
     } else {
       // Setting new step - always set the step path
       setActiveStepPath(stepPath);
-      
+
       // Find the step and set corresponding rule
       const findStepAtPath = (steps: any[], path: number[]): any | undefined => {
         if (!path || path.length === 0) return undefined;
-        
         let current = steps;
         for (let i = 0; i < path.length; i++) {
           const index = path[i];
           if (!current[index]) return undefined;
-          
           if (i === path.length - 1) {
             return current[index];
           }
-          
           current = current[index].children || [];
         }
         return undefined;
       };
-      
       if (result?.derivation) {
         const step = findStepAtPath(result.derivation, stepPath);
         if (step?.ruleId) {
@@ -167,7 +151,7 @@ export const TypeInferencePlayground = () => {
         handleInference();
         toast({
           description: "Running type inference...",
-          duration: 1500,
+          duration: 1500
         });
       }
     },
@@ -176,7 +160,7 @@ export const TypeInferencePlayground = () => {
       setResult(undefined);
       toast({
         description: "Expression cleared",
-        duration: 1500,
+        duration: 1500
       });
     },
     onFocusInput: () => {
@@ -191,13 +175,13 @@ export const TypeInferencePlayground = () => {
           await navigator.clipboard.writeText(url.toString());
           toast({
             description: "Link copied to clipboard",
-            duration: 2000,
+            duration: 2000
           });
         } catch {
           toast({
             description: "Failed to copy link",
             variant: "destructive",
-            duration: 2000,
+            duration: 2000
           });
         }
       }
@@ -212,13 +196,11 @@ export const TypeInferencePlayground = () => {
       navigate(url.pathname + url.search);
       toast({
         description: url.searchParams.has('compare') ? "Switched to compare mode" : "Switched to single mode",
-        duration: 1500,
+        duration: 1500
       });
     }
   });
-
-  return (
-    <>
+  return <>
       <Navbar />
       <div className="min-h-screen bg-background animate-page-enter">
         {/* Main Content */}
@@ -227,27 +209,16 @@ export const TypeInferencePlayground = () => {
             {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
             <div className="xl:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="animate-stagger-1 hover-scale-sm">
-                <AlgorithmSelector
-                  algorithms={algorithms}
-                  selectedAlgorithm={selectedAlgorithm}
-                  onAlgorithmChange={setSelectedAlgorithm}
-                />
+                <AlgorithmSelector algorithms={algorithms} selectedAlgorithm={selectedAlgorithm} onAlgorithmChange={setSelectedAlgorithm} />
               </div>
               
               <div className="animate-stagger-2 hover-scale-sm">
-                <ExpressionInput
-                  ref={expressionInputRef}
-                  expression={expression}
-                  onExpressionChange={(expr) => {
-                    setExpression(expr);
-                    if (!expr.trim()) {
-                      setResult(undefined);
-                    }
-                  }}
-                  onInfer={handleInference}
-                  isInferring={isInferring}
-                  selectedAlgorithm={selectedAlgorithm}
-                />
+                <ExpressionInput ref={expressionInputRef} expression={expression} onExpressionChange={expr => {
+                setExpression(expr);
+                if (!expr.trim()) {
+                  setResult(undefined);
+                }
+              }} onInfer={handleInference} isInferring={isInferring} selectedAlgorithm={selectedAlgorithm} />
               </div>
             </div>
 
@@ -255,27 +226,13 @@ export const TypeInferencePlayground = () => {
             <div className="xl:col-span-4 space-y-4 sm:space-y-6 lg:space-y-8">
               {/* Derivation */}
               <div className="animate-stagger-3 hover-scale-sm">
-                <DerivationViewer
-                  result={result}
-                  algorithm={selectedAlgorithmData}
-                  activeStepPath={activeStepPath}
-                  activeRuleId={activeRuleId}
-                  onStepClick={handleStepClick}
-                  expression={expression}
-                  isInferring={isInferring}
-                />
+                <DerivationViewer result={result} algorithm={selectedAlgorithmData} activeStepPath={activeStepPath} activeRuleId={activeRuleId} onStepClick={handleStepClick} expression={expression} isInferring={isInferring} />
               </div>
               
               {/* Typing Rules */}
-              {selectedAlgorithmData && (
-                <div className="animate-stagger-4 hover-scale-sm">
-                  <TypingRules
-                    rules={selectedAlgorithmData.rules}
-                    activeRuleId={activeRuleId}
-                    onRuleClick={handleRuleClick}
-                  />
-                </div>
-              )}
+              {selectedAlgorithmData && <div className="animate-stagger-4 hover-scale-sm">
+                  <TypingRules rules={selectedAlgorithmData.rules} activeRuleId={activeRuleId} onRuleClick={handleRuleClick} />
+                </div>}
             </div>
           </div>
           
@@ -285,34 +242,23 @@ export const TypeInferencePlayground = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <span>
                   Released under the{' '}
-                  <a 
-                    href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
+                  <a href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-colors duration-200">
                     MIT License
                   </a>
                 </span>
                 <span className="hidden sm:inline text-muted-foreground/50">•</span>
                 <span>
                   Copyright © 2025{' '}
-                  <a 
-                    href="https://cuichen.cc" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
+                  <a href="https://cuichen.cc" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-colors duration-200">
                     Chen Cui
                   </a>
                 </span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                
                 <KeyboardShortcutsHelp />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
-  );
+    </>;
 };

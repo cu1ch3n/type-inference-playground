@@ -48,7 +48,7 @@ export const AlgorithmSelector = ({
         </div>
         
         <div className="relative">
-          <div className="max-h-60 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-24 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}
@@ -62,8 +62,12 @@ export const AlgorithmSelector = ({
               >
                 <div className="space-y-1.5">
                   <h3 className="font-medium text-sm text-foreground leading-tight">{algorithm.name}</h3>
-                  <div className="scale-75 origin-left -ml-1">
-                    <AlgorithmLabels labels={algorithm.labels} />
+                  <div className="flex flex-wrap gap-1 items-center">
+                    {algorithm.labels.map((label) => (
+                      <span key={label} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-secondary/50 text-secondary-foreground border border-secondary/20">
+                        {label}
+                      </span>
+                    ))}
                   </div>
                   
                   {algorithm.paper && (
@@ -100,9 +104,12 @@ export const AlgorithmSelector = ({
             )}
           </div>
           
-          {/* Subtle scroll gradient */}
-          {filteredAlgorithms.length > 5 && (
-            <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+          {/* Shadow indicators for scrolling */}
+          {filteredAlgorithms.length > 1 && (
+            <>
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none shadow-inner" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-border/20 to-transparent pointer-events-none" />
+            </>
           )}
         </div>
       </CardContent>

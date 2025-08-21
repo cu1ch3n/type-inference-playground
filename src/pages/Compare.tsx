@@ -38,7 +38,9 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  TooltipProvider,
 } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 
 import { InferenceResult } from '@/types/inference';
 
@@ -97,6 +99,9 @@ const SortableExpressionItem = ({ expression, onRemove }: {
   expression: string; 
   onRemove: (expr: string) => void; 
 }) => {
+  const { toast } = useToast();
+  const [showCopied, setShowCopied] = useState(false);
+  
   const {
     attributes,
     listeners,
@@ -112,6 +117,25 @@ const SortableExpressionItem = ({ expression, onRemove }: {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const handleCopyExpression = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(expression);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 1500);
+      toast({
+        description: "Expression copied to clipboard",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        description: "Failed to copy expression",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -122,7 +146,19 @@ const SortableExpressionItem = ({ expression, onRemove }: {
       }`}
     >
       <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" {...listeners} />
-      <code className="flex-1 text-sm font-code">{expression}</code>
+      <Tooltip open={showCopied}>
+        <TooltipTrigger asChild>
+          <code 
+            className="flex-1 text-sm font-code cursor-pointer hover:bg-accent/50 px-1 py-0.5 rounded transition-colors"
+            onClick={handleCopyExpression}
+          >
+            {expression}
+          </code>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Copied!</p>
+        </TooltipContent>
+      </Tooltip>
       <X 
         className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
         onClick={(e) => {
@@ -396,11 +432,12 @@ export const Compare = () => {
   const availableAlgorithms = algorithms.filter(alg => !selectedAlgorithms.includes(alg.id));
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
+    <TooltipProvider>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
       <div className="min-h-screen bg-background animate-fade-in">
         <Navbar />
         
@@ -580,6 +617,7 @@ export const Compare = () => {
           </Card>
         </div>
       </div>
+      </DndContext>
       
       {/* Derivation Modal */}
       {modalData && (
@@ -591,7 +629,7 @@ export const Compare = () => {
           result={modalData.result}
         />
       )}
-    </DndContext>
+    </TooltipProvider>
   );
 };
 

@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, ArrowLeft } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -391,9 +391,25 @@ export const Compare = () => {
         
         <div className="container mx-auto px-4 py-6 animate-stagger-1">
           <div className="mb-6">
-            <div className="flex items-center gap-3">
-              <GitCompare className="w-6 h-6 text-primary" />
-              <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <GitCompare className="w-6 h-6 text-primary" />
+                <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url = new URL(window.location.href);
+                  url.searchParams.delete('compare');
+                  window.history.pushState({}, '', url.toString());
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                className="btn-interactive h-9 px-3 flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Return</span>
+              </Button>
             </div>
             <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
           </div>

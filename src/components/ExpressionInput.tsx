@@ -92,7 +92,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               variant="ghost" 
               size="sm" 
               onClick={() => setHelpModalOpen(true)}
-              className="absolute top-2 left-2 h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth z-10"
+              className="absolute bottom-2 left-2 h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth z-10"
             >
               <HelpCircle className="w-3 h-3" />
             </Button>

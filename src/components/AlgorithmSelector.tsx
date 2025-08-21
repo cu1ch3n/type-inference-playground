@@ -42,7 +42,15 @@ export const AlgorithmSelector = ({
         </div>
         
         <div className="relative">
-          <div className="max-h-60 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="max-h-72 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent" 
+               onScroll={(e) => {
+                 const target = e.target as HTMLElement;
+                 const isAtBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 5;
+                 const fadeElement = target.parentElement?.querySelector('.scroll-fade');
+                 if (fadeElement) {
+                   (fadeElement as HTMLElement).style.opacity = isAtBottom ? '0' : '1';
+                 }
+               }}>
             {filteredAlgorithms.map((algorithm, index) => (
               <div
                 key={algorithm.id}
@@ -100,7 +108,7 @@ export const AlgorithmSelector = ({
           
           {/* Subtle scroll indicators */}
           {filteredAlgorithms.length > 2 && (
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+            <div className="scroll-fade absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none transition-opacity duration-300" />
           )}
         </div>
       </CardContent>

@@ -517,10 +517,13 @@ export const Compare = () => {
           
           <div className="container mx-auto px-1 sm:px-4 py-2 sm:py-4 animate-stagger-1">
             <div className="mb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <GitCompare className="w-6 h-6 text-primary" />
-                  <h1 className="text-2xl font-bold">Algorithm Comparison</h1>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <GitCompare className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
+                  <h1 className="text-lg sm:text-2xl font-bold truncate">
+                    <span className="hidden sm:inline">Algorithm Comparison</span>
+                    <span className="sm:hidden">Compare</span>
+                  </h1>
                 </div>
                 <Button
                   variant="outline"

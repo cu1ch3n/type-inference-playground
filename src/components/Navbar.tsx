@@ -25,12 +25,12 @@ export const Navbar = () => {
   return (
     <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
       <div className="container mx-auto px-4 sm:px-6 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded flex items-center justify-center flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 max-w-[60%] sm:max-w-none">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded flex items-center justify-center flex-shrink-0">
               <span className="text-primary-foreground font-bold text-xs sm:text-sm">λ</span>
             </div>
-            <h1 className="text-sm sm:text-lg font-semibold min-w-0">
+            <h1 className="text-xs sm:text-lg font-semibold min-w-0">
               <button
                 onClick={() => {
                   const url = new URL(window.location.href);
@@ -40,12 +40,13 @@ export const Navbar = () => {
                 }}
                 className="hover:text-primary transition-colors block truncate text-left"
               >
-                Type Inference Zoo
+                <span className="hidden sm:inline">Type Inference Zoo</span>
+                <span className="sm:hidden">TI Zoo</span>
               </button>
             </h1>
           </div>
           
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -64,7 +65,7 @@ export const Navbar = () => {
                     window.history.pushState({}, '', url.toString());
                     window.dispatchEvent(new PopStateEvent('popstate'));
                   }}
-                  className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
+                  className="btn-interactive h-7 w-7 sm:h-9 sm:w-9"
                 >
                   <GitCompare className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
@@ -73,38 +74,42 @@ export const Navbar = () => {
                 <p>Compare algorithms</p>
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setHelpModalOpen(true)}
-                  className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
-                >
-                  <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Help & quick reference</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <KeyboardShortcutsHelp />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Keyboard shortcuts</p>
-              </TooltipContent>
-            </Tooltip>
+            <div className="hidden sm:block">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setHelpModalOpen(true)}
+                    className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
+                  >
+                    <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Help & quick reference</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div className="hidden sm:block">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <KeyboardShortcutsHelp />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Keyboard shortcuts</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="relative btn-interactive h-8 w-8 sm:h-9 sm:w-9"
+                  className="relative btn-interactive h-7 w-7 sm:h-9 sm:w-9"
                 >
                   <Sun className="h-3 w-3 sm:h-4 sm:w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                   <Moon className="absolute h-3 w-3 sm:h-4 sm:w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -117,7 +122,7 @@ export const Navbar = () => {
             </Tooltip>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="btn-interactive h-8 sm:h-9 px-2 sm:px-3">
+                <Button variant="outline" size="icon" className="btn-interactive h-7 w-7 sm:h-9 sm:w-9 px-1 sm:px-3">
                   <Github className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </DropdownMenuTrigger>

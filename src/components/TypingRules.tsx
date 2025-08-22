@@ -54,9 +54,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           </div>
         )}
 
-        {/* Traditional premise/conclusion rules - grid layout */}
+        {/* Traditional premise/conclusion rules - adaptive grid layout */}
         {rules.some(rule => !rule.reduction) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
             {rules.filter(rule => !rule.reduction).map((rule) => (
               <div
                 key={rule.id}
@@ -79,9 +79,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
                   </Badge>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {rule.premises.length > 0 && (
-                    <div className="space-y-0.5">
+                    <div className="space-y-1.5">
                       {rule.premises.map((premise, index) => (
                         <div key={index} className="text-center">
                           <KaTeXRenderer 

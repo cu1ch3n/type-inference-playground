@@ -26,7 +26,7 @@ export const Navbar = () => {
     <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
       <div className="container mx-auto px-4 sm:px-6 py-3">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 max-w-[60%] sm:max-w-none">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 max-w-[55%] sm:max-w-none">
             <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded flex items-center justify-center flex-shrink-0">
               <span className="text-primary-foreground font-bold text-xs sm:text-sm">λ</span>
             </div>
@@ -40,8 +40,7 @@ export const Navbar = () => {
                 }}
                 className="hover:text-primary transition-colors block truncate text-left"
               >
-                <span className="hidden sm:inline">Type Inference Zoo</span>
-                <span className="sm:hidden">TI Zoo</span>
+                Type Inference Zoo
               </button>
             </h1>
           </div>
@@ -74,23 +73,21 @@ export const Navbar = () => {
                 <p>Compare algorithms</p>
               </TooltipContent>
             </Tooltip>
-            <div className="hidden sm:block">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setHelpModalOpen(true)}
-                    className="btn-interactive h-8 w-8 sm:h-9 sm:w-9"
-                  >
-                    <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Help & quick reference</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setHelpModalOpen(true)}
+                  className="btn-interactive h-7 w-7 sm:h-9 sm:w-9"
+                >
+                  <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Help & quick reference</p>
+              </TooltipContent>
+            </Tooltip>
             <div className="hidden sm:block">
               <Tooltip>
                 <TooltipTrigger asChild>

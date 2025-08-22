@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { ChevronRight, ChevronDown, Circle } from 'lucide-react';
 import { KaTeXRenderer } from './KaTeXRenderer';
-import { DerivationStep } from '@/types/inference';
+import { DerivationStep, TypingRule } from '@/types/inference';
+import { RuleTooltip } from './RuleTooltip';
 
 interface TreeViewerProps {
   steps: DerivationStep[];
+  rules?: TypingRule[];
   onStepClick?: (stepPath: number[]) => void;
   activeStepPath?: number[];
   activeRuleId?: string;
@@ -14,6 +15,7 @@ interface TreeViewerProps {
 
 export const TreeViewer = ({ 
   steps, 
+  rules = [],
   onStepClick, 
   activeStepPath, 
   activeRuleId,
@@ -102,12 +104,13 @@ export const TreeViewer = ({
           </div>
           
           {/* Rule badge - aligned right */}
-          <Badge 
+          <RuleTooltip 
+            ruleId={step.ruleId}
+            rules={rules}
             variant={isActive ? "default" : "secondary"}
             className="text-xs font-medium shrink-0 min-w-fit ml-auto"
-          >
-            {step.ruleId}
-          </Badge>
+            isActive={isActive}
+          />
         </div>
 
         {/* Children - nested list */}

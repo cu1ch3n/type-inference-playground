@@ -6,6 +6,7 @@ import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
 import { GitBranch, Activity, TreePine, Zap } from 'lucide-react';
 import { ShareExportButtons } from './ShareExportButtons';
+import { RuleTooltip } from './RuleTooltip';
 
 interface DerivationViewerProps {
   result?: InferenceResult;
@@ -47,12 +48,12 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
             />
           </div>
           
-      <Badge 
-        variant="secondary" 
-        className="text-xs font-medium ml-auto transition-smooth hover:scale-105"
-      >
-            {step.ruleId}
-          </Badge>
+          <RuleTooltip 
+            ruleId={step.ruleId}
+            rules={algorithm?.rules || []}
+            variant="secondary"
+            className="text-xs font-medium ml-auto transition-smooth hover:scale-105"
+          />
         </div>
       </div>
     );
@@ -195,6 +196,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
               {viewMode === 'tree' ? (
                 <TreeViewer 
                   steps={result.derivation}
+                  rules={algorithm?.rules}
                   onStepClick={onStepClick}
                   activeStepPath={activeStepPath}
                   activeRuleId={activeRuleId}

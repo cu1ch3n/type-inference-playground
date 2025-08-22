@@ -81,7 +81,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
                 <div className="space-y-2">
                   {rule.premises.length > 0 && (
-                    <div className="space-y-1.5">
+                    <div className="flex flex-wrap items-center justify-center gap-3">
                       {rule.premises.map((premise, index) => (
                         <div key={index} className="text-center">
                           <KaTeXRenderer 

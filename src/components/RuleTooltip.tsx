@@ -37,7 +37,7 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
       
       {isHovered && (
         <Card className={`absolute right-full bottom-full mr-2 mb-2 p-3 bg-background/95 backdrop-blur-sm border shadow-lg z-50 animate-scale-in ${
-          rule.reduction ? 'min-w-[400px] max-w-[600px]' : 'min-w-[250px] max-w-[350px]'
+          rule.reduction ? 'min-w-[450px] max-w-[650px]' : 'min-w-[350px] max-w-[450px]'
         }`}>
           {/* Reduction rule format - wider to prevent wrapping */}
           {rule.reduction ? (
@@ -60,9 +60,6 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
                         displayMode={false}
                         className="text-sm"
                       />
-                      {idx < rule.premises.length - 1 && (
-                        <span className="ml-2 text-muted-foreground">∧</span>
-                      )}
                     </div>
                   ))}
                 </div>

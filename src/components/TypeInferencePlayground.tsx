@@ -280,7 +280,7 @@ export const TypeInferencePlayground = () => {
           </div>
           
           {/* Footnote */}
-          <div className="mt-12 sm:mt-16 lg:mt-20 pt-6 sm:pt-8 border-t border-muted-foreground/20 animate-stagger-5">
+          <div className="mt-6 sm:mt-8 lg:mt-10 pt-4 sm:pt-6 border-t border-muted-foreground/20 animate-stagger-5">
             <div className="text-center text-xs sm:text-sm text-muted-foreground">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                 <span>

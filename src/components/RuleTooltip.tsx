@@ -49,12 +49,10 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
               />
             </div>
           ) : (
-            /* Traditional premise/conclusion format - inline premises when possible */
+            /* Traditional premise/conclusion format - try inline first, fallback to stacked */
             <div className="space-y-2">
               {rule.premises && rule.premises.length > 0 && (
-                <div className={`${
-                  rule.premises.length <= 2 ? 'flex items-center justify-center gap-4' : 'space-y-1'
-                }`}>
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   {rule.premises.map((premise, idx) => (
                     <div key={idx} className="text-center">
                       <KaTeXRenderer 
@@ -62,6 +60,9 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
                         displayMode={false}
                         className="text-sm"
                       />
+                      {idx < rule.premises.length - 1 && (
+                        <span className="ml-2 text-muted-foreground">∧</span>
+                      )}
                     </div>
                   ))}
                 </div>

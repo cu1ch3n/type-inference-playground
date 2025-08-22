@@ -54,9 +54,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           </div>
         )}
 
-        {/* Traditional premise/conclusion rules - content-adaptive grid layout */}
+        {/* Traditional premise/conclusion rules - adaptive grid layout */}
         {rules.some(rule => !rule.reduction) && (
-          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
             {rules.filter(rule => !rule.reduction).map((rule) => (
               <div
                 key={rule.id}

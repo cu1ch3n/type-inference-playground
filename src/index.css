@@ -49,7 +49,7 @@ All colors MUST be HSL. Mathematical typography optimized.
     --rule-bg: 220 15% 98%;
     --derivation-bg: 0 0% 99%;
     --code-bg: 220 20% 98%;
-    --highlight: 50 100% 90%;
+    --highlight: 220 70% 95%;
     
     /* Typography */
     --math-font: 'Roboto Slab', 'Computer Modern', 'Latin Modern Math', serif;
@@ -124,7 +124,7 @@ All colors MUST be HSL. Mathematical typography optimized.
     --rule-bg: 215 28% 12%;
     --derivation-bg: 215 28% 9%;
     --code-bg: 215 25% 11%;
-    --highlight: 45 100% 25%;
+    --highlight: 221 83% 20%;
     
     /* Dark Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));

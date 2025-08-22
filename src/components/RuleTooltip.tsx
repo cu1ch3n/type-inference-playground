@@ -36,21 +36,25 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
       </Badge>
       
       {isHovered && (
-        <Card className="absolute right-full bottom-full mr-2 mb-2 p-3 bg-background/95 backdrop-blur-sm border shadow-lg z-50 min-w-[250px] max-w-[350px] animate-scale-in">
-          {/* Reduction rule format */}
+        <Card className={`absolute right-full bottom-full mr-2 mb-2 p-3 bg-background/95 backdrop-blur-sm border shadow-lg z-50 animate-scale-in ${
+          rule.reduction ? 'min-w-[400px] max-w-[600px]' : 'min-w-[250px] max-w-[350px]'
+        }`}>
+          {/* Reduction rule format - wider to prevent wrapping */}
           {rule.reduction ? (
             <div className="text-center">
               <KaTeXRenderer 
                 expression={rule.reduction} 
                 displayMode={false}
-                className="text-sm"
+                className="text-sm whitespace-nowrap"
               />
             </div>
           ) : (
-            /* Traditional premise/conclusion format */
+            /* Traditional premise/conclusion format - inline premises when possible */
             <div className="space-y-2">
               {rule.premises && rule.premises.length > 0 && (
-                <div className="space-y-1">
+                <div className={`${
+                  rule.premises.length <= 2 ? 'flex items-center justify-center gap-4' : 'space-y-1'
+                }`}>
                   {rule.premises.map((premise, idx) => (
                     <div key={idx} className="text-center">
                       <KaTeXRenderer 

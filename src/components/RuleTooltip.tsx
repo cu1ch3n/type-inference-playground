@@ -36,43 +36,48 @@ export const RuleTooltip = ({ ruleId, rules, variant = "secondary", className = 
       </Badge>
       
       {isHovered && (
-        <Card className="absolute right-full bottom-full mr-2 mb-2 p-3 bg-background/95 backdrop-blur-sm border shadow-lg z-50 min-w-[300px] max-w-[400px] animate-scale-in">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs font-bold">
-                {rule.name}
-              </Badge>
+        <Card className="absolute right-full bottom-full mr-2 mb-2 p-3 bg-background/95 backdrop-blur-sm border shadow-lg z-50 min-w-[250px] max-w-[350px] animate-scale-in">
+          {/* Reduction rule format */}
+          {rule.reduction ? (
+            <div className="text-center">
+              <KaTeXRenderer 
+                expression={rule.reduction} 
+                displayMode={false}
+                className="text-sm"
+              />
             </div>
-            
-            {rule.premises && rule.premises.length > 0 && (
-              <div className="space-y-1">
-                <div className="text-xs font-semibold text-muted-foreground">Premises:</div>
-                {rule.premises.map((premise, idx) => (
-                  <div key={idx} className="text-sm pl-2 border-l-2 border-muted-foreground/20">
-                    <KaTeXRenderer expression={premise} displayMode={false} />
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {rule.conclusion && (
-              <div className="space-y-1">
-                <div className="text-xs font-semibold text-muted-foreground">Conclusion:</div>
-                <div className="text-sm pl-2 border-l-2 border-primary/40">
-                  <KaTeXRenderer expression={rule.conclusion} displayMode={false} />
+          ) : (
+            /* Traditional premise/conclusion format */
+            <div className="space-y-2">
+              {rule.premises && rule.premises.length > 0 && (
+                <div className="space-y-1">
+                  {rule.premises.map((premise, idx) => (
+                    <div key={idx} className="text-center">
+                      <KaTeXRenderer 
+                        expression={premise} 
+                        displayMode={false}
+                        className="text-sm"
+                      />
+                    </div>
+                  ))}
                 </div>
-              </div>
-            )}
-            
-            {rule.reduction && (
-              <div className="space-y-1">
-                <div className="text-xs font-semibold text-muted-foreground">Reduction:</div>
-                <div className="text-sm pl-2 border-l-2 border-primary/40">
-                  <KaTeXRenderer expression={rule.reduction} displayMode={false} />
+              )}
+              
+              {rule.premises && rule.premises.length > 0 && (
+                <div className="border-t border-foreground/20 mx-2"></div>
+              )}
+              
+              {rule.conclusion && (
+                <div className="text-center">
+                  <KaTeXRenderer 
+                    expression={rule.conclusion} 
+                    displayMode={false}
+                    className="text-sm font-medium"
+                  />
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </Card>
       )}
     </div>

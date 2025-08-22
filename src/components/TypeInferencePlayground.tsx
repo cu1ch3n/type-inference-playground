@@ -222,7 +222,7 @@ export const TypeInferencePlayground = () => {
       <Navbar />
       <div className="min-h-screen bg-background animate-page-enter">
         {/* Main Content */}
-        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+        <div className="container mx-auto px-1 sm:px-4 py-2 sm:py-4">
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4 max-w-7xl mx-auto">
             {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
             <div className="lg:col-span-2 space-y-2 sm:space-y-3 lg:space-y-4">

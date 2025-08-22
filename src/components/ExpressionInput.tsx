@@ -51,7 +51,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 sm:pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Code className="w-4 h-4 text-primary" />
           Input Program

@@ -30,7 +30,7 @@ export const AlgorithmSelector = ({
 
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardContent className="space-y-3 pt-4">
+      <CardContent className="space-y-3 pt-3 sm:pt-4">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
           <Input

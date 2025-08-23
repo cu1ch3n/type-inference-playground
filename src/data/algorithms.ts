@@ -107,10 +107,50 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     },
     rules: [
       {
-        id: "placeholder",
-        name: "TBA",
-        premises: [],
-        conclusion: "\\text{Rules will be added soon.}"
+        id: "typing",
+        name: "Typing",
+        description: "Core typing rules for expressions",
+        formula: "\\boxed{\\Gamma \\vdash e : \\tau}",
+        rules: [
+          {
+            id: "CTVar",
+            name: "CTVar",
+            premises: ["x : \\sigma \\in \\Gamma"],
+            conclusion: "\\Gamma \\vdash x : \\sigma"
+          },
+          {
+            id: "CTApp",
+            name: "CTApp", 
+            premises: ["\\Gamma \\vdash e_1 : \\tau_1 \\to \\tau_2", "\\Gamma \\vdash e_2 : \\tau_1"],
+            conclusion: "\\Gamma \\vdash e_1~e_2 : \\tau_2"
+          },
+          {
+            id: "CTAbs",
+            name: "CTAbs",
+            premises: ["\\Gamma, x : \\tau_1 \\vdash e : \\tau_2"],
+            conclusion: "\\Gamma \\vdash \\lambda x.~e : \\tau_1 \\to \\tau_2"
+          }
+        ]
+      },
+      {
+        id: "matching",
+        name: "Matching",
+        description: "Type matching and unification rules",
+        formula: "\\boxed{\\tau_1 \\triangleleft \\tau_2 \\Rightarrow S}",
+        rules: [
+          {
+            id: "MTVar",
+            name: "MTVar",
+            premises: ["\\alpha \\text{ fresh}"],
+            conclusion: "\\alpha \\triangleleft \\tau \\Rightarrow [\\alpha \\mapsto \\tau]"
+          },
+          {
+            id: "MTArr",
+            name: "MTArr",
+            premises: ["\\tau_1 \\triangleleft \\tau_3 \\Rightarrow S_1", "S_1(\\tau_2) \\triangleleft S_1(\\tau_4) \\Rightarrow S_2"],
+            conclusion: "\\tau_1 \\to \\tau_2 \\triangleleft \\tau_3 \\to \\tau_4 \\Rightarrow S_2 \\circ S_1"
+          }
+        ]
       }
     ]
   },

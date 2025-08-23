@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
+import { TypingRule, RuleSection } from '@/types/inference';
 import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
 import { Workflow, Activity, TreePine, Zap } from 'lucide-react';
@@ -29,6 +30,14 @@ export const DerivationViewer = ({
   isInferring,
   variant
 }: DerivationViewerProps) => {
+
+  // Helper function to get flat rules for backward compatibility
+  const getFlatRules = (rules: TypingRule[] | RuleSection[]): TypingRule[] => {
+    if (rules.length > 0 && 'rules' in rules[0]) {
+      return (rules as RuleSection[]).flatMap(section => section.rules);
+    }
+    return rules as TypingRule[];
+  };
 
   const renderLinearStep = (step: DerivationStep, stepPath: number[]) => {
     const isActiveByPath = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
@@ -60,7 +69,7 @@ export const DerivationViewer = ({
           
           <RuleTooltip 
             ruleId={step.ruleId}
-            rules={algorithm?.rules || []}
+            rules={algorithm?.rules ? getFlatRules(algorithm.rules) : []}
             variant="secondary"
             className="text-xs font-medium ml-auto transition-smooth hover:scale-105"
           />
@@ -207,7 +216,7 @@ export const DerivationViewer = ({
               {viewMode === 'tree' ? (
                 <TreeViewer 
                   steps={result.derivation}
-                  rules={algorithm?.rules}
+                  rules={algorithm?.rules ? getFlatRules(algorithm.rules) : undefined}
                   onStepClick={onStepClick}
                   activeStepPath={activeStepPath}
                   activeRuleId={activeRuleId}

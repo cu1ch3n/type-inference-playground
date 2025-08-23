@@ -20,7 +20,7 @@ export interface TypeInferenceAlgorithm {
     year: number;
     url?: string;
   };
-  rules: TypingRule[];
+  rules: TypingRule[] | RuleSection[];
 }
 
 export interface TypingRule {
@@ -29,6 +29,14 @@ export interface TypingRule {
   premises: string[]; // KaTeX expressions
   conclusion: string; // KaTeX expression
   reduction?: string; // For worklist-style rules: "A → B"
+}
+
+export interface RuleSection {
+  id: string;
+  name: string;
+  description?: string;
+  formula?: string; // LaTeX formula showing the form (usually boxed)
+  rules: TypingRule[];
 }
 
 export interface DerivationStep {

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Zap, Search, ChevronDown } from 'lucide-react';
+import { ExternalLink, Zap, Search, ChevronDown, Settings } from 'lucide-react';
 import { TypeInferenceAlgorithm, AlgorithmVariant } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 import { useState, useMemo } from 'react';
@@ -80,6 +80,7 @@ export const AlgorithmSelector = ({
                             className="h-auto p-1 text-xs bg-background/50 border border-border/30 hover:bg-accent/50 transition-colors duration-200"
                             onClick={(e) => e.stopPropagation()}
                           >
+                            <Settings className="w-3 h-3 mr-1 flex-shrink-0" />
                             <span className="truncate max-w-16">
                               {algorithm.variants.find(v => v.id === (selectedVariant || algorithm.defaultVariant))?.name || 'Base'}
                             </span>
@@ -88,7 +89,6 @@ export const AlgorithmSelector = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[180px] bg-background border border-border/50 shadow-lg">
                           {algorithm.variants.map((variant) => {
-                            const IconComponent = variant.icon ? (LucideIcons as any)[variant.icon] : null;
                             return (
                               <DropdownMenuItem
                                 key={variant.id}
@@ -99,7 +99,6 @@ export const AlgorithmSelector = ({
                                 className="cursor-pointer hover:bg-accent/50 transition-colors duration-200"
                               >
                                 <div className="flex items-start gap-2 w-full">
-                                  {IconComponent && <IconComponent className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-primary" />}
                                   <div className="flex-1 min-w-0">
                                     <div className="font-medium text-sm">{variant.name}</div>
                                     <div className="text-xs text-muted-foreground leading-tight">{variant.description}</div>

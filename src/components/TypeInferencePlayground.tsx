@@ -301,7 +301,11 @@ export const TypeInferencePlayground = () => {
               {selectedAlgorithmData && (
                 <div className="animate-stagger-4 hover-scale-sm">
                   <TypingRules
-                    rules={selectedAlgorithmData.rules}
+                    rules={
+                      selectedVariant && selectedAlgorithmData.variantRules?.[selectedVariant]
+                        ? selectedAlgorithmData.variantRules[selectedVariant]
+                        : selectedAlgorithmData.rules
+                    }
                     activeRuleId={activeRuleId}
                     onRuleClick={handleRuleClick}
                   />

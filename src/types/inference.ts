@@ -21,6 +21,7 @@ export interface TypeInferenceAlgorithm {
     url?: string;
   };
   rules: TypingRule[] | RuleSection[];
+  variantRules?: Record<string, TypingRule[] | RuleSection[]>;
 }
 
 export interface TypingRule {

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
+import { LatexText } from './LatexText';
 import { TypingRule, RuleSection } from '@/types/inference';
 import { BookOpen } from 'lucide-react';
 
@@ -139,7 +140,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
                     )}
                   </div>
                   {section.description && (
-                    <p className="text-sm text-muted-foreground">{section.description}</p>
+                    <LatexText text={section.description} className="text-sm text-muted-foreground" />
                   )}
                 </div>
 

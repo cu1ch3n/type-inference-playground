@@ -109,7 +109,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
       {
         id: "typing",
         name: "Typing",
-        description: "Core typing rules for expressions",
+        description: "Under environment $\\Gamma$, expression $e$ has type $\\tau$",
         formula: "\\boxed{\\Gamma \\vdash e : \\tau}",
         rules: [
           {
@@ -135,7 +135,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
       {
         id: "matching",
         name: "Matching",
-        description: "Type matching and unification rules",
+        description: "Type matching produces substitution $S$ from types $\\tau_1$ and $\\tau_2$",
         formula: "\\boxed{\\tau_1 \\triangleleft \\tau_2 \\Rightarrow S}",
         rules: [
           {
@@ -152,7 +152,117 @@ export const algorithms: TypeInferenceAlgorithm[] = [
           }
         ]
       }
-    ]
+    ],
+    variantRules: {
+      base: [
+        {
+          id: "typing",
+          name: "Typing",
+          description: "Under environment $\\Gamma$, expression $e$ has type $\\tau$",
+          formula: "\\boxed{\\Gamma \\vdash e : \\tau}",
+          rules: [
+            {
+              id: "CTVar",
+              name: "CTVar",
+              premises: ["x : \\sigma \\in \\Gamma"],
+              conclusion: "\\Gamma \\vdash x : \\sigma"
+            },
+            {
+              id: "CTApp",
+              name: "CTApp", 
+              premises: ["\\Gamma \\vdash e_1 : \\tau_1 \\to \\tau_2", "\\Gamma \\vdash e_2 : \\tau_1"],
+              conclusion: "\\Gamma \\vdash e_1~e_2 : \\tau_2"
+            },
+            {
+              id: "CTAbs",
+              name: "CTAbs",
+              premises: ["\\Gamma, x : \\tau_1 \\vdash e : \\tau_2"],
+              conclusion: "\\Gamma \\vdash \\lambda x.~e : \\tau_1 \\to \\tau_2"
+            }
+          ]
+        }
+      ],
+      extension: [
+        {
+          id: "typing",
+          name: "Typing",
+          description: "Under environment $\\Gamma$, expression $e$ has type $\\tau$",
+          formula: "\\boxed{\\Gamma \\vdash e : \\tau}",
+          rules: [
+            {
+              id: "CTVar",
+              name: "CTVar",
+              premises: ["x : \\sigma \\in \\Gamma"],
+              conclusion: "\\Gamma \\vdash x : \\sigma"
+            },
+            {
+              id: "CTApp",
+              name: "CTApp", 
+              premises: ["\\Gamma \\vdash e_1 : \\tau_1 \\to \\tau_2", "\\Gamma \\vdash e_2 : \\tau_1"],
+              conclusion: "\\Gamma \\vdash e_1~e_2 : \\tau_2"
+            },
+            {
+              id: "CTAbs",
+              name: "CTAbs",
+              premises: ["\\Gamma, x : \\tau_1 \\vdash e : \\tau_2"],
+              conclusion: "\\Gamma \\vdash \\lambda x.~e : \\tau_1 \\to \\tau_2"
+            },
+            {
+              id: "CTLet",
+              name: "CTLet",
+              premises: ["\\Gamma \\vdash e_1 : \\tau_1", "\\Gamma, x : \\tau_1 \\vdash e_2 : \\tau_2"],
+              conclusion: "\\Gamma \\vdash \\text{let } x = e_1 \\text{ in } e_2 : \\tau_2"
+            }
+          ]
+        },
+        {
+          id: "matching",
+          name: "Matching",
+          description: "Type matching produces substitution $S$ from types $\\tau_1$ and $\\tau_2$",
+          formula: "\\boxed{\\tau_1 \\triangleleft \\tau_2 \\Rightarrow S}",
+          rules: [
+            {
+              id: "MTVar",
+              name: "MTVar",
+              premises: ["\\alpha \\text{ fresh}"],
+              conclusion: "\\alpha \\triangleleft \\tau \\Rightarrow [\\alpha \\mapsto \\tau]"
+            },
+            {
+              id: "MTArr",
+              name: "MTArr",
+              premises: ["\\tau_1 \\triangleleft \\tau_3 \\Rightarrow S_1", "S_1(\\tau_2) \\triangleleft S_1(\\tau_4) \\Rightarrow S_2"],
+              conclusion: "\\tau_1 \\to \\tau_2 \\triangleleft \\tau_3 \\to \\tau_4 \\Rightarrow S_2 \\circ S_1"
+            },
+            {
+              id: "MTUnit",
+              name: "MTUnit",
+              premises: [],
+              conclusion: "\\text{unit} \\triangleleft \\text{unit} \\Rightarrow \\text{id}"
+            }
+          ]
+        },
+        {
+          id: "inference",
+          name: "Inference",
+          description: "Type inference for expressions without explicit type annotations",
+          formula: "\\boxed{\\Gamma \\vdash e \\Rightarrow \\tau}",
+          rules: [
+            {
+              id: "InfVar",
+              name: "InfVar",
+              premises: ["x : \\sigma \\in \\Gamma"],
+              conclusion: "\\Gamma \\vdash x \\Rightarrow \\sigma"
+            },
+            {
+              id: "InfApp",
+              name: "InfApp",
+              premises: ["\\Gamma \\vdash e_1 \\Rightarrow \\tau_1 \\to \\tau_2", "\\Gamma \\vdash e_2 \\Leftarrow \\tau_1"],
+              conclusion: "\\Gamma \\vdash e_1~e_2 \\Rightarrow \\tau_2"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     id: "Worklist",

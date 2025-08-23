@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, CornerUpLeft, Search } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, GitCompare, Undo2, Search, Lightbulb } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -533,7 +533,7 @@ export const Compare = () => {
                   }}
                   className="btn-interactive h-9 px-3 flex items-center gap-2"
                 >
-                  <CornerUpLeft className="w-4 h-4" />
+                  <Undo2 className="w-4 h-4" />
                   <span className="hidden sm:inline">Return</span>
                 </Button>
               </div>
@@ -622,7 +622,10 @@ export const Compare = () => {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle>Comparison</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">💡 Click any cell to view detailed derivation</p>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
+                    <Lightbulb className="w-3 h-3" />
+                    Click any cell to view detailed derivation
+                  </p>
                 </div>
                 <CompareShareExportButtons
                   selectedAlgorithms={selectedAlgorithms}

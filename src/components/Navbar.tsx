@@ -1,4 +1,4 @@
-import { Github, Sun, Moon, GitCompare, HelpCircle } from 'lucide-react';
+import { Github, Sun, Moon, Grid3x3, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -66,7 +66,7 @@ export const Navbar = () => {
                   }}
                   className="btn-interactive h-7 w-7 sm:h-9 sm:w-9"
                 >
-                  <GitCompare className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

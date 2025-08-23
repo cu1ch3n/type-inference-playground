@@ -84,10 +84,10 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
     <div
       key={rule.id}
       className={`
-        flex items-center justify-between p-3 rounded-lg border transition-all duration-300 hover:scale-[1.01]
+        flex items-center justify-between p-2 rounded-md border transition-all duration-300 hover:scale-[1.005]
         ${activeRuleId === rule.id 
-          ? 'bg-highlight/30 border-primary shadow-md' 
-          : 'bg-rule border-border hover:bg-rule/80 hover:shadow-md'
+          ? 'bg-highlight/30 border-primary shadow-sm' 
+          : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
         }
         ${onRuleClick ? 'cursor-pointer' : ''}
       `}
@@ -97,12 +97,12 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
         <KaTeXRenderer 
           expression={rule.reduction!} 
           displayMode={false}
-          className="text-sm"
+          className="text-xs"
         />
       </div>
       <Badge 
         variant={activeRuleId === rule.id ? "default" : "secondary"}
-        className="font-medium text-xs"
+        className="font-medium text-xs ml-2"
       >
         {rule.name}
       </Badge>
@@ -146,7 +146,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
                 {/* Section rules */}
                 {section.rules.some(rule => rule.reduction) ? (
-                  <div className="space-y-3">
+                  <div className="space-y-1.5">
                     {section.rules.filter(rule => rule.reduction).map(renderReductionRule)}
                   </div>
                 ) : (
@@ -167,7 +167,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           <>
             {/* Reduction rules - single lines */}
             {flatRules.some(rule => rule.reduction) && (
-              <div className="space-y-3 mb-6">
+              <div className="space-y-1.5 mb-4">
                 {flatRules.filter(rule => rule.reduction).map(renderReductionRule)}
               </div>
             )}

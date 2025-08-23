@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { TreeViewer } from './TreeViewer';
 import { DerivationStep, InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { GitBranch, Activity, TreePine, Zap } from 'lucide-react';
+import { Workflow, Activity, TreePine, Zap } from 'lucide-react';
 import { ShareExportButtons } from './ShareExportButtons';
 import { RuleTooltip } from './RuleTooltip';
 
@@ -86,7 +86,7 @@ export const DerivationViewer = ({
       <Card className="academic-panel">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <GitBranch className="w-5 h-5 text-primary" />
+            <Workflow className="w-5 h-5 text-primary" />
             Derivation
           </CardTitle>
         </CardHeader>
@@ -113,7 +113,7 @@ export const DerivationViewer = ({
       <Card className="academic-panel">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <GitBranch className="w-5 h-5 text-primary" />
+            <Workflow className="w-5 h-5 text-primary" />
             Derivation
           </CardTitle>
         </CardHeader>
@@ -144,7 +144,7 @@ export const DerivationViewer = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <GitBranch className="w-5 h-5 text-primary" />
+              <Workflow className="w-5 h-5 text-primary" />
               Derivation
             </CardTitle>
             {result.finalType && (

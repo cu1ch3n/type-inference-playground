@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Zap, Search, ChevronDown, Split } from 'lucide-react';
+import { ExternalLink, Zap, Search, ChevronDown, Check } from 'lucide-react';
 import { TypeInferenceAlgorithm, AlgorithmVariant } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 import { useState, useMemo } from 'react';
@@ -80,7 +80,7 @@ export const AlgorithmSelector = ({
                             className="h-auto p-1 text-xs bg-background/50 border border-border/30 hover:bg-accent/50 transition-colors duration-200"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Split className="w-3 h-3 mr-1 flex-shrink-0" />
+                            <ChevronDown className="w-3 h-3 mr-1 flex-shrink-0" />
                             <span className="truncate max-w-16">
                               {algorithm.variants.find(v => v.id === (selectedVariant || algorithm.defaultVariant))?.name || 'Base'}
                             </span>
@@ -89,6 +89,7 @@ export const AlgorithmSelector = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[180px] bg-background border border-border/50 shadow-lg">
                           {algorithm.variants.map((variant) => {
+                            const isSelected = variant.id === (selectedVariant || algorithm.defaultVariant);
                             return (
                               <DropdownMenuItem
                                 key={variant.id}
@@ -96,8 +97,13 @@ export const AlgorithmSelector = ({
                                   e.stopPropagation();
                                   onVariantChange?.(variant.id);
                                 }}
-                                className="cursor-pointer hover:bg-accent/50 transition-colors duration-200"
+                                className="cursor-pointer hover:bg-accent/50 transition-colors duration-200 relative pl-8"
                               >
+                                {isSelected && (
+                                  <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                                    <Check className="h-4 w-4 text-primary" />
+                                  </span>
+                                )}
                                 <div className="flex items-start gap-2 w-full">
                                   <div className="flex-1 min-w-0">
                                     <div className="font-medium text-sm">{variant.name}</div>

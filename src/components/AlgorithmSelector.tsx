@@ -1,21 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Zap, Search } from 'lucide-react';
-import { TypeInferenceAlgorithm } from '@/types/inference';
+import { ExternalLink, Zap, Search, ChevronDown } from 'lucide-react';
+import { TypeInferenceAlgorithm, AlgorithmVariant } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 import { useState, useMemo } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import * as LucideIcons from 'lucide-react';
 
 interface AlgorithmSelectorProps {
   algorithms: TypeInferenceAlgorithm[];
   selectedAlgorithm?: string;
+  selectedVariant?: string;
   onAlgorithmChange: (algorithmId: string) => void;
+  onVariantChange?: (variantId: string) => void;
 }
 
 export const AlgorithmSelector = ({ 
   algorithms, 
   selectedAlgorithm, 
-  onAlgorithmChange 
+  selectedVariant,
+  onAlgorithmChange,
+  onVariantChange
 }: AlgorithmSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -63,7 +69,49 @@ export const AlgorithmSelector = ({
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="space-y-1.5">
-                  <h3 className="font-medium text-sm text-foreground leading-tight">{algorithm.name}</h3>
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-medium text-sm text-foreground leading-tight flex-1">{algorithm.name}</h3>
+                    {algorithm.variants && algorithm.variants.length > 0 && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-auto p-1 text-xs bg-background/50 border border-border/30 hover:bg-accent/50 transition-colors duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="truncate max-w-16">
+                              {algorithm.variants.find(v => v.id === (selectedVariant || algorithm.defaultVariant))?.name || 'Base'}
+                            </span>
+                            <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-[180px] bg-background border border-border/50 shadow-lg">
+                          {algorithm.variants.map((variant) => {
+                            const IconComponent = variant.icon ? (LucideIcons as any)[variant.icon] : null;
+                            return (
+                              <DropdownMenuItem
+                                key={variant.id}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onVariantChange?.(variant.id);
+                                }}
+                                className="cursor-pointer hover:bg-accent/50 transition-colors duration-200"
+                              >
+                                <div className="flex items-start gap-2 w-full">
+                                  {IconComponent && <IconComponent className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-primary" />}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-medium text-sm">{variant.name}</div>
+                                    <div className="text-xs text-muted-foreground leading-tight">{variant.description}</div>
+                                  </div>
+                                </div>
+                              </DropdownMenuItem>
+                            );
+                          })}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
                   <div className="flex flex-wrap gap-1 items-center">
                     {algorithm.labels.map((label) => (
                       <span key={label} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-secondary/50 text-secondary-foreground border border-secondary/20">

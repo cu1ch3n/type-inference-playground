@@ -19,6 +19,7 @@ import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
+  const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [expression, setExpression] = useState<string>('');
   const [result, setResult] = useState<InferenceResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);
@@ -32,12 +33,36 @@ export const TypeInferencePlayground = () => {
 
   const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
 
+  const handleAlgorithmChange = (algorithmId: string) => {
+    setSelectedAlgorithm(algorithmId);
+    
+    // Reset variant to default when changing algorithm
+    const algorithmData = algorithms.find(a => a.id === algorithmId);
+    if (algorithmData?.defaultVariant) {
+      setSelectedVariant(algorithmData.defaultVariant);
+    } else {
+      setSelectedVariant('');
+    }
+  };
+
+  const handleVariantChange = (variantId: string) => {
+    setSelectedVariant(variantId);
+  };
+
   // Initialize from URL parameters once, then clean the URL
   useEffect(() => {
-    const { algorithm, expression: urlExpression } = getParamsFromUrl();
+    const { algorithm, expression: urlExpression, variant } = getParamsFromUrl();
     
     if (algorithm && algorithms.find(a => a.id === algorithm)) {
       setSelectedAlgorithm(algorithm);
+      
+      // Set variant if provided and valid for this algorithm
+      const algorithmData = algorithms.find(a => a.id === algorithm);
+      if (variant && algorithmData?.variants?.find(v => v.id === variant)) {
+        setSelectedVariant(variant);
+      } else if (algorithmData?.defaultVariant) {
+        setSelectedVariant(algorithmData.defaultVariant);
+      }
     }
     
     if (urlExpression) {
@@ -45,7 +70,7 @@ export const TypeInferencePlayground = () => {
     }
     
     // Clean URL after loading parameters
-    if (algorithm || urlExpression) {
+    if (algorithm || urlExpression || variant) {
       cleanUrl();
     }
     
@@ -150,7 +175,7 @@ export const TypeInferencePlayground = () => {
     }
   };
 
-  // Auto-run inference when algorithm or expression changes (only after initialization)
+  // Auto-run inference when algorithm, variant, or expression changes (only after initialization)
   useEffect(() => {
     if (initialized && expression.trim() && selectedAlgorithm) {
       const timer = setTimeout(() => {
@@ -158,7 +183,7 @@ export const TypeInferencePlayground = () => {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [selectedAlgorithm, expression, initialized]);
+  }, [selectedAlgorithm, selectedVariant, expression, initialized]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -188,6 +213,9 @@ export const TypeInferencePlayground = () => {
           const url = new URL(window.location.href);
           url.searchParams.set('algorithm', selectedAlgorithm);
           url.searchParams.set('expression', expression);
+          if (selectedVariant) {
+            url.searchParams.set('variant', selectedVariant);
+          }
           await navigator.clipboard.writeText(url.toString());
           toast({
             description: "Link copied to clipboard",
@@ -230,7 +258,9 @@ export const TypeInferencePlayground = () => {
                 <AlgorithmSelector
                   algorithms={algorithms}
                   selectedAlgorithm={selectedAlgorithm}
-                  onAlgorithmChange={setSelectedAlgorithm}
+                  selectedVariant={selectedVariant}
+                  onAlgorithmChange={handleAlgorithmChange}
+                  onVariantChange={handleVariantChange}
                 />
               </div>
               
@@ -263,6 +293,7 @@ export const TypeInferencePlayground = () => {
                   onStepClick={handleStepClick}
                   expression={expression}
                   isInferring={isInferring}
+                  variant={selectedVariant}
                 />
               </div>
               

@@ -84,6 +84,7 @@ export const DerivationModal = ({
             activeStepPath={activeStepPath}
             activeRuleId={activeRuleId}
             expression={expression}
+            isInferring={false}
           />
 
           {/* Typing Rules */}

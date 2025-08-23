@@ -2,19 +2,21 @@ export const cleanUrl = () => {
   const url = new URL(window.location.href);
   url.searchParams.delete('algorithm');
   url.searchParams.delete('program');
+  url.searchParams.delete('variant');
   url.searchParams.delete('algorithms');
   url.searchParams.delete('expressions');
   window.history.replaceState({}, '', url.toString());
 };
 
 export const getParamsFromUrl = () => {
-  if (typeof window === 'undefined') return { algorithm: '', expression: '' };
+  if (typeof window === 'undefined') return { algorithm: '', expression: '', variant: '' };
   
   const url = new URL(window.location.href);
   const algorithm = url.searchParams.get('algorithm') || '';
   const expression = url.searchParams.get('program') ? decodeURIComponent(url.searchParams.get('program')!) : '';
+  const variant = url.searchParams.get('variant') || '';
   
-  return { algorithm, expression };
+  return { algorithm, expression, variant };
 };
 
 export const getCompareParamsFromUrl = () => {
@@ -58,10 +60,16 @@ export const shareCompareState = async (algorithms: string[], expressions: strin
   }
 };
 
-export const shareCurrentState = async (algorithm: string, expression: string) => {
+export const shareCurrentState = async (algorithm: string, expression: string, variant?: string) => {
   const url = new URL(window.location.href);
   url.searchParams.set('algorithm', algorithm);
   url.searchParams.set('program', encodeURIComponent(expression.trim()));
+  
+  if (variant) {
+    url.searchParams.set('variant', variant);
+  } else {
+    url.searchParams.delete('variant');
+  }
   
   const shareUrl = url.toString();
   

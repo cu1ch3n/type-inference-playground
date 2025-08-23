@@ -84,6 +84,21 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Contextual Typing",
     labels: ["Local", "Contextual"],
     viewMode: "tree",
+    variants: [
+      {
+        id: "base",
+        name: "Base",
+        description: "Basic contextual typing algorithm",
+        icon: "Layers"
+      },
+      {
+        id: "extension",
+        name: "Extension",
+        description: "Extended contextual typing with additional features",
+        icon: "Plus"
+      }
+    ],
+    defaultVariant: "base",
     paper: {
       title: "Contextual Typing",
       authors: ["Xu Xue", "Bruno C. d. S. Oliveira"],

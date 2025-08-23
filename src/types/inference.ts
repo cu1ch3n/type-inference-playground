@@ -1,10 +1,19 @@
 // Type definitions for the type inference playground
 
+export interface AlgorithmVariant {
+  id: string;
+  name: string;
+  description: string;
+  icon?: string;
+}
+
 export interface TypeInferenceAlgorithm {
   id: string;
   name: string;
   labels: string[];
   viewMode: 'tree' | 'linear';
+  variants?: AlgorithmVariant[];
+  defaultVariant?: string;
   paper?: {
     title: string;
     authors: string[];

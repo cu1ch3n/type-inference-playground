@@ -11,14 +11,24 @@ import { RuleTooltip } from './RuleTooltip';
 interface DerivationViewerProps {
   result?: InferenceResult;
   algorithm?: TypeInferenceAlgorithm;
-  onStepClick?: (stepPath: number[]) => void;
   activeStepPath?: number[];
   activeRuleId?: string;
-  expression?: string;
-  isInferring?: boolean;
+  onStepClick?: (stepPath: number[]) => void;
+  expression: string;
+  isInferring: boolean;
+  variant?: string;
 }
 
-export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPath, activeRuleId, expression, isInferring }: DerivationViewerProps) => {
+export const DerivationViewer = ({ 
+  result, 
+  algorithm, 
+  activeStepPath, 
+  activeRuleId, 
+  onStepClick,
+  expression,
+  isInferring,
+  variant
+}: DerivationViewerProps) => {
 
   const renderLinearStep = (step: DerivationStep, stepPath: number[]) => {
     const isActiveByPath = activeStepPath && activeStepPath.join('-') === stepPath.join('-');
@@ -155,6 +165,7 @@ export const DerivationViewer = ({ result, algorithm, onStepClick, activeStepPat
                 algorithm={algorithm}
                 expression={expression}
                 result={result}
+                variant={variant}
                 disabled={isInferring}
               />
             )}

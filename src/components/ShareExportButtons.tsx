@@ -10,6 +10,7 @@ interface ShareExportButtonsProps {
   algorithm: TypeInferenceAlgorithm;
   expression: string;
   result?: InferenceResult;
+  variant?: string;
   disabled?: boolean;
 }
 
@@ -17,6 +18,7 @@ export const ShareExportButtons = ({
   algorithm,
   expression,
   result,
+  variant,
   disabled = false
 }: ShareExportButtonsProps) => {
   const { toast } = useToast();
@@ -34,7 +36,7 @@ export const ShareExportButtons = ({
 
     setIsSharing(true);
     try {
-      const shareResult = await shareCurrentState(algorithm.id, expression);
+      const shareResult = await shareCurrentState(algorithm.id, expression, variant);
       
       if (shareResult.success) {
         toast({

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Zap, Search, ChevronDown, Check } from 'lucide-react';
+import { ExternalLink, Zap, Search, ChevronDown, Check, Split } from 'lucide-react';
 import { TypeInferenceAlgorithm, AlgorithmVariant } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 import { useState, useMemo } from 'react';
@@ -80,7 +80,7 @@ export const AlgorithmSelector = ({
                             className="h-auto p-1 text-xs bg-background/50 border border-border/30 hover:bg-accent/50 transition-colors duration-200"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <ChevronDown className="w-3 h-3 mr-1 flex-shrink-0" />
+                            <Split className="w-3 h-3 mr-1 flex-shrink-0" />
                             <span className="truncate max-w-16">
                               {algorithm.variants.find(v => v.id === (selectedVariant || algorithm.defaultVariant))?.name || 'Base'}
                             </span>

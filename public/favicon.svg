@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" fill="white" rx="4"/>
+  
+  <!-- Lambda symbol -->
+  <path d="M8 26 L14 8 L18 8 L24 26 L20 26 L18.5 22 L13.5 22 L12 26 Z M14.5 18 L17.5 18 L16 14 Z" fill="#3b82f6" stroke="none"/>
+  
+  <!-- Small animal ears on top -->
+  <circle cx="13" cy="6" r="2" fill="#3b82f6"/>
+  <circle cx="19" cy="6" r="2" fill="#3b82f6"/>
+  
+  <!-- Small paw prints -->
+  <circle cx="6" cy="28" r="1" fill="#3b82f6" opacity="0.6"/>
+  <circle cx="26" cy="28" r="1" fill="#3b82f6" opacity="0.6"/>
+  
+  <!-- Border -->
+  <rect width="32" height="32" fill="none" stroke="#3b82f6" stroke-width="1" rx="4"/>
+</svg>

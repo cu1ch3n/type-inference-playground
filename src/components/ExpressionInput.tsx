@@ -136,8 +136,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                     className="transition-fast hover:bg-accent/50"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    <div className="flex flex-col items-start w-full min-w-0">
-                      <span className="font-medium truncate w-full">{example.name}</span>
+                    <div className="flex flex-col items-start w-full">
+                      <span className="font-medium">{example.name}</span>
                       <span className="text-xs text-muted-foreground font-code truncate w-full">
                         {example.expression}
                       </span>
@@ -265,8 +265,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   className="transition-fast hover:bg-accent/50"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <div className="flex flex-col items-start w-full min-w-0">
-                    <span className="font-medium truncate w-full">{example.name}</span>
+                  <div className="flex flex-col items-start w-full">
+                    <span className="font-medium">{example.name}</span>
                     <span className="text-xs text-muted-foreground font-code truncate w-full">
                       {example.expression}
                     </span>

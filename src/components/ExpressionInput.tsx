@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
 import { algorithmExamples, subtypingExamples, allAlgorithms } from '@/data/algorithms';
 import { HelpModal } from './HelpModal';
+import { LatexText } from './LatexText';
 
 interface ExpressionInputProps {
   expression: string;
@@ -151,19 +152,11 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             <div className="space-y-3">
               {/* Left Type Input */}
               <div className="relative">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setHelpModalOpen(true)}
-                  className="absolute bottom-2 left-2 h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth z-10"
-                >
-                  <HelpCircle className="w-3 h-3" />
-                </Button>
                 <Textarea 
                   value={leftType} 
                   onChange={e => setLeftType(e.target.value)} 
                   placeholder="Left type (e.g., Int, Top -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-20 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
@@ -173,10 +166,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
               {/* Arrow */}
               <div className="flex justify-center">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <ArrowRight className="w-4 h-4" />
-                  <span className="text-sm font-medium">subtype of</span>
-                  <ArrowRight className="w-4 h-4" />
+                <div className="flex items-center text-muted-foreground">
+                  <LatexText text="$\le$" className="text-lg font-medium" />
                 </div>
               </div>
 
@@ -186,7 +177,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   value={rightType} 
                   onChange={e => setRightType(e.target.value)} 
                   placeholder="Right type (e.g., Top, a -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-20 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
@@ -195,33 +186,41 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-2 justify-between">
                 <Button 
-                  onClick={handleClear} 
                   variant="ghost" 
                   size="sm" 
+                  onClick={() => setHelpModalOpen(true)}
                   className="opacity-60 hover:opacity-100 transition-smooth"
                 >
-                  <RotateCcw className="w-3 h-3 mr-1" />
-                  Clear
+                  <HelpCircle className="w-3 h-3" />
                 </Button>
-                <Button 
-                  onClick={onInfer} 
-                  disabled={!leftType.trim() || !rightType.trim() || isInferring} 
-                  size="sm" 
-                  className={`
-                    btn-interactive transition-smooth touch-manipulation
-                    ${isInferring ? 'animate-pulse glow-primary' : 'hover:glow-primary'}
-                    ${!leftType.trim() || !rightType.trim() ? 'opacity-50' : ''}
-                  `}
-                >
-                  {isInferring ? (
-                    <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                  ) : (
-                    <Play className="w-3 h-3 mr-1 transition-transform duration-200 hover:scale-110" />
-                  )}
-                  Check Subtyping
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleClear} 
+                    variant="ghost" 
+                    size="sm" 
+                    className="opacity-60 hover:opacity-100 transition-smooth"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                  </Button>
+                  <Button 
+                    onClick={onInfer} 
+                    disabled={!leftType.trim() || !rightType.trim() || isInferring} 
+                    size="sm" 
+                    className={`
+                      btn-interactive transition-smooth touch-manipulation
+                      ${isInferring ? 'animate-pulse glow-primary' : 'hover:glow-primary'}
+                      ${!leftType.trim() || !rightType.trim() ? 'opacity-50' : ''}
+                    `}
+                  >
+                    {isInferring ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Play className="w-3 h-3 transition-transform duration-200 hover:scale-110" />
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

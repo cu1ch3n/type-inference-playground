@@ -1,4 +1,4 @@
-import { InferenceResult } from '@/types/inference';
+import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
 import { wasmInference } from './wasmInterface';
 
 export const runInference = async (algorithm: string, expression: string): Promise<InferenceResult> => {
@@ -36,6 +36,47 @@ export const runInference = async (algorithm: string, expression: string): Promi
     return generateAlgorithmWDerivation(cleanExpression);
   } else if (algorithm === 'Worklist') {
     return generateWorklistDerivation(cleanExpression);
+  }
+  
+  return {
+    success: false,
+    error: 'Unsupported algorithm',
+    derivation: []
+  };
+};
+
+export const runSubtyping = async (algorithm: string, variant: string, leftType: string, rightType: string): Promise<SubtypingResult> => {
+  // Try WASM service first, fallback to mock if unavailable
+  try {
+    const wasmResult = await wasmInference.runSubtyping({
+      algorithm,
+      variant,
+      leftType,
+      rightType,
+      options: { showSteps: true, maxDepth: 100 }
+    });
+    
+    if (wasmResult.result) {
+      const result = wasmResult.result as any;
+      return {
+        success: result.success || false,
+        finalType: result.finalType,
+        derivation: result.derivation || [],
+        error: result.error,
+        errorLatex: result.errorLatex || false
+      };
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('WASM service unavailable, using mock:', error);
+  }
+  
+  // Fallback to mock subtyping
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Generate mock subtyping derivation
+  if (algorithm === 'Subtyping') {
+    return generateSubtypingDerivation(leftType, rightType, variant);
   }
   
   return {
@@ -197,6 +238,109 @@ const generateWorklistDerivation = (expression: string): InferenceResult => {
           ruleId: 'InfVar',
           expression: `Process: ${expression} : a`
         }
+    ]
+  };
+};
+
+const generateSubtypingDerivation = (leftType: string, rightType: string, variant: string): SubtypingResult => {
+  // Check if it's a recursive subtyping example
+  if (leftType.includes('mu a.') && rightType.includes('mu a.')) {
+    return {
+      success: true,
+      finalType: `${leftType} <: ${rightType}`,
+      derivation: [
+        {
+          ruleId: 'Info',
+          expression: `\\text{Recursive Subtyping: } ${leftType} <: ${rightType}`,
+          children: []
+        },
+        {
+          ruleId: 'Info',
+          expression: `\\text{Derive: } ${leftType} <: ${rightType}`,
+          children: []
+        },
+        {
+          ruleId: 'Info',
+          expression: `\\text{Derive: } ${leftType.replace('mu a.', '')} <: ${rightType.replace('mu a.', '')}`,
+          children: []
+        },
+        {
+          ruleId: 'S-top',
+          expression: `${leftType.replace('mu a.', '')} <: \\top`,
+          children: []
+        },
+        {
+          ruleId: 'S-int',
+          expression: `\\texttt{Int} <: \\texttt{Int}`,
+          children: []
+        },
+        {
+          ruleId: 'S-arrow',
+          expression: `${leftType.replace('mu a.', '')} <: ${rightType.replace('mu a.', '')}`,
+          children: [
+            {
+              ruleId: 'S-top',
+              expression: `${leftType.replace('mu a.', '')} <: \\top`,
+              children: []
+            },
+            {
+              ruleId: 'S-int',
+              expression: `\\texttt{Int} <: \\texttt{Int}`,
+              children: []
+            }
+          ]
+        },
+        {
+          ruleId: 'S-mu',
+          expression: `${leftType} <: ${rightType}`,
+          children: [
+            {
+              ruleId: 'S-arrow',
+              expression: `${leftType.replace('mu a.', '')} <: ${rightType.replace('mu a.', '')}`,
+              children: [
+                {
+                  ruleId: 'S-top',
+                  expression: `${leftType.replace('mu a.', '')} <: \\top`,
+                  children: []
+                },
+                {
+                  ruleId: 'S-int',
+                  expression: `\\texttt{Int} <: \\texttt{Int}`,
+                  children: []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+  }
+  
+  // Basic subtyping examples
+  if (leftType === 'Int' && rightType === 'Top') {
+    return {
+      success: true,
+      finalType: 'Int <: Top',
+      derivation: [
+        {
+          ruleId: 'S-top',
+          expression: 'Int <: Top',
+          children: []
+        }
+      ]
+    };
+  }
+  
+  // Default case
+  return {
+    success: true,
+    finalType: `${leftType} <: ${rightType}`,
+    derivation: [
+      {
+        ruleId: 'S-top',
+        expression: `${leftType} <: ${rightType}`,
+        children: []
+      }
     ]
   };
 };

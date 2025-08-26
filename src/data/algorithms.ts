@@ -6,6 +6,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Algorithm W",
     labels: ["Global", "Unification", "Hindley-Milner"],
     viewMode: "tree",
+    mode: "inference",
     paper: {
       title: "A Theory of Type Polymorphism in Programming",
       authors: ["Robin Milner"],
@@ -44,6 +45,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Algorithm R",
     labels: ["Global", "Unification", "Hindley-Milner"],
     viewMode: "tree",
+    mode: "inference",
     paper: {
       title: "No Unification Variable Left Behind: Fully Grounding Type Inference for the HDM System",
       authors: ["Roger Bosman", "Georgios Karachalias", "Tom Schrijvers"],
@@ -64,6 +66,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Dunfield-Krishnaswami",
     labels: ["Global", "Unification", "Bidirectional", "System F", "Higher-Rank", "Implicit"],
     viewMode: "tree",
+    mode: "inference",
     paper: {
       title: "Complete and Easy Bidirectional Typechecking for Higher-rank Polymorphism",
       authors: ["Jana Dunfield", "Neelakantan R. Krishnaswami"],
@@ -84,6 +87,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Contextual Typing",
     labels: ["Local", "Contextual"],
     viewMode: "tree",
+    mode: "inference",
     variants: [
       {
         id: "base",
@@ -192,7 +196,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
             {
               id: "CTVar",
               name: "CTVar",
-              premises: ["x : \\sigma \\in \\Gamma"],
+              premises: ["x : \\sigma \\in \\sigma"],
               conclusion: "\\Gamma \\vdash x : \\sigma"
             },
             {
@@ -269,6 +273,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Worklist (Dunfield-Krishnaswami)",
     labels: ["Global", "Unification", "Bidirectional", "Worklist", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit"],
     viewMode: "linear",
+    mode: "inference",
     paper: {
       title: "A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference",
       authors: ["Jinxu Zhao", "Bruno C. d. S. Oliveira", "Tom Schrijvers"],
@@ -486,6 +491,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Worklist (Elementary)",
     labels: ["Global", "Unification", "Worklist", "Dunfield-Krishnaswami", "System F", "Higher-Rank", "Implicit", "Explicit Type Application"],
     viewMode: "linear",
+    mode: "inference",
     paper: {
       title: "Elementary Type Inference",
       authors: ["Jinxu Zhao", "Bruno C. d. S. Oliveira"],
@@ -506,6 +512,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Worklist (Bounded Quantification)",
     labels: ["Global", "Unification", "Worklist", "System Fsub", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit", "Explicit Type Application", "Bounded-Quantification"],
     viewMode: "linear",
+    mode: "inference",
     paper: {
       title: "Greedy Implicit Bounded Quantification",
       authors: ["Chen Cui", "Shengyi Jiang", "Bruno C. d. S. Oliveira"],
@@ -526,6 +533,7 @@ export const algorithms: TypeInferenceAlgorithm[] = [
     name: "Worklist (Intersection and Union)",
     labels: ["Global", "Unification", "Worklist", "System F", "Dunfield-Krishnaswami", "Higher-Rank", "Implicit", "Explicit Type Application", "Intersection-Union"],
     viewMode: "linear",
+    mode: "inference",
     paper: {
       title: "Bidirectional Higher-Rank Polymorphism with Intersection and Union Types",
       authors: ["Shengyi Jiang", "Chen Cui", "Bruno C. d. S. Oliveira"],
@@ -540,8 +548,90 @@ export const algorithms: TypeInferenceAlgorithm[] = [
         conclusion: "\\text{Rules will be added soon.}"
       }
     ]
-  },
+  }
 ];
+
+// Separate list for subtyping algorithms
+export const subtypingAlgorithms: TypeInferenceAlgorithm[] = [
+  {
+    id: "Revisiting",
+    name: "Revisiting Iso-Recursive Subtyping",
+    labels: ["Subtyping", "Recursive Types"],
+    viewMode: "tree",
+    mode: "subtyping",
+    variants: [
+      {
+        id: "nominal",
+        name: "Nominal",
+        description: "Nominal Unfolding",
+        icon: "Tag"
+      },
+      {
+        id: "double",
+        name: "Recursive",
+        description: "Double Unfolding",
+        icon: "RefreshCw"
+      },
+    ],
+    defaultVariant: "nominal",
+    paper: {
+      title: "Revisiting Iso-Recursive Subtyping",
+      authors: ["Yaoda Zhou", "Jinxu Zhao", "Bruno C. d. S. Oliveira"],
+      year: 2022,
+      url: "https://i.cs.hku.hk/~bruno/papers/toplas2022.pdf"
+    },
+    rules: [
+      {
+        id: "S-top",
+        name: "S-top",
+        premises: [],
+        conclusion: "A <: \\top"
+      },
+      {
+        id: "S-int",
+        name: "S-int",
+        premises: [],
+        conclusion: "\\texttt{Int} <: \\texttt{Int}"
+      },
+      {
+        id: "S-arrow",
+        name: "S-arrow",
+        premises: ["B_1 <: A_1", "A_2 <: B_2"],
+        conclusion: "A_1 \\to A_2 <: B_1 \\to B_2"
+      },
+      {
+        id: "S-mu",
+        name: "S-mu",
+        premises: ["A [ \\{ a : A \\} / a ] <: B [ \\{ a : B \\} / a ]"],
+        conclusion: "\\mu a.~A <: \\mu a.~B"
+      }
+    ]
+  },
+  {
+    id: "Fsubmu",
+    name: "Recursive Subtyping for All",
+    labels: ["Subtyping", "System Fsub", "Recursive Types"],
+    viewMode: "tree",
+    mode: "subtyping",
+    paper: {
+      title: "Recursive Subtyping for All",
+      authors: ["Litao Zhou", "Yaoda Zhou", "Qianyong Wan", "Bruno C. d. S. Oliveira"],
+      year: 2025,
+      url: "https://i.cs.hku.hk/~bruno/papers/jfp25.pdf"
+    },
+    rules: [
+      {
+        id: "placeholder",
+        name: "TBA",
+        premises: [],
+        conclusion: "\\text{Rules will be added soon.}"
+      }
+    ]
+  }
+];
+
+// Combined list for all algorithms (both inference and subtyping)
+export const allAlgorithms = [...algorithms, ...subtypingAlgorithms];
 
 const universalExamples = [
   {
@@ -573,4 +663,30 @@ export const algorithmExamples = {
   "Elementary": universalExamples,
   "Bounded": universalExamples,
   "IU": universalExamples
+} as const;
+
+// Separate examples for subtyping algorithms
+export const subtypingExamples = {
+  "Revisiting": [
+    {
+      name: "Positive Recursive Types",
+      expression: "mu a. Top -> a <: mu a. Int -> a",
+      description: "Positive recursive subtyping"
+    },
+    {
+      name: "Negative Recursive Types (Fail)",
+      expression: "mu a. a -> Int <: mu a. a -> Top",
+      description: "Negative recursive subtyping"
+    },
+    {
+      name: "Negative Recursive Types + Top",
+      expression: "mu a. Top -> Int <: mu a. a -> Int",
+      description: "Recursive type subtyping"
+    },
+    {
+      name: "Nested Recursive Subtyping",
+      expression: "mu a. Top -> (mu b. b -> a) <: mu a. Int -> (mu b. b -> a)",
+      description: "Nested recursive subtyping"
+    }
+  ]
 } as const;

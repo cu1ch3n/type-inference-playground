@@ -12,6 +12,7 @@ export interface TypeInferenceAlgorithm {
   name: string;
   labels: string[];
   viewMode: 'tree' | 'linear';
+  mode: 'inference' | 'subtyping'; // Add mode to distinguish between inference and subtyping
   variants?: AlgorithmVariant[];
   defaultVariant?: string;
   paper?: {
@@ -53,6 +54,18 @@ export interface InferenceResult {
   error?: string;
   errorLatex?: boolean;
 }
+
+// Add new interface for subtyping results
+export interface SubtypingResult {
+  success: boolean;
+  finalType?: string; // The subtyping relationship
+  derivation: DerivationStep[];
+  error?: string;
+  errorLatex?: boolean;
+}
+
+// Union type for all possible results
+export type AlgorithmResult = InferenceResult | SubtypingResult;
 
 export interface LambdaExpression {
   raw: string;

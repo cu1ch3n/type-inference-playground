@@ -11,7 +11,25 @@ export interface InferenceRequest {
   };
 }
 
+export interface SubtypingRequest {
+  algorithm: string;
+  variant: string;
+  leftType: string;
+  rightType: string;
+  options?: {
+    showSteps?: boolean;
+    maxDepth?: number;
+  };
+}
+
 export interface InferenceResponse {
+  success: boolean;
+  result?: Record<string, unknown>;
+  error?: string;
+  steps?: Array<Record<string, unknown>>;
+}
+
+export interface SubtypingResponse {
   success: boolean;
   result?: Record<string, unknown>;
   error?: string;
@@ -121,6 +139,69 @@ export class WasmTypeInference {
     }
   }
 
+  async runSubtyping(request: SubtypingRequest): Promise<SubtypingResponse> {
+    if (!this.isInitialized) {
+      const initialized = await this.initialize();
+      if (!initialized) {
+        throw new Error('WASM module not available');
+      }
+    }
+
+    try {
+      if (!this.wasmModule) {
+        throw new Error('WASM module not loaded');
+      }
+
+      // Reset output buffer
+      this.outputBuffer = '';
+
+      // Prepare command line arguments for subtyping
+      const args = ['infer', '--subtyping', request.variant, request.leftType, request.rightType];
+      const env: string[] = [];
+      
+      const fds = [
+        null, // stdin
+        ConsoleStdout.lineBuffered((msg) => {
+          this.outputBuffer += `${msg}\n`;
+        }),
+      ];
+
+      const wasi = new WASI(args, env, fds);
+      const instance = await WebAssembly.instantiate(this.wasmModule, {
+        wasi_snapshot_preview1: wasi.wasiImport,
+      });
+
+      wasi.start(instance as any);
+
+      // Parse output as JSON or return as text
+      const output = this.outputBuffer.trim();
+
+      console.log(output);
+      try {
+        const result = JSON.parse(output);
+        return {
+          success: true,
+          result,
+          steps: result.steps || []
+        };
+      } catch {
+        // If not JSON, return as text result
+        return {
+          success: true,
+          result: { type: output },
+          steps: []
+        };
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('WASM subtyping error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown WASM error',
+      };
+    }
+  }
+
   getWasmUrl(): string {
     return this.wasmUrl;
   }
@@ -172,4 +253,5 @@ export { initializeWasm, getWasmModule };
 */
 
 // Global instance (disabled by default)
-export const wasmInference = new WasmTypeInference();
+// export const wasmInference = new WasmTypeInference();
+export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");

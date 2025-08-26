@@ -12,16 +12,16 @@ import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { algorithms } from '@/data/algorithms';
-import { runInference } from '@/lib/mockInference';
-import { InferenceResult } from '@/types/inference';
+import { allAlgorithms } from '@/data/algorithms';
+import { runInference, runSubtyping } from '@/lib/mockInference';
+import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
   const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [expression, setExpression] = useState<string>('');
-  const [result, setResult] = useState<InferenceResult | undefined>();
+  const [result, setResult] = useState<AlgorithmResult | undefined>();
   const [isInferring, setIsInferring] = useState(false);
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
@@ -31,13 +31,13 @@ export const TypeInferencePlayground = () => {
   const { toast } = useToast();
   
 
-  const selectedAlgorithmData = algorithms.find(a => a.id === selectedAlgorithm);
+  const selectedAlgorithmData = allAlgorithms.find(a => a.id === selectedAlgorithm);
 
   const handleAlgorithmChange = (algorithmId: string) => {
     setSelectedAlgorithm(algorithmId);
     
     // Reset variant to default when changing algorithm
-    const algorithmData = algorithms.find(a => a.id === algorithmId);
+    const algorithmData = allAlgorithms.find(a => a.id === algorithmId);
     if (algorithmData?.defaultVariant) {
       setSelectedVariant(algorithmData.defaultVariant);
     } else {
@@ -53,11 +53,11 @@ export const TypeInferencePlayground = () => {
   useEffect(() => {
     const { algorithm, expression: urlExpression, variant } = getParamsFromUrl();
     
-    if (algorithm && algorithms.find(a => a.id === algorithm)) {
+    if (algorithm && allAlgorithms.find(a => a.id === algorithm)) {
       setSelectedAlgorithm(algorithm);
       
       // Set variant if provided and valid for this algorithm
-      const algorithmData = algorithms.find(a => a.id === algorithm);
+      const algorithmData = allAlgorithms.find(a => a.id === algorithm);
       if (variant && algorithmData?.variants?.find(v => v.id === variant)) {
         setSelectedVariant(variant);
       } else if (algorithmData?.defaultVariant) {
@@ -86,7 +86,26 @@ export const TypeInferencePlayground = () => {
     setActiveStepPath(undefined);
     
     try {
-      const inferenceResult = await runInference(selectedAlgorithm, expression);
+      let inferenceResult: AlgorithmResult;
+      
+      if (selectedAlgorithmData?.mode === 'subtyping') {
+        // Handle subtyping mode
+        const parts = expression.split(' <: ');
+        if (parts.length !== 2) {
+          throw new Error('Subtyping expression must be in format "LeftType <: RightType"');
+        }
+        
+        inferenceResult = await runSubtyping(
+          selectedAlgorithm, 
+          selectedVariant || 'recursive', 
+          parts[0].trim(), 
+          parts[1].trim()
+        );
+      } else {
+        // Handle type inference mode
+        inferenceResult = await runInference(selectedAlgorithm, expression);
+      }
+      
       setResult(inferenceResult);
       
     } catch (error) {
@@ -256,7 +275,7 @@ export const TypeInferencePlayground = () => {
             <div className="lg:col-span-2 space-y-2 sm:space-y-3 lg:space-y-4">
               <div className="animate-stagger-1 hover-scale-sm">
                 <AlgorithmSelector
-                  algorithms={algorithms}
+                  algorithms={allAlgorithms}
                   selectedAlgorithm={selectedAlgorithm}
                   selectedVariant={selectedVariant}
                   onAlgorithmChange={handleAlgorithmChange}
@@ -277,6 +296,7 @@ export const TypeInferencePlayground = () => {
                   onInfer={handleInference}
                   isInferring={isInferring}
                   selectedAlgorithm={selectedAlgorithm}
+                  selectedVariant={selectedVariant}
                 />
               </div>
             </div>

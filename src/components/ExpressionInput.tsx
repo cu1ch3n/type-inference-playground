@@ -138,7 +138,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   >
                     <div className="flex flex-col items-start">
                       <span className="font-medium">{example.name}</span>
-                      <span className="text-xs text-muted-foreground font-code">
+                      <span className="text-xs text-muted-foreground font-code truncate">
                         {example.expression}
                       </span>
                     </div>
@@ -267,7 +267,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                 >
                   <div className="flex flex-col items-start">
                     <span className="font-medium">{example.name}</span>
-                    <span className="text-xs text-muted-foreground font-code">
+                    <span className="text-xs text-muted-foreground font-code truncate">
                       {example.expression}
                     </span>
                   </div>

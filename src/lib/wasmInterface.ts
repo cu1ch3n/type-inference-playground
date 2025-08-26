@@ -258,44 +258,4 @@ export class WasmTypeInference {
   }
 }
 
-/* UNCOMMENT TO ENABLE WASM
-// Global WASM interface - uncommented when WASM is enabled
-let wasmModule: Record<string, unknown> | null = null;
-let wasmWorker: Worker | null = null;
-
-export async function initializeWasm(): Promise<boolean> {
-  try {
-    wasmWorker = new Worker('/wasm/inference-worker.js');
-    
-    return new Promise((resolve) => {
-      const timeout = setTimeout(() => resolve(false), 5000);
-      
-      wasmWorker?.addEventListener('message', (event) => {
-        if (event.data.type === 'wasm_ready') {
-          clearTimeout(timeout);
-          wasmModule = event.data.module;
-          // eslint-disable-next-line no-console
-          console.log('✅ WASM module initialized successfully');
-          resolve(true);
-        }
-      });
-      
-      wasmWorker?.postMessage({ type: 'init' });
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to initialize WASM:', error);
-    return false;
-  }
-}
-
-export function getWasmModule() {
-  return wasmModule;
-}
-
-export { initializeWasm, getWasmModule };
-*/
-
-// Global instance (disabled by default)
-// export const wasmInference = new WasmTypeInference();
-export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");
+export const wasmInference = new WasmTypeInference();

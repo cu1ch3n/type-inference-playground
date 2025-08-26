@@ -253,5 +253,5 @@ export { initializeWasm, getWasmModule };
 */
 
 // Global instance (disabled by default)
-// export const wasmInference = new WasmTypeInference();
-export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");
+export const wasmInference = new WasmTypeInference();
+// export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");

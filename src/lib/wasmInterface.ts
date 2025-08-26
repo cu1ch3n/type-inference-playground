@@ -93,7 +93,7 @@ export class WasmTypeInference {
       this.outputBuffer = '';
 
       // Prepare command line arguments exactly like your original implementation
-      const args = ['infer', '--alg', request.algorithm, request.expression];
+      const args = ['infer', '--typing', request.algorithm, request.expression];
       const env: string[] = [];
       
       const fds = [

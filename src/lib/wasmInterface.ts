@@ -36,6 +36,20 @@ export interface SubtypingResponse {
   steps?: Array<Record<string, unknown>>;
 }
 
+export interface TranslationRequest {
+  algorithm: string;
+  variant: string;
+  type: string;
+  options?: { showSteps?: boolean; maxDepth?: number };
+}
+
+export interface TranslationResponse {
+  success: boolean;
+  result?: Record<string, unknown>;
+  error?: string;
+  steps?: Array<Record<string, unknown>>;
+}
+
 export class WasmTypeInference {
   private wasmModule: WebAssembly.Module | null = null;
   private wasmUrl: string;
@@ -202,6 +216,36 @@ export class WasmTypeInference {
     }
   }
 
+  async runTranslate(request: TranslationRequest): Promise<TranslationResponse> {
+    if (!this.isInitialized) {
+      const initialized = await this.initialize();
+      if (!initialized) throw new Error('WASM module not available');
+    }
+    try {
+      if (!this.wasmModule) throw new Error('WASM module not loaded');
+      this.outputBuffer = '';
+      const args = ['infer', '--translate', request.variant, request.type];
+      const env: string[] = [];
+      const fds = [
+        null,
+        ConsoleStdout.lineBuffered((msg) => { this.outputBuffer += `${msg}\n`; }),
+      ];
+      const wasi = new WASI(args, env, fds);
+      const instance = await WebAssembly.instantiate(this.wasmModule, { wasi_snapshot_preview1: wasi.wasiImport });
+      wasi.start(instance as any);
+      const output = this.outputBuffer.trim();
+      try {
+        const result = JSON.parse(output);
+        return { success: true, result, steps: (result as any).steps || [] };
+      } catch {
+        return { success: true, result: { type: output }, steps: [] };
+      }
+    } catch (error) {
+      console.error('WASM translate error:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown WASM error' };
+    }
+  }
+
   getWasmUrl(): string {
     return this.wasmUrl;
   }
@@ -253,5 +297,5 @@ export { initializeWasm, getWasmModule };
 */
 
 // Global instance (disabled by default)
-export const wasmInference = new WasmTypeInference();
-// export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");
+// export const wasmInference = new WasmTypeInference();
+export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");

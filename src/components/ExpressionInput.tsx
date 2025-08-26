@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
-import { algorithmExamples, subtypingExamples, allAlgorithms } from '@/data/algorithms';
+import { algorithmExamples, subtypingExamples, translateExamples, allAlgorithms } from '@/data/algorithms';
 import { HelpModal } from './HelpModal';
 
 interface ExpressionInputProps {
@@ -16,7 +16,7 @@ interface ExpressionInputProps {
   selectedVariant?: string;
 }
 
-export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputProps>(({
+export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputProps>(({ 
   expression,
   onExpressionChange,
   onInfer,
@@ -31,29 +31,19 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   
   const selectedAlgorithmData = allAlgorithms.find(a => a.id === selectedAlgorithm);
   const isSubtypingMode = selectedAlgorithmData?.mode === 'subtyping';
+  const isTranslateMode = selectedAlgorithmData?.mode === 'translate';
   
   // Use appropriate examples based on mode
   const currentExamples = isSubtypingMode 
     ? (subtypingExamples[selectedAlgorithm as keyof typeof subtypingExamples] || [])
-    : (algorithmExamples[selectedAlgorithm as keyof typeof algorithmExamples] || []);
-
-  // Debug logging
-  console.log('ExpressionInput Debug:', {
-    selectedAlgorithm,
-    selectedAlgorithmData,
-    isSubtypingMode,
-    subtypingExamples,
-    algorithmExamples,
-    currentExamples,
-    'subtypingExamples[selectedAlgorithm]': subtypingExamples[selectedAlgorithm as keyof typeof subtypingExamples],
-    'algorithmExamples[selectedAlgorithm]': algorithmExamples[selectedAlgorithm as keyof typeof algorithmExamples]
-  });
+    : isTranslateMode
+      ? (translateExamples[selectedAlgorithm as keyof typeof translateExamples] || [])
+      : (algorithmExamples[selectedAlgorithm as keyof typeof algorithmExamples] || []);
 
   const handleExampleSelect = (exampleName: string) => {
     const example = currentExamples.find(e => e.name === exampleName);
     if (example) {
       if (isSubtypingMode) {
-        // Parse subtyping examples like "Int <: Top" into left and right types
         const parts = example.expression.split(' <: ');
         if (parts.length === 2) {
           setLeftType(parts[0].trim());
@@ -80,7 +70,6 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
     }
   };
 
-  // Reset selected example when expression changes and doesn't match current example
   useEffect(() => {
     if (selectedExample) {
       const currentExample = currentExamples.find(e => e.name === selectedExample);
@@ -240,13 +229,13 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
     );
   }
 
-  // Original single input mode for type inference
+  // Single input UI for inference and translate
   return (
     <Card className="academic-panel hover-scale-sm transition-smooth">
       <CardHeader className="pb-2 sm:pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Code className="w-4 h-4 text-primary" />
-          Input Program
+          {isTranslateMode ? 'Translate Type' : 'Input Program'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 pt-0">
@@ -292,11 +281,10 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               ref={ref}
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
-              placeholder="Please enter an expression. For example, (\x. x) 1" 
+              placeholder={isTranslateMode ? 'Please enter a type. For example, mu a. a -> Int' : 'Please enter an expression. For example, (\\x. x) 1'} 
               className="font-code text-xs sm:text-sm bg-code min-h-[90px] sm:min-h-[100px] resize-none pr-20 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
-            {/* Clear button - top right */}
             {expression.trim() && (
               <Button 
                 onClick={handleClear} 
@@ -307,7 +295,6 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                 <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:rotate-180" />
               </Button>
             )}
-            {/* Play button - bottom right */}
             <Button 
               onClick={onInfer} 
               disabled={!expression.trim() || isInferring} 

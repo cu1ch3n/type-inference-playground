@@ -13,8 +13,8 @@ import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
 import { allAlgorithms } from '@/data/algorithms';
-import { runInference, runSubtyping } from '@/lib/mockInference';
-import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
+import { runInference, runSubtyping, runTranslate } from '@/lib/mockInference';
+import { InferenceResult, SubtypingResult, TranslationResult, AlgorithmResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
@@ -101,6 +101,8 @@ export const TypeInferencePlayground = () => {
           parts[0].trim(), 
           parts[1].trim()
         );
+      } else if (selectedAlgorithmData?.mode === 'translate') {
+        inferenceResult = await runTranslate(selectedAlgorithm, selectedVariant || 'standard', expression.trim());
       } else {
         // Handle type inference mode
         inferenceResult = await runInference(selectedAlgorithm, expression);
@@ -112,7 +114,7 @@ export const TypeInferencePlayground = () => {
       console.error('Inference error:', error);
       setResult({
         success: false,
-        error: 'An unexpected error occurred during type inference.',
+        error: 'An unexpected error occurred during processing.',
         derivation: []
       });
     } finally {

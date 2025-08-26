@@ -630,15 +630,34 @@ export const subtypingAlgorithms: TypeInferenceAlgorithm[] = [
   }
 ];
 
-// Combined list for all algorithms (both inference and subtyping)
-export const allAlgorithms = [...algorithms, ...subtypingAlgorithms];
+// Separate list for translate algorithms
+export const translateAlgorithms: TypeInferenceAlgorithm[] = [
+  {
+    id: "Translate",
+    name: "Type Translator",
+    labels: ["Translation", "Type Conversion", "Recursive Types"],
+    viewMode: "tree",
+    mode: "translate",
+    variants: [
+      { id: "standard", name: "Standard", description: "Standard type translation algorithm", icon: "ArrowRight" },
+      { id: "extended", name: "Extended", description: "Extended type translation with additional features", icon: "ArrowUpRight" }
+    ],
+    defaultVariant: "standard",
+    paper: { title: "Type Translation", authors: ["Various"], year: 2024, url: "#" },
+    rules: [
+      { id: "Trans-Var", name: "Trans-Var", premises: [], conclusion: "a \\rightsquigarrow a" },
+      { id: "Trans-Int", name: "Trans-Int", premises: [], conclusion: "\\texttt{Int} \\rightsquigarrow \\texttt{Int}" },
+      { id: "Trans-Fun", name: "Trans-Fun", premises: ["A_1 \\rightsquigarrow B_1", "A_2 \\rightsquigarrow B_2"], conclusion: "(A_1 \\to A_2) \\rightsquigarrow (B_1 \\to B_2)" },
+      { id: "Trans-Mu", name: "Trans-Mu", premises: ["A \\rightsquigarrow B"], conclusion: "\\mu a.~A \\rightsquigarrow [(a_1,m). (\\{m : a_2 \\to B\\}) \\to B]" }
+    ]
+  }
+];
+
+// Combined list for all algorithms (both inference, subtyping and translate)
+export const allAlgorithms = [...algorithms, ...subtypingAlgorithms, ...translateAlgorithms];
 
 const universalExamples = [
-  {
-    name: "Trivial Application",
-    expression: "(\\x. x) 1",
-    description: "Trivial function application of identity function to integer literal"
-  }
+  { name: "Trivial Application", expression: "(\\x. x) 1", description: "Trivial function application of identity function to integer literal" }
 ];
 
 export const algorithmExamples = {
@@ -688,5 +707,15 @@ export const subtypingExamples = {
       expression: "mu a. Top -> (mu b. b -> a) <: mu a. Int -> (mu b. b -> a)",
       description: "Nested recursive subtyping"
     }
+  ]
+} as const;
+
+
+// Separate examples for translation algorithms
+export const translateExamples = {
+  "Translate": [
+    { name: "Basic Translation", expression: "Int", description: "Basic type translation" },
+    { name: "Arrow Translation", expression: "a -> Int", description: "Arrow type translation" },
+    { name: "Recursive Translation", expression: "mu a. a -> Int", description: "Recursive type translation" }
   ]
 } as const;

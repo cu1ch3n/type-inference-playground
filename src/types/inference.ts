@@ -12,7 +12,7 @@ export interface TypeInferenceAlgorithm {
   name: string;
   labels: string[];
   viewMode: 'tree' | 'linear';
-  mode: 'inference' | 'subtyping'; // Add mode to distinguish between inference and subtyping
+  mode: 'inference' | 'subtyping' | 'translate'; // Add translate mode
   variants?: AlgorithmVariant[];
   defaultVariant?: string;
   paper?: {
@@ -64,8 +64,17 @@ export interface SubtypingResult {
   errorLatex?: boolean;
 }
 
+// Add new interface for translation results
+export interface TranslationResult {
+  success: boolean;
+  finalType?: string; // The translated type
+  derivation: DerivationStep[];
+  error?: string;
+  errorLatex?: boolean;
+}
+
 // Union type for all possible results
-export type AlgorithmResult = InferenceResult | SubtypingResult;
+export type AlgorithmResult = InferenceResult | SubtypingResult | TranslationResult;
 
 export interface LambdaExpression {
   raw: string;

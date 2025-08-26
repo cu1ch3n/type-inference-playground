@@ -1,4 +1,4 @@
-import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
+import { InferenceResult, SubtypingResult, AlgorithmResult, TranslationResult } from '@/types/inference';
 import { wasmInference } from './wasmInterface';
 
 export const runInference = async (algorithm: string, expression: string): Promise<InferenceResult> => {
@@ -83,6 +83,50 @@ export const runSubtyping = async (algorithm: string, variant: string, leftType:
     success: false,
     error: 'Unsupported algorithm',
     derivation: []
+  };
+};
+
+export const runTranslate = async (algorithm: string, variant: string, typeExpr: string): Promise<TranslationResult> => {
+  try {
+    const wasmResult = await wasmInference.runTranslate({
+      algorithm,
+      variant,
+      type: typeExpr,
+      options: { showSteps: true, maxDepth: 100 }
+    });
+    if (wasmResult.result) {
+      const result = wasmResult.result as any;
+      return {
+        success: result.success ?? true,
+        finalType: result.finalType ?? (result.type as string | undefined),
+        derivation: result.derivation || result.derivation || [],
+        error: result.error,
+        errorLatex: result.errorLatex || false
+      };
+    }
+  } catch (error) {
+    console.log('WASM translate unavailable, using mock:', error);
+  }
+  // Mock fallback
+  await new Promise(r => setTimeout(r, 300));
+  if (/^mu\s+a\./.test(typeExpr)) {
+    return {
+      success: true,
+      finalType: '[(a_{1},m). (\\{m : a_{2} \\to Int\\}) \\to Int]',
+      derivation: [
+        { ruleId: 'Trans-Mu', expression: `${typeExpr} \\rightsquigarrow [(a_{1},m). (\\{m : a_{2} \\to \\texttt{Int}\\}) \\to \\texttt{Int}]`, children: [
+          { ruleId: 'Trans-Fun', expression: '(a_1 \\to Int) \\rightsquigarrow (a_1 \\to Int)', children: [
+            { ruleId: 'Trans-Var', expression: 'a_1 \\rightsquigarrow a_1' },
+            { ruleId: 'Trans-Int', expression: '\\texttt{Int} \\rightsquigarrow \\texttt{Int}' }
+          ]}
+        ]}
+      ]
+    };
+  }
+  return {
+    success: true,
+    finalType: typeExpr,
+    derivation: [ { ruleId: 'Trans-Var', expression: `${typeExpr} \\rightsquigarrow ${typeExpr}` } ]
   };
 };
 

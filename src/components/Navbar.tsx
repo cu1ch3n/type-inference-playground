@@ -48,7 +48,7 @@ export const Navbar = () => {
                 }}
                 className="hover:text-primary transition-colors block truncate text-left"
               >
-                Type Inference Zoo
+                Type Inference Playground
               </button>
             </h1>
           </div>

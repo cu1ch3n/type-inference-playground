@@ -1,4 +1,4 @@
-# Type Inference Zoo - Frontend
+# Type Inference Playground
 
 [![Build Status](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions/workflows/build.yml/badge.svg)](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)

@@ -80,7 +80,7 @@ export const AlgorithmSelector = ({
                             className="h-auto p-1 text-xs bg-background/50 border border-border/30 hover:bg-accent/50 transition-colors duration-200"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Split className="w-3 h-3 mr-1 flex-shrink-0" />
+                            <Split className="w-3 h-3 mr-1 text-muted-foreground flex-shrink-0" />
                             <span className="truncate max-w-16">
                               {algorithm.variants.find(v => v.id === (selectedVariant || algorithm.defaultVariant))?.name || 'Base'}
                             </span>

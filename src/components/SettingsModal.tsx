@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Download, ExternalLink } from 'lucide-react';
+import { Settings, RotateCcw, Upload, FileCode } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -68,8 +68,9 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
     setTempUrl(DEFAULT_WASM_URL);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleFile = (file: File) => {
     if (file && file.name.endsWith('.wasm')) {
       const url = URL.createObjectURL(file);
       setTempUrl(url);
@@ -77,8 +78,34 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
     } else {
       toast.error('Please select a valid .wasm file');
     }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFile(file);
+    }
     // Clear the input so the same file can be selected again
     event.target.value = '';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      handleFile(file);
+    }
   };
 
   const isUrlChanged = tempUrl !== wasmUrl;
@@ -104,38 +131,27 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="wasm-url">WASM Module URL</Label>
-              <Input
-                id="wasm-url"
-                value={tempUrl}
-                onChange={(e) => setTempUrl(e.target.value)}
-                placeholder="https://example.com/module.wasm"
-                className="font-mono text-sm"
-              />
+              <div className="relative">
+                <Input
+                  id="wasm-url"
+                  value={tempUrl}
+                  onChange={(e) => setTempUrl(e.target.value)}
+                  placeholder="https://example.com/module.wasm"
+                  className="font-mono text-sm pr-8"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={resetToDefault}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 hover:bg-muted"
+                  title="Reset to default"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                </Button>
+              </div>
               <p className="text-xs text-muted-foreground">
                 URL of the WebAssembly module for type inference
               </p>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={resetToDefault}
-                className="flex-1"
-              >
-                <RotateCcw className="w-3 h-3 mr-2" />
-                Reset to Default
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open(tempUrl, '_blank')}
-                disabled={!isValidUrl}
-                className="px-3"
-              >
-                <ExternalLink className="w-3 h-3" />
-              </Button>
             </div>
           </div>
 
@@ -143,7 +159,17 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
 
           <div className="space-y-3">
             <Label>Load Local WASM File</Label>
-            <div className="flex items-center gap-2">
+            <div 
+              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+                isDragOver 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById('wasm-file-input')?.click()}
+            >
               <input
                 type="file"
                 accept=".wasm"
@@ -151,19 +177,24 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
                 className="hidden"
                 id="wasm-file-input"
               />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('wasm-file-input')?.click()}
-                className="flex-1"
-              >
-                <Download className="w-3 h-3 mr-2" />
-                Select Local File
-              </Button>
+              <div className="space-y-2">
+                <div className="flex justify-center">
+                  {isDragOver ? (
+                    <Upload className="w-8 h-8 text-primary" />
+                  ) : (
+                    <FileCode className="w-8 h-8 text-muted-foreground" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-medium">
+                    {isDragOver ? 'Drop WASM file here' : 'Drop WASM file or click to browse'}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Supports .wasm files only
+                  </p>
+                </div>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Upload a local .wasm file to use instead of the remote URL
-            </p>
           </div>
 
           <div className="bg-muted/50 p-3 rounded-lg">

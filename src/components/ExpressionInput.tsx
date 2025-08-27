@@ -81,6 +81,11 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
     }
   };
 
+  // Reset selected example when algorithm changes
+  useEffect(() => {
+    setSelectedExample('');
+  }, [selectedAlgorithm]);
+
   // Reset selected example when expression changes and doesn't match current example
   useEffect(() => {
     if (selectedExample) {
@@ -123,9 +128,38 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <Select value={selectedExample} onValueChange={handleExampleSelect}>
               <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
-                <div className="flex items-center gap-2">
-                  <Lightbulb className="w-3.5 h-3.5 text-muted-foreground" />
-                  <SelectValue placeholder="Choose an example..." />
+                <div className="flex items-start gap-2 w-full min-w-0">
+                  <Lightbulb className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-1" />
+                  {selectedExample ? (
+                    <div className="flex flex-col min-w-0 flex-1 overflow-hidden items-start" style={{ maxWidth: 'calc(100% - 2rem)' }}>
+                      <span 
+                        className="font-medium text-sm text-left" 
+                        style={{ 
+                          whiteSpace: 'nowrap', 
+                          overflow: 'hidden', 
+                          textOverflow: 'ellipsis',
+                          maxWidth: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {selectedExample}
+                      </span>
+                      <span 
+                        className="text-xs text-muted-foreground font-code text-left" 
+                        style={{ 
+                          whiteSpace: 'nowrap', 
+                          overflow: 'hidden', 
+                          textOverflow: 'ellipsis',
+                          maxWidth: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {currentExamples.find(e => e.name === selectedExample)?.expression}
+                      </span>
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Choose an example..." />
+                  )}
                 </div>
               </SelectTrigger>
               <SelectContent className="animate-fade-in-scale">
@@ -160,7 +194,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
-                  Left Type
+                  Left
                 </div>
               </div>
 
@@ -181,7 +215,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
-                  Right Type
+                  Right
                 </div>
               </div>
 
@@ -252,9 +286,38 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
             <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
-              <div className="flex items-center gap-2">
-                <Lightbulb className="w-3.5 h-3.5 text-muted-foreground" />
-                <SelectValue placeholder="Choose an example..." />
+              <div className="flex items-start gap-2 w-full min-w-0">
+                <Lightbulb className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-1" />
+                {selectedExample ? (
+                  <div className="flex flex-col min-w-0 flex-1 overflow-hidden items-start" style={{ maxWidth: 'calc(100% - 2rem)' }}>
+                    <span 
+                      className="font-medium text-sm text-left" 
+                      style={{ 
+                        whiteSpace: 'nowrap', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      {selectedExample}
+                    </span>
+                    <span 
+                      className="text-xs text-muted-foreground font-code text-left" 
+                      style={{ 
+                        whiteSpace: 'nowrap', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      {currentExamples.find(e => e.name === selectedExample)?.expression}
+                    </span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Choose an example..." />
+                )}
               </div>
             </SelectTrigger>
             <SelectContent className="animate-fade-in-scale">

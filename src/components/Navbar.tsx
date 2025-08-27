@@ -23,6 +23,7 @@ import { wasmInference } from '@/lib/wasmInterface';
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const handleWasmUrlChange = (url: string) => {
     wasmInference.updateWasmUrl(url);
@@ -94,16 +95,6 @@ export const Navbar = () => {
                 <p>Help & quick reference</p>
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <SettingsModal onWasmUrlChange={handleWasmUrlChange} />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Settings</p>
-              </TooltipContent>
-            </Tooltip>
             <div className="hidden sm:block">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -163,18 +154,23 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <div className="hidden sm:block">
-              <WasmStatusIndicator />
+              <WasmStatusIndicator onClick={() => setSettingsModalOpen(true)} />
             </div>
           </div>
         </div>
         
         {/* Mobile Row 2: WASM indicator (right-aligned) */}
         <div className="sm:hidden mt-2 flex justify-end">
-          <WasmStatusIndicator />
+          <WasmStatusIndicator onClick={() => setSettingsModalOpen(true)} />
         </div>
       </div>
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
+      <SettingsModal 
+        open={settingsModalOpen} 
+        onOpenChange={setSettingsModalOpen}
+        onWasmUrlChange={handleWasmUrlChange} 
+      />
     </nav>
   );
 };

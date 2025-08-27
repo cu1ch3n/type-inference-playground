@@ -15,14 +15,15 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
 interface SettingsModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onWasmUrlChange: (url: string) => void;
 }
 
 const DEFAULT_WASM_URL = 'https://files.cuichen.cc/bin.wasm';
 const STORAGE_KEY = 'wasm-settings';
 
-export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
-  const [open, setOpen] = useState(false);
+export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsModalProps) => {
   const [wasmUrl, setWasmUrl] = useState(DEFAULT_WASM_URL);
   const [tempUrl, setTempUrl] = useState('');
 
@@ -56,7 +57,7 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
       setWasmUrl(tempUrl);
       onWasmUrlChange(tempUrl);
-      setOpen(false);
+      onOpenChange(false);
       toast.success('Settings saved successfully');
     } catch (error) {
       console.error('Failed to save settings:', error);
@@ -112,19 +113,10 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
   const isValidUrl = tempUrl.trim() !== '' && (tempUrl.startsWith('http') || tempUrl.startsWith('blob:'));
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="btn-interactive h-7 w-7 sm:h-9 sm:w-9"
-        >
-          <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>WASM Settings</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
@@ -210,7 +202,7 @@ export const SettingsModal = ({ onWasmUrlChange }: SettingsModalProps) => {
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
           >
             Cancel
           </Button>

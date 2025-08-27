@@ -9,7 +9,11 @@ import { wasmInference } from '@/lib/wasmInterface';
 
 type WasmStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
-export const WasmStatusIndicator = () => {
+interface WasmStatusIndicatorProps {
+  onClick?: () => void;
+}
+
+export const WasmStatusIndicator = ({ onClick }: WasmStatusIndicatorProps) => {
   const [status, setStatus] = useState<WasmStatus>('disconnected');
 
   useEffect(() => {
@@ -47,12 +51,17 @@ export const WasmStatusIndicator = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="inline-flex">
+        <button
+          onClick={onClick}
+          className={`inline-flex transition-colors ${
+            onClick ? 'hover:bg-accent/50 cursor-pointer' : 'cursor-default'
+          }`}
+        >
           <Badge variant="outline" className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
             <span className="text-xs">{getStatusText()}</span>
           </Badge>
-        </div>
+        </button>
       </TooltipTrigger>
       <TooltipContent>
         <p className="font-mono text-xs">{wasmInference.getWasmUrl()}</p>

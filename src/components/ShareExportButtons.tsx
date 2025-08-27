@@ -94,7 +94,7 @@ export const ShareExportButtons = ({
   };
 
   const handleExportMarkdown = () => {
-    if (!result?.success || !result.derivation.length) {
+    if (!result?.derivation || result.derivation.length === 0) {
       toast({
         title: "Cannot export",
         description: "No derivation available to export.",
@@ -167,7 +167,7 @@ ${markdown}`;
           <Button
             variant="outline"
             size="sm"
-            disabled={disabled || !result?.success}
+            disabled={disabled || (!result?.success && (!result?.derivation || result.derivation.length === 0))}
             className="btn-interactive touch-manipulation h-8 w-8 sm:w-auto sm:h-9 p-0 sm:px-3"
           >
             <Download className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />

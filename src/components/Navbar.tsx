@@ -17,10 +17,16 @@ import {
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { HelpModal } from './HelpModal';
 import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp';
+import { SettingsModal } from './SettingsModal';
+import { wasmInference } from '@/lib/wasmInterface';
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [helpModalOpen, setHelpModalOpen] = useState(false);
+
+  const handleWasmUrlChange = (url: string) => {
+    wasmInference.updateWasmUrl(url);
+  };
 
   return (
     <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
@@ -86,6 +92,16 @@ export const Navbar = () => {
               </TooltipTrigger>
               <TooltipContent>
                 <p>Help & quick reference</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <SettingsModal onWasmUrlChange={handleWasmUrlChange} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Settings</p>
               </TooltipContent>
             </Tooltip>
             <div className="hidden sm:block">

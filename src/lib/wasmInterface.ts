@@ -48,6 +48,17 @@ export class WasmTypeInference {
     console.log(`WASM configured for: ${this.wasmUrl}`);
   }
 
+  updateWasmUrl(newUrl: string) {
+    if (this.wasmUrl !== newUrl) {
+      this.wasmUrl = newUrl;
+      // Reset initialization when URL changes
+      this.wasmModule = null;
+      this.isInitialized = false;
+      // eslint-disable-next-line no-console
+      console.log(`WASM URL updated to: ${this.wasmUrl}`);
+    }
+  }
+
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     

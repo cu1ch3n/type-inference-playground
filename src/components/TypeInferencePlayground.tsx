@@ -270,9 +270,9 @@ export const TypeInferencePlayground = () => {
       <div className="min-h-screen bg-background animate-page-enter">
         {/* Main Content */}
         <div className="container mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-4">
-          <div className="grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-7 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full">
             {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
-            <div className="lg:col-span-2 xl:col-span-2 space-y-2 sm:space-y-3 lg:space-y-4">
+            <div className="lg:col-span-2 xl:col-span-3 space-y-2 sm:space-y-3 lg:space-y-4">
               <div className="animate-stagger-1 hover-scale-sm">
                 <AlgorithmSelector
                   algorithms={allAlgorithms}
@@ -302,7 +302,7 @@ export const TypeInferencePlayground = () => {
             </div>
 
             {/* Mobile: Stack below, Desktop: Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 xl:col-span-6 space-y-2 sm:space-y-3 lg:space-y-4">
+            <div className="lg:col-span-3 xl:col-span-4 space-y-2 sm:space-y-3 lg:space-y-4">
               {/* Derivation */}
               <div className="animate-stagger-3 hover-scale-sm">
                 <DerivationViewer

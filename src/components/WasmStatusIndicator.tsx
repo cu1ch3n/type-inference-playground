@@ -54,7 +54,7 @@ export const WasmStatusIndicator = ({ onClick }: WasmStatusIndicatorProps) => {
         <button
           onClick={onClick}
           className={`inline-flex transition-colors ${
-            onClick ? 'hover:bg-accent/50 cursor-pointer' : 'cursor-default'
+            onClick ? 'hover:bg-accent/50 cursor-pointer rounded-md p-1' : 'cursor-default'
           }`}
         >
           <Badge variant="outline" className="flex items-center gap-2">

@@ -34,7 +34,8 @@ import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
-import { getCompareParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
+// Import compare utilities - access functions with bracket notation
+import { cleanUrl } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { AlgorithmSelector } from '@/components/AlgorithmSelector';
@@ -182,7 +183,14 @@ export const Compare = () => {
 
   // Load shared state from URL on mount
   useEffect(() => {
-    const { algorithms: sharedAlgorithms, expressions: sharedExpressions } = getCompareParamsFromUrl();
+    // Parse URL for shared comparison state
+    const url = new URL(window.location.href);
+    const algorithmsParam = url.searchParams.get('algorithms');
+    const expressionsParam = url.searchParams.get('expressions');
+    
+    const sharedAlgorithms = algorithmsParam ? algorithmsParam.split(',') : [];
+    const sharedExpressions = expressionsParam ? 
+      expressionsParam.split(',').map(expr => decodeURIComponent(expr)) : [];
     
     if (sharedAlgorithms.length > 0 || sharedExpressions.length > 0) {
       // Validate algorithms exist

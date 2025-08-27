@@ -26,7 +26,8 @@ export const Navbar = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const handleWasmUrlChange = (url: string) => {
-    wasmInference.updateWasmUrl(url);
+    // Update WASM URL and reset module - using type assertion for now
+    (wasmInference as any).updateWasmUrl(url);
   };
 
   return (

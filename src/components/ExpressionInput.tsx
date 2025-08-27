@@ -190,12 +190,22 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   value={leftType} 
                   onChange={e => setLeftType(e.target.value)} 
                   placeholder="Left type (e.g., Int, Top -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-12 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-3 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
                   Left
                 </div>
+                {leftType.trim() && (
+                  <Button 
+                    onClick={() => setLeftType('')} 
+                    variant="ghost" 
+                    size="sm" 
+                    className="absolute bottom-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                  >
+                    <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:rotate-180" />
+                  </Button>
+                )}
               </div>
 
               {/* Arrow */}
@@ -211,12 +221,22 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   value={rightType} 
                   onChange={e => setRightType(e.target.value)} 
                   placeholder="Right type (e.g., Top, a -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-12 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-3 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
                   Right
                 </div>
+                {rightType.trim() && (
+                  <Button 
+                    onClick={() => setRightType('')} 
+                    variant="ghost" 
+                    size="sm" 
+                    className="absolute bottom-2 right-2 h-7 w-7 sm:h-8 sm:w-8 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                  >
+                    <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 hover:rotate-180" />
+                  </Button>
+                )}
               </div>
 
               {/* Action Buttons */}

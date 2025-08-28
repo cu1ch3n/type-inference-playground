@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { DerivationViewer } from './DerivationViewer';
 import { TypingRules } from './TypingRules';
 import { InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { useAlgorithms } from '@/hooks/useAlgorithms';
+import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { KaTeXRenderer } from './KaTeXRenderer';
 
 interface DerivationModalProps {

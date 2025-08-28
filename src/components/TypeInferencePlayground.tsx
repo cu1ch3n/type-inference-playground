@@ -12,7 +12,7 @@ import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { useAlgorithms } from '@/hooks/useAlgorithms';
+import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';

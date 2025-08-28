@@ -27,7 +27,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useNavigate } from 'react-router-dom';
-import { useAlgorithms } from '@/hooks/useAlgorithms';
+import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
@@ -169,9 +169,6 @@ export const Compare = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { algorithms, loading, error } = useAlgorithms();
-  
-  // Debug log
-  console.log('Compare page algorithms state:', { algorithmsCount: algorithms.length, loading, error });
 
   // Configure sensors for both mouse and touch
   const sensors = useSensors(
@@ -185,6 +182,7 @@ export const Compare = () => {
     })
   );
 
+  // Load shared state from URL on mount
   useEffect(() => {
     // Only process URL params after algorithms are loaded
     if (loading || algorithms.length === 0) return;

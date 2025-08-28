@@ -74,7 +74,7 @@ export const TypeInferencePlayground = () => {
       if (urlExpression) {
         setExpression(urlExpression);
       } else {
-        setExpression('\\x -> x'); // Default expression
+        setExpression('(\\x. x) 1'); // Default expression
       }
       
       // Clean URL after loading parameters

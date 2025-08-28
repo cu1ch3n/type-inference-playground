@@ -154,7 +154,10 @@ export const AlgorithmSelector = ({
             
             {filteredAlgorithms.length === 0 && (
               <div className="text-center py-4 text-sm text-muted-foreground">
-                No algorithms found matching "{searchTerm}"
+                {algorithms.length === 0 
+                  ? "Loading algorithms..." 
+                  : `No algorithms found matching "${searchTerm}"`
+                }
               </div>
             )}
           </div>

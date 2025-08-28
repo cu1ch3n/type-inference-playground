@@ -20,7 +20,7 @@ import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { PlaygroundSidebar } from './PlaygroundSidebar';
+import { TwoColumnSidebar } from './TwoColumnSidebar';
 import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
@@ -394,7 +394,7 @@ export const TypeInferencePlayground = () => {
               </div>
 
               {/* Collapsible Sidebar */}
-              <PlaygroundSidebar
+              <TwoColumnSidebar
                 algorithms={allAlgorithms}
                 selectedAlgorithm={selectedAlgorithm}
                 selectedVariant={selectedVariant}

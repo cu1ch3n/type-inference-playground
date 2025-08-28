@@ -2,6 +2,7 @@ import { useState, useEffect, forwardRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { SyntaxHighlightedTextarea } from './SyntaxHighlightedTextarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
 import { TypeInferenceAlgorithm } from '@/types/inference';
@@ -174,12 +175,11 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             <div className="space-y-3">
               {/* Left Type Input */}
               <div className="relative">
-                <Textarea 
+                <SyntaxHighlightedTextarea 
                   value={leftType} 
-                  onChange={e => setLeftType(e.target.value)} 
+                  onChange={setLeftType} 
                   placeholder="Left type (e.g., Int, Top -> Int, mu a. a -> Int)" 
                   className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
-                  spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
                   Left
@@ -205,12 +205,11 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
               {/* Right Type Input */}
               <div className="relative">
-                <Textarea 
+                <SyntaxHighlightedTextarea 
                   value={rightType} 
-                  onChange={e => setRightType(e.target.value)} 
+                  onChange={setRightType} 
                   placeholder="Right type (e.g., Top, a -> Int, mu a. a -> Int)" 
                   className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
-                  spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
                   Right
@@ -358,13 +357,12 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             >
               <HelpCircle className="w-3 h-3" />
             </Button>
-            <Textarea 
+            <SyntaxHighlightedTextarea 
               ref={ref}
               value={expression} 
-              onChange={e => onExpressionChange(e.target.value)} 
+              onChange={onExpressionChange} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
               className="font-code text-xs sm:text-sm bg-code min-h-[90px] sm:min-h-[100px] resize-none pr-12 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
-              spellCheck={false} 
             />
             {/* Clear button - top right */}
             {expression.trim() && (

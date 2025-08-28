@@ -306,12 +306,12 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-hidden flex flex-col p-10">
+      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-hidden flex flex-col p-8">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle>WASM Sources</DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 overflow-y-auto space-y-10 pr-2">
+        <div className="flex-1 overflow-y-auto space-y-8 pr-2">
           {/* Current Selection */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">

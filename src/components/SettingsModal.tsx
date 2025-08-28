@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Settings, RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2, Link } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -55,6 +55,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
   });
   const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
   const [isDragOver, setIsDragOver] = useState(false);
+  const [subscriptionUrl, setSubscriptionUrl] = useState('');
 
   // Load sources from localStorage on mount
   useEffect(() => {
@@ -139,6 +140,95 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem('current-wasm-url');
     toast.success('All sources cleared');
+  };
+
+  const decodeSubscriptionUrl = (url: string): WasmSource | null => {
+    try {
+      // Try to extract base64 encoded data from URL
+      let encodedData = url;
+      
+      // Check if it's a URL with hash fragment
+      if (url.includes('#')) {
+        encodedData = url.split('#')[1];
+      }
+      
+      // Check if it's a URL with query parameter
+      if (url.includes('wasm=')) {
+        const match = url.match(/wasm=([^&]+)/);
+        if (match) {
+          encodedData = decodeURIComponent(match[1]);
+        }
+      }
+      
+      // Decode base64
+      const decodedData = atob(encodedData);
+      const sourceData = JSON.parse(decodedData);
+      
+      // Validate required fields
+      if (!sourceData.name || !sourceData.url) {
+        throw new Error('Invalid subscription format: missing name or url');
+      }
+      
+      // Create source with validation
+      const source: WasmSource = {
+        id: Date.now().toString(),
+        name: sourceData.name,
+        url: sourceData.url,
+        authType: sourceData.authType || 'none',
+        authToken: sourceData.authToken,
+        authHeader: sourceData.authHeader,
+        isLocal: false,
+        createdAt: Date.now()
+      };
+      
+      return source;
+    } catch (error) {
+      console.error('Failed to decode subscription URL:', error);
+      return null;
+    }
+  };
+
+  const handleSubscriptionImport = () => {
+    if (!subscriptionUrl.trim()) {
+      toast.error('Please enter a subscription URL');
+      return;
+    }
+    
+    const decodedSource = decodeSubscriptionUrl(subscriptionUrl.trim());
+    if (!decodedSource) {
+      toast.error('Invalid subscription URL format');
+      return;
+    }
+    
+    // Check if source already exists
+    const existingSource = sources.find(s => s.url === decodedSource.url);
+    if (existingSource) {
+      toast.error('A source with this URL already exists');
+      return;
+    }
+    
+    setSources(prev => [...prev, decodedSource]);
+    setSelectedSourceId(decodedSource.id);
+    setSubscriptionUrl('');
+    toast.success(`Imported WASM source: ${decodedSource.name}`);
+  };
+
+  const generateSubscriptionUrl = (source: WasmSource): string => {
+    try {
+      const data = {
+        name: source.name,
+        url: source.url,
+        authType: source.authType,
+        authToken: source.authToken,
+        authHeader: source.authHeader
+      };
+      
+      const encodedData = btoa(JSON.stringify(data));
+      return `wasm://subscribe#${encodedData}`;
+    } catch (error) {
+      console.error('Failed to generate subscription URL:', error);
+      return '';
+    }
   };
 
   const handleFile = (file: File) => {
@@ -351,6 +441,32 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
               </div>
             </div>
           )}
+
+          <Separator />
+
+          {/* Subscription Import */}
+          <div className="space-y-3">
+            <Label>Import from Subscription URL</Label>
+            <p className="text-xs text-muted-foreground">
+              Paste a subscription URL that contains encoded WASM source information
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={subscriptionUrl}
+                onChange={(e) => setSubscriptionUrl(e.target.value)}
+                placeholder="wasm://subscribe#... or https://example.com?wasm=..."
+                className="font-mono"
+              />
+              <Button
+                onClick={handleSubscriptionImport}
+                disabled={!subscriptionUrl.trim()}
+                size="sm"
+              >
+                <Link className="w-3 h-3 mr-1" />
+                Import
+              </Button>
+            </div>
+          </div>
 
           <Separator />
 

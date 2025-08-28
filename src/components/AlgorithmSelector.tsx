@@ -30,7 +30,7 @@ export const AlgorithmSelector = ({
     const term = searchTerm.toLowerCase();
     return algorithms.filter(algorithm => 
       algorithm.Name.toLowerCase().includes(term) ||
-      algorithm.Labels.some(label => label.toLowerCase().includes(term))
+      algorithm.Labels?.some(label => label.toLowerCase().includes(term))
     );
   }, [algorithms, searchTerm]);
 
@@ -82,13 +82,13 @@ export const AlgorithmSelector = ({
                           >
                             <Split className="w-3 h-3 mr-1 text-muted-foreground flex-shrink-0" />
                             <span className="truncate max-w-16">
-                              {algorithm.Variants.find(v => v.Id === (selectedVariant || algorithm.DefaultVariant))?.Name || 'Base'}
+                              {algorithm.Variants?.find(v => v.Id === (selectedVariant || algorithm.DefaultVariant))?.Name || 'Base'}
                             </span>
                             <ChevronDown className="w-3 h-3 ml-1 flex-shrink-0" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[180px] bg-background border border-border/50 shadow-lg">
-                          {algorithm.Variants.map((variant) => {
+                          {algorithm.Variants?.map((variant) => {
                             const isSelected = variant.Id === (selectedVariant || algorithm.DefaultVariant);
                             return (
                               <DropdownMenuItem
@@ -118,7 +118,7 @@ export const AlgorithmSelector = ({
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1 items-center">
-                    {algorithm.Labels.map((label) => (
+                    {algorithm.Labels?.map((label) => (
                       <span key={label} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-secondary/50 text-secondary-foreground border border-secondary/20">
                         {label}
                       </span>

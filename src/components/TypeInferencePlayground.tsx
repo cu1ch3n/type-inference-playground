@@ -7,11 +7,20 @@ import { ExpressionInput } from './ExpressionInput';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarProvider, 
+  SidebarTrigger,
+  useSidebar 
+} from '@/components/ui/sidebar';
+import { PanelLeft } from 'lucide-react';
 
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
+import { PlaygroundSidebar } from './PlaygroundSidebar';
 import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
@@ -309,101 +318,158 @@ export const TypeInferencePlayground = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-background animate-page-enter">
-        {/* Main Content */}
-        <div className="w-full max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full">
-            {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
-            <div className="lg:col-span-4 xl:col-span-4 2xl:col-span-3 space-y-2 sm:space-y-3 lg:space-y-4">
-              <div className="animate-stagger-1 hover-scale-sm">
-                <AlgorithmSelector
-                  algorithms={allAlgorithms}
-                  selectedAlgorithm={selectedAlgorithm}
-                  selectedVariant={selectedVariant}
-                  onAlgorithmChange={handleAlgorithmChange}
-                  onVariantChange={handleVariantChange}
-                />
-              </div>
-              
-              <div className="animate-stagger-2 hover-scale-sm">
-                <ExpressionInput
-                  ref={expressionInputRef}
-                  expression={expression}
-                  onExpressionChange={(expr) => {
-                    setExpression(expr);
-                    if (!expr.trim()) {
-                      setResult(undefined);
-                    }
-                  }}
-                  onInfer={handleInference}
-                  isInferring={isInferring}
-                  selectedAlgorithm={selectedAlgorithm}
-                  algorithms={allAlgorithms}
-                  selectedVariant={selectedVariant}
-                />
-              </div>
+        {/* Mobile: Traditional stacked layout */}
+        <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4">
+          <div className="space-y-2 sm:space-y-3">
+            {/* Mobile Algorithm Selector */}
+            <div className="animate-stagger-1 hover-scale-sm">
+              <AlgorithmSelector
+                algorithms={allAlgorithms}
+                selectedAlgorithm={selectedAlgorithm}
+                selectedVariant={selectedVariant}
+                onAlgorithmChange={handleAlgorithmChange}
+                onVariantChange={handleVariantChange}
+              />
             </div>
-
-            {/* Mobile: Stack below, Desktop: Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-8 xl:col-span-8 2xl:col-span-9 space-y-2 sm:space-y-3 lg:space-y-4">
-              {/* Derivation */}
-              <div className="animate-stagger-3 hover-scale-sm">
-                <DerivationViewer
-                  result={result}
-                  algorithm={selectedAlgorithmData}
-                  activeStepPath={activeStepPath}
+            
+            {/* Mobile Expression Input */}
+            <div className="animate-stagger-2 hover-scale-sm">
+              <ExpressionInput
+                ref={expressionInputRef}
+                expression={expression}
+                onExpressionChange={(expr) => {
+                  setExpression(expr);
+                  if (!expr.trim()) {
+                    setResult(undefined);
+                  }
+                }}
+                onInfer={handleInference}
+                isInferring={isInferring}
+                selectedAlgorithm={selectedAlgorithm}
+                algorithms={allAlgorithms}
+                selectedVariant={selectedVariant}
+              />
+            </div>
+            
+            {/* Mobile Derivation */}
+            <div className="animate-stagger-3 hover-scale-sm">
+              <DerivationViewer
+                result={result}
+                algorithm={selectedAlgorithmData}
+                activeStepPath={activeStepPath}
+                activeRuleId={activeRuleId}
+                onStepClick={handleStepClick}
+                expression={expression}
+                isInferring={isInferring}
+                variant={selectedVariant}
+              />
+            </div>
+            
+            {/* Mobile Typing Rules */}
+            {selectedAlgorithmData && (
+              <div className="animate-stagger-4 hover-scale-sm">
+                <TypingRules
+                  rules={
+                    selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                      ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                      : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                  }
                   activeRuleId={activeRuleId}
-                  onStepClick={handleStepClick}
-                  expression={expression}
-                  isInferring={isInferring}
-                  variant={selectedVariant}
+                  onRuleClick={handleRuleClick}
                 />
               </div>
-              
-              {/* Typing Rules */}
-              {selectedAlgorithmData && (
-                <div className="animate-stagger-4 hover-scale-sm">
-                  <TypingRules
-                    rules={
-                      selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                        ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                        : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                    }
+            )}
+          </div>
+        </div>
+
+        {/* Desktop: Sidebar layout */}
+        <div className="hidden lg:block w-full">
+          <SidebarProvider defaultOpen={true}>
+            <div className="flex min-h-screen w-full">
+              {/* Sidebar Toggle Header */}
+              <div className="absolute top-4 left-4 z-50">
+                <SidebarTrigger className="bg-background/80 backdrop-blur-sm border border-border/40 hover:bg-muted/50 transition-colors">
+                  <PanelLeft className="h-4 w-4" />
+                </SidebarTrigger>
+              </div>
+
+              {/* Collapsible Sidebar */}
+              <PlaygroundSidebar
+                algorithms={allAlgorithms}
+                selectedAlgorithm={selectedAlgorithm}
+                selectedVariant={selectedVariant}
+                onAlgorithmChange={handleAlgorithmChange}
+                onVariantChange={handleVariantChange}
+                expression={expression}
+                onExpressionChange={setExpression}
+                onInfer={handleInference}
+                isInferring={isInferring}
+                setResult={setResult}
+                expressionInputRef={expressionInputRef}
+              />
+
+              {/* Main Content */}
+              <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 xl:px-6 py-4 space-y-3 lg:space-y-4 overflow-x-auto">
+                {/* Derivation */}
+                <div className="animate-stagger-3 hover-scale-sm">
+                  <DerivationViewer
+                    result={result}
+                    algorithm={selectedAlgorithmData}
+                    activeStepPath={activeStepPath}
                     activeRuleId={activeRuleId}
-                    onRuleClick={handleRuleClick}
+                    onStepClick={handleStepClick}
+                    expression={expression}
+                    isInferring={isInferring}
+                    variant={selectedVariant}
                   />
                 </div>
-              )}
+                
+                {/* Typing Rules */}
+                {selectedAlgorithmData && (
+                  <div className="animate-stagger-4 hover-scale-sm">
+                    <TypingRules
+                      rules={
+                        selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                          ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                          : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                      }
+                      activeRuleId={activeRuleId}
+                      onRuleClick={handleRuleClick}
+                    />
+                  </div>
+                )}
+              </main>
             </div>
-          </div>
-          
-          {/* Footnote */}
-          <div className="mt-6 sm:mt-8 lg:mt-10 pt-4 sm:pt-6 border-t border-muted-foreground/20 animate-stagger-5">
-            <div className="text-center text-xs sm:text-sm text-muted-foreground">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-                <span>
-                  Released under the{' '}
-                  <a 
-                    href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
-                    MIT License
-                  </a>
-                </span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span>
-                  Copyright © 2025{' '}
-                  <a 
-                    href="https://cuichen.cc" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline transition-colors duration-200"
-                  >
-                    Chen Cui
-                  </a>
-                </span>
-              </div>
+          </SidebarProvider>
+        </div>
+        
+        {/* Footnote */}
+        <div className="mt-6 sm:mt-8 lg:mt-10 pt-4 sm:pt-6 border-t border-muted-foreground/20 animate-stagger-5">
+          <div className="text-center text-xs sm:text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+              <span>
+                Released under the{' '}
+                <a 
+                  href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline transition-colors duration-200"
+                >
+                  MIT License
+                </a>
+              </span>
+              <span className="hidden sm:inline text-muted-foreground/50">•</span>
+              <span>
+                Copyright © 2025{' '}
+                <a 
+                  href="https://cuichen.cc" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline transition-colors duration-200"
+                >
+                  Chen Cui
+                </a>
+              </span>
             </div>
           </div>
         </div>

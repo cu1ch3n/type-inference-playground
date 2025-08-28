@@ -445,7 +445,6 @@ All colors MUST be HSL. Mathematical typography optimized.
     border: 2px solid hsl(var(--primary));
     box-shadow: var(--shadow-medium);
   }
-  }
   
   /* Line clamp utilities for long URLs */
   .line-clamp-2 {

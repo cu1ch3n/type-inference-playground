@@ -1,11 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Zap, Search, ChevronDown, Check, Split } from 'lucide-react';
+import { ExternalLink, Zap, Search, ChevronDown, Check, Split, RefreshCw } from 'lucide-react';
 import { TypeInferenceAlgorithm, AlgorithmVariant } from '@/types/inference';
 import { AlgorithmLabels } from './AlgorithmLabels';
 import { useState, useMemo } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import * as LucideIcons from 'lucide-react';
 
 interface AlgorithmSelectorProps {
@@ -24,6 +25,7 @@ export const AlgorithmSelector = ({
   onVariantChange
 }: AlgorithmSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { loading, error, refreshAlgorithms } = useAlgorithms();
 
   const filteredAlgorithms = useMemo(() => {
     if (!searchTerm) return algorithms;
@@ -154,10 +156,27 @@ export const AlgorithmSelector = ({
             
             {filteredAlgorithms.length === 0 && (
               <div className="text-center py-4 text-sm text-muted-foreground">
-                {algorithms.length === 0 
-                  ? "Loading algorithms..." 
-                  : `No algorithms found matching "${searchTerm}"`
-                }
+                {loading ? (
+                  "Loading algorithms..."
+                ) : error ? (
+                  <div className="space-y-2">
+                    <div className="text-destructive">Failed to load algorithms</div>
+                    <div className="text-xs">{error}</div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={refreshAlgorithms}
+                      className="mt-2"
+                    >
+                      <RefreshCw className="w-3 h-3 mr-1" />
+                      Retry
+                    </Button>
+                  </div>
+                ) : algorithms.length === 0 ? (
+                  "No algorithms available"
+                ) : (
+                  `No algorithms found matching "${searchTerm}"`
+                )}
               </div>
             )}
           </div>

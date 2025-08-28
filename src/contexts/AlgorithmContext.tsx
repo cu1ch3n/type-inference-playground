@@ -32,14 +32,21 @@ export const AlgorithmProvider = ({ children }: AlgorithmProviderProps) => {
     try {
       setLoading(true);
       setError(null);
+      console.log('AlgorithmContext: Starting to fetch algorithms...');
+      
+      // Add small delay to ensure WASM is ready in iframe environment
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const metadata = await wasmInference.getMetadata();
-      setAlgorithms(metadata);
+      console.log('AlgorithmContext: Fetched algorithms:', metadata);
+      setAlgorithms(metadata || []);
     } catch (err) {
-      console.error('Failed to fetch algorithms:', err);
-      setError('Failed to load algorithms from WASM');
+      console.error('AlgorithmContext: Failed to fetch algorithms:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load algorithms from WASM');
       setAlgorithms([]);
     } finally {
       setLoading(false);
+      console.log('AlgorithmContext: Fetch complete');
     }
   };
 

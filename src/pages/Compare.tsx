@@ -159,8 +159,8 @@ const SortableExpressionItem = ({ expression, onRemove }: {
 };
 
 export const Compare = () => {
-  const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>(['W']);
-  const [expressions, setExpressions] = useState<string[]>(['\\x. x', '(\\x. x) 1']);
+  const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([]);
+  const [expressions, setExpressions] = useState<string[]>([]);
   const [newExpression, setNewExpression] = useState('');
   const [algorithmSearch, setAlgorithmSearch] = useState('');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
@@ -595,7 +595,7 @@ export const Compare = () => {
                   </SortableContext>
                   
                   <AlgorithmSelector
-                    algorithms={filteredAlgorithms}
+                    algorithms={algorithms}
                     onAlgorithmChange={(algorithmId) => {
                       addAlgorithm(algorithmId);
                       setAlgorithmSearch('');

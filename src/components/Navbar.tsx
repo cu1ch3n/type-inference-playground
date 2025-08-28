@@ -46,9 +46,10 @@ export const Navbar = () => {
                   window.history.pushState({}, '', url.toString());
                   window.dispatchEvent(new PopStateEvent('popstate'));
                 }}
-                className="hover:text-primary transition-colors block truncate text-left"
+                className="hover:text-primary transition-colors block text-left"
               >
-                Type Inference Playground
+                <span className="sm:hidden leading-tight">Type Inference<br />Playground</span>
+                <span className="hidden sm:inline">Type Inference Playground</span>
               </button>
             </h1>
           </div>
@@ -154,15 +155,8 @@ export const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="hidden sm:block">
-              <WasmStatusIndicator onClick={() => setSettingsModalOpen(true)} />
-            </div>
+            <WasmStatusIndicator onClick={() => setSettingsModalOpen(true)} />
           </div>
-        </div>
-        
-        {/* Mobile Row 2: WASM indicator (right-aligned) */}
-        <div className="sm:hidden mt-2 flex justify-end">
-          <WasmStatusIndicator onClick={() => setSettingsModalOpen(true)} />
         </div>
       </div>
       

@@ -28,7 +28,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { useNavigate } from 'react-router-dom';
 import { algorithms } from '@/data/algorithms';
-import { runInference } from '@/lib/mockInference';
+import { wasmInference } from '@/lib/wasmInterface';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
@@ -223,11 +223,28 @@ export const Compare = () => {
     })));
 
     try {
-      const result = await runInference(algorithmId, expression);
+      const wasmResult = await wasmInference.runInference({
+        algorithm: algorithmId,
+        expression,
+        options: { showSteps: true, maxDepth: 100 }
+      });
+      
+      if (!wasmResult.success || !wasmResult.result) {
+        throw new Error(wasmResult.error || 'WASM inference failed');
+      }
+      
+      const result = wasmResult.result as any;
+      const inferenceResult = {
+        success: result.success || false,
+        finalType: result.finalType,
+        derivation: result.derivation || [],
+        error: result.error,
+        errorLatex: result.errorLatex || false
+      };
       setComparisonResults(prev => new Map(prev.set(key, {
         algorithmId,
         expression,
-        result,
+        result: inferenceResult,
         loading: false
       })));
     } catch (error) {

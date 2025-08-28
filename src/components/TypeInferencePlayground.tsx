@@ -13,7 +13,7 @@ import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
 import { allAlgorithms } from '@/data/algorithms';
-import { runInference, runSubtyping } from '@/lib/mockInference';
+import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
@@ -95,15 +95,46 @@ export const TypeInferencePlayground = () => {
           throw new Error('Subtyping expression must be in format "LeftType <: RightType"');
         }
         
-        inferenceResult = await runSubtyping(
-          selectedAlgorithm, 
-          selectedVariant || 'recursive', 
-          parts[0].trim(), 
-          parts[1].trim()
-        );
+        const wasmResult = await wasmInference.runSubtyping({
+          algorithm: selectedAlgorithm,
+          variant: selectedVariant || 'recursive',
+          leftType: parts[0].trim(),
+          rightType: parts[1].trim(),
+          options: { showSteps: true, maxDepth: 100 }
+        });
+        
+        if (!wasmResult.success || !wasmResult.result) {
+          throw new Error(wasmResult.error || 'WASM subtyping failed');
+        }
+        
+        const result = wasmResult.result as any;
+        inferenceResult = {
+          success: result.success || false,
+          finalType: result.finalType,
+          derivation: result.derivation || [],
+          error: result.error,
+          errorLatex: result.errorLatex || false
+        };
       } else {
         // Handle type inference mode
-        inferenceResult = await runInference(selectedAlgorithm, expression);
+        const wasmResult = await wasmInference.runInference({
+          algorithm: selectedAlgorithm,
+          expression,
+          options: { showSteps: true, maxDepth: 100 }
+        });
+        
+        if (!wasmResult.success || !wasmResult.result) {
+          throw new Error(wasmResult.error || 'WASM inference failed');
+        }
+        
+        const result = wasmResult.result as any;
+        inferenceResult = {
+          success: result.success || false,
+          finalType: result.finalType,
+          derivation: result.derivation || [],
+          error: result.error,
+          errorLatex: result.errorLatex || false
+        };
       }
       
       setResult(inferenceResult);

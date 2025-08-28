@@ -168,7 +168,10 @@ export const Compare = () => {
   const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { algorithms } = useAlgorithms();
+  const { algorithms, loading, error } = useAlgorithms();
+  
+  // Debug log
+  console.log('Compare page algorithms state:', { algorithmsCount: algorithms.length, loading, error });
 
   // Configure sensors for both mouse and touch
   const sensors = useSensors(
@@ -182,8 +185,10 @@ export const Compare = () => {
     })
   );
 
-  // Load shared state from URL on mount
   useEffect(() => {
+    // Only process URL params after algorithms are loaded
+    if (loading || algorithms.length === 0) return;
+    
     // Parse URL for shared comparison state
     const url = new URL(window.location.href);
     const algorithmsParam = url.searchParams.get('algorithms');
@@ -210,7 +215,7 @@ export const Compare = () => {
       // Clean URL after loading
       cleanUrl();
     }
-  }, []);
+  }, [algorithms, loading]);
 
   const getCellKey = (algorithmId: string, expression: string) => `${algorithmId}:${expression}`;
 

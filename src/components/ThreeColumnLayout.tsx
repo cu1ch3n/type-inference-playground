@@ -71,19 +71,13 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Button - Always Visible */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md z-10"
+        {/* Toggle Handle - Always Visible */}
+        <div
+          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-20 flex items-center justify-center group"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
-          {leftColumnCollapsed ? (
-            <ChevronRight className="h-3 w-3" />
-          ) : (
-            <ChevronLeft className="h-3 w-3" />
-          )}
-        </Button>
+          <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
+        </div>
       </div>
 
       {/* Middle Column - Expression Input */}
@@ -112,19 +106,13 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Button - Always Visible */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md z-10"
+        {/* Toggle Handle - Always Visible */}
+        <div
+          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-10 flex items-center justify-center group"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
         >
-          {middleColumnCollapsed ? (
-            <ChevronRight className="h-3 w-3" />
-          ) : (
-            <ChevronLeft className="h-3 w-3" />
-          )}
-        </Button>
+          <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
+        </div>
       </div>
 
       {/* Right Column - Main Content (Derivation + Rules) */}

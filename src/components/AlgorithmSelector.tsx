@@ -37,8 +37,8 @@ export const AlgorithmSelector = ({
   }, [algorithms, searchTerm]);
 
   return (
-    <Card className="academic-panel hover-scale-sm transition-smooth h-full flex flex-col">
-      <CardContent className="space-y-3 pt-3 sm:pt-4 flex-1 flex flex-col">
+    <div className="h-full flex flex-col">
+      <div className="space-y-3 pt-3 sm:pt-4 flex-1 flex flex-col">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
           <Input
@@ -189,7 +189,7 @@ export const AlgorithmSelector = ({
             <div className="scroll-fade absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none transition-opacity duration-300" />
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

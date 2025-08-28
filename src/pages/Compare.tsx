@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -34,6 +34,7 @@ import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
+import { SideBySideComparison } from '@/components/SideBySideComparison';
 // Import compare utilities - access functions with bracket notation
 import { cleanUrl } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -163,6 +164,7 @@ export const Compare = () => {
   const [expressions, setExpressions] = useState<string[]>([]);
   const [newExpression, setNewExpression] = useState('');
   const [algorithmSearch, setAlgorithmSearch] = useState('');
+  const [viewMode, setViewMode] = useState<'table' | 'sidebyside'>('table');
   const [comparisonResults, setComparisonResults] = useState<Map<string, ComparisonCell>>(new Map());
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
@@ -650,12 +652,32 @@ export const Compare = () => {
             {/* Comparison Table */}
             <Card className="academic-panel animate-stagger-3">
               <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Comparison</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                    <Lightbulb className="w-3 h-3" />
-                    Click any cell to view detailed derivation
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <CardTitle>Comparison</CardTitle>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
+                      <Lightbulb className="w-3 h-3" />
+                      {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={viewMode === 'table' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('table')}
+                    >
+                      <Table2 className="h-4 w-4 mr-2" />
+                      Table
+                    </Button>
+                    <Button
+                      variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('sidebyside')}
+                    >
+                      <LayoutGrid className="h-4 w-4 mr-2" />
+                      Side-by-Side
+                    </Button>
+                  </div>
                 </div>
                 <CompareShareExportButtons
                   selectedAlgorithms={selectedAlgorithms}
@@ -664,45 +686,53 @@ export const Compare = () => {
                 />
               </CardHeader>
               <CardContent>
-                {selectedAlgorithms.length === 0 || expressions.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
-                    {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
-                    {expressions.length === 0 && "add at least one expression"}
-                    {" to start comparing."}
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="min-w-[200px]">Expression</TableHead>
-                          {selectedAlgorithms.map(algorithmId => {
-                            const algorithm = algorithms.find(a => a.Id === algorithmId);
-                            return (
-                              <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
-                              </TableHead>
-                            );
-                          })}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {expressions.map(expression => (
-                          <TableRow key={expression}>
-                            <TableCell className="font-code text-sm border-r">
-                              <code>{expression}</code>
-                            </TableCell>
-                            {selectedAlgorithms.map(algorithmId => (
-                              <TableCell key={`${expression}-${algorithmId}`} className="text-center">
-                                {renderCell(algorithmId, expression)}
-                              </TableCell>
-                            ))}
+                {viewMode === 'table' ? (
+                  selectedAlgorithms.length === 0 || expressions.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
+                      {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
+                      {expressions.length === 0 && "add at least one expression"}
+                      {" to start comparing."}
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="min-w-[200px]">Expression</TableHead>
+                            {selectedAlgorithms.map(algorithmId => {
+                              const algorithm = algorithms.find(a => a.Id === algorithmId);
+                              return (
+                                <TableHead key={algorithmId} className="text-center min-w-[120px]">
+                                  <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
+                                </TableHead>
+                              );
+                            })}
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                        </TableHeader>
+                        <TableBody>
+                          {expressions.map(expression => (
+                            <TableRow key={expression}>
+                              <TableCell className="font-code text-sm border-r">
+                                <code>{expression}</code>
+                              </TableCell>
+                              {selectedAlgorithms.map(algorithmId => (
+                                <TableCell key={`${expression}-${algorithmId}`} className="text-center">
+                                  {renderCell(algorithmId, expression)}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )
+                ) : (
+                  <SideBySideComparison
+                    selectedAlgorithms={selectedAlgorithms}
+                    expressions={expressions}
+                    comparisonResults={comparisonResults}
+                  />
                 )}
               </CardContent>
             </Card>

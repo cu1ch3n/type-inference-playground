@@ -40,13 +40,13 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
 
   const getColumnWidth = (position: 'left' | 'middle' | 'right') => {
     if (position === 'left') {
-      return leftColumnCollapsed ? 'w-1' : 'w-[40%]';
+      return leftColumnCollapsed ? 'w-1' : 'w-[30%]';
     }
     if (position === 'middle') {
       return middleColumnCollapsed ? 'w-1' : 'w-[20%]';
     }
-    // Right column takes remaining space (40% when both open, more when others collapsed)
-    const leftSpace = leftColumnCollapsed ? 0 : 40;
+    // Right column takes remaining space (50% when both open, more when others collapsed)
+    const leftSpace = leftColumnCollapsed ? 0 : 30;
     const middleSpace = middleColumnCollapsed ? 0 : 20;
     const rightSpace = 100 - leftSpace - middleSpace;
     return `w-[${rightSpace}%]`;
@@ -74,12 +74,12 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Always Visible (Top Position) */}
+        {/* Toggle Handle - Always Visible (Higher Position) */}
         <div
-          className="absolute -right-3 top-8 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-20 flex items-center justify-center group"
+          className="absolute right-0 top-4 w-4 h-12 bg-background border-y border-r border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-20 flex items-center justify-center group"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
-          <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
+          <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
         </div>
       </div>
 
@@ -111,10 +111,10 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
         
         {/* Toggle Handle - Always Visible (Staggered Position) */}
         <div
-          className="absolute -right-3 top-24 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-10 flex items-center justify-center group"
+          className="absolute right-0 top-16 w-4 h-12 bg-background border-y border-r border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-10 flex items-center justify-center group"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
         >
-          <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
+          <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
         </div>
       </div>
 

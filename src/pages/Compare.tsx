@@ -229,6 +229,7 @@ export const Compare = () => {
     try {
       const wasmResult = await wasmInference.runInference({
         algorithm: algorithmId,
+        variant: undefined, // No variant support in compare mode for now
         expression,
         options: { showSteps: true, maxDepth: 100 }
       });

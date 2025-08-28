@@ -128,6 +128,7 @@ export const TypeInferencePlayground = () => {
         // Handle type inference mode
         const wasmResult = await wasmInference.runInference({
           algorithm: selectedAlgorithm,
+          variant: selectedVariant,
           expression,
           options: { showSteps: true, maxDepth: 100 }
         });

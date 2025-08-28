@@ -4,6 +4,7 @@ import { ConsoleStdout, WASI } from "@bjorn3/browser_wasi_shim";
 
 export interface InferenceRequest {
   algorithm: string;
+  variant?: string;
   expression: string;
   options?: {
     showSteps?: boolean;
@@ -108,7 +109,9 @@ export class WasmTypeInference {
       this.outputBuffer = '';
 
       // Prepare command line arguments exactly like your original implementation
-      const args = ['infer', '--typing', request.algorithm, request.expression];
+      const args = request.variant 
+        ? ['infer', '--typing', request.algorithm, request.variant, request.expression]
+        : ['infer', '--typing', request.algorithm, request.expression];
       const env: string[] = [];
       
       const fds = [
@@ -171,7 +174,7 @@ export class WasmTypeInference {
       this.outputBuffer = '';
 
       // Prepare command line arguments for subtyping
-      const args = ['infer', '--subtyping', request.variant, request.leftType, request.rightType];
+      const args = ['infer', '--subtyping', request.algorithm, request.variant, request.leftType, request.rightType];
       const env: string[] = [];
       
       const fds = [

@@ -82,13 +82,11 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Cuts through separator */}
+        {/* Toggle Handle - Right half only */}
         <div
-          className="absolute -right-2 top-4 w-4 h-12 bg-background border border-border rounded-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-20 flex items-center justify-center group"
+          className="absolute right-0 top-4 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-20"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
-        >
-          <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
-        </div>
+        />
       </div>
 
       {/* Middle Column - Expression Input */}
@@ -107,31 +105,39 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
         
         {!middleColumnCollapsed && (
           <div className="h-full p-4 overflow-y-auto">
-            <ExpressionInput
-              ref={expressionInputRef}
-              expression={expression}
-              onExpressionChange={(expr) => {
-                onExpressionChange(expr);
-                if (!expr.trim()) {
-                  setResult(undefined);
-                }
-              }}
-              onInfer={onInfer}
-              isInferring={isInferring}
-              selectedAlgorithm={selectedAlgorithm}
-              algorithms={algorithms}
-              selectedVariant={selectedVariant}
-            />
+            <div className="space-y-4 h-full flex flex-col">
+              <ExpressionInput
+                ref={expressionInputRef}
+                expression={expression}
+                onExpressionChange={(expr) => {
+                  onExpressionChange(expr);
+                  if (!expr.trim()) {
+                    setResult(undefined);
+                  }
+                }}
+                onInfer={onInfer}
+                isInferring={isInferring}
+                selectedAlgorithm={selectedAlgorithm}
+                algorithms={algorithms}
+                selectedVariant={selectedVariant}
+              />
+              
+              {/* History Input */}
+              <div className="flex-1 bg-card border border-border rounded-lg p-3">
+                <h3 className="text-sm font-medium mb-2">Expression History</h3>
+                <div className="space-y-1 text-xs">
+                  <div className="text-muted-foreground">Recent expressions will appear here</div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
         
-        {/* Toggle Handle - Cuts through separator */}
+        {/* Toggle Handle - Right half only */}
         <div
-          className="absolute -right-2 top-16 w-4 h-12 bg-background border border-border rounded-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-10 flex items-center justify-center group"
+          className="absolute right-0 top-16 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-10"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
-        >
-          <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
-        </div>
+        />
       </div>
 
       {/* Right Column - Main Content (Derivation + Rules) */}

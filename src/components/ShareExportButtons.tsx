@@ -95,12 +95,22 @@ export const ShareExportButtons = ({
 
   const latexToUnicode = (latex: string): string => {
     return latex
+      // Handle \texttt{...} by extracting content
+      .replace(/\\texttt\{([^}]*)\}/g, '$1')
+      // Handle subscripts: both _{...} and _x formats
+      .replace(/([a-zA-Z0-9])_\{([^}]*)\}/g, '$1$2')
+      .replace(/([a-zA-Z0-9])_([a-zA-Z0-9])/g, '$1$2')
+      // Handle ~ as space and \sim as ~
+      .replace(/\\sim/g, '~')
+      .replace(/~/g, ' ')
+      // Greek letters and symbols
       .replace(/\\rightarrow|\\to/g, '→')
       .replace(/\\Rightarrow/g, '⇒')
       .replace(/\\leftarrow/g, '←')
       .replace(/\\Leftarrow/g, '⇐')
       .replace(/\\leftrightarrow/g, '↔')
       .replace(/\\Leftrightarrow/g, '⇔')
+      .replace(/\\leadsto/g, '↝')
       .replace(/\\lambda/g, 'λ')
       .replace(/\\alpha/g, 'α')
       .replace(/\\beta/g, 'β')
@@ -134,10 +144,14 @@ export const ShareExportButtons = ({
       .replace(/\\lor/g, '∨')
       .replace(/\\pm/g, '±')
       .replace(/\\infty/g, '∞')
+      // Handle escaped characters
       .replace(/\\\\/g, '\n')
       .replace(/\\{/g, '{')
       .replace(/\\}/g, '}')
-      .replace(/\\_/g, '_');
+      .replace(/\\_/g, '_')
+      // Clean up extra spaces
+      .replace(/\s+/g, ' ')
+      .trim();
   };
 
   const derivationToUnicodeMarkdown = (steps: DerivationStep[], depth = 0): string => {

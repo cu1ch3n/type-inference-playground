@@ -15,7 +15,7 @@ interface TypingRulesProps {
 export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesProps) => {
   // Helper function to check if rules are sectioned
   const isSectioned = (rules: TypingRule[] | RuleSection[]): rules is RuleSection[] => {
-    return rules.length > 0 && 'Rules' in rules[0];
+    return rules && rules.length > 0 && 'Rules' in rules[0];
   };
 
   // Helper function to get all flat rules for backward compatibility

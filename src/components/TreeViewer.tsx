@@ -117,7 +117,7 @@ export const TreeViewer = ({
         {hasChildren && isExpanded && step.children && (
           <ul className="ml-5 border-l border-muted-foreground/20 pl-3 mt-0.5 space-y-0.5">
             {step.children.map((child, index) => 
-              renderTreeNode(child, [...path, index], index === step.children!.length - 1)
+              renderTreeNode(child, [...path, index], index === (step.children?.length || 0) - 1)
             )}
           </ul>
         )}

@@ -33,7 +33,7 @@ export const DerivationViewer = ({
 
   // Helper function to get flat rules for backward compatibility
   const getFlatRules = (rules: TypingRule[] | RuleSection[]): TypingRule[] => {
-    if (rules.length > 0 && 'Rules' in rules[0]) {
+    if (rules && rules.length > 0 && 'Rules' in rules[0]) {
       return (rules as RuleSection[]).flatMap(section => section.Rules);
     }
     return rules as TypingRule[];
@@ -56,7 +56,7 @@ export const DerivationViewer = ({
       >
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-xs min-w-[2rem] shrink-0 text-center font-mono">
-            {(stepPath[stepPath.length - 1] + 1).toString().padStart(2, ' ')}
+            {((stepPath && stepPath.length > 0 ? stepPath[stepPath.length - 1] : 0) + 1).toString().padStart(2, ' ')}
           </Badge>
           
           <div className="flex-1 min-w-0">

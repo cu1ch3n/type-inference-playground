@@ -58,8 +58,16 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
       <div className={cn(
         "transition-all duration-300 flex-shrink-0 relative",
         getColumnWidth('left'),
-        leftColumnCollapsed ? "bg-border/20" : "bg-muted/30 border-r border-border"
+        leftColumnCollapsed ? "bg-border/20" : "bg-muted/30"
       )}>
+        {/* Separator line with gap for handle */}
+        {!leftColumnCollapsed && (
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-border">
+            {/* Gap in separator for handle */}
+            <div className="absolute top-4 w-px h-12 bg-background" />
+          </div>
+        )}
+        
         {!leftColumnCollapsed && (
           <div className="h-full p-4 overflow-y-auto">
             <div className="h-full">
@@ -74,9 +82,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Always Visible (Higher Position) */}
+        {/* Toggle Handle - Cuts through separator */}
         <div
-          className="absolute right-0 top-4 w-4 h-12 bg-background border-y border-r border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-20 flex items-center justify-center group"
+          className="absolute -right-2 top-4 w-4 h-12 bg-background border border-border rounded-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-20 flex items-center justify-center group"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
           <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
@@ -87,8 +95,16 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
       <div className={cn(
         "transition-all duration-300 flex-shrink-0 relative",
         getColumnWidth('middle'),
-        middleColumnCollapsed ? "bg-border/20" : "bg-muted/20 border-r border-border"
+        middleColumnCollapsed ? "bg-border/20" : "bg-muted/20"
       )}>
+        {/* Separator line with gap for handle */}
+        {!middleColumnCollapsed && (
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-border">
+            {/* Gap in separator for handle */}
+            <div className="absolute top-16 w-px h-12 bg-background" />
+          </div>
+        )}
+        
         {!middleColumnCollapsed && (
           <div className="h-full p-4 overflow-y-auto">
             <ExpressionInput
@@ -109,9 +125,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Always Visible (Staggered Position) */}
+        {/* Toggle Handle - Cuts through separator */}
         <div
-          className="absolute right-0 top-16 w-4 h-12 bg-background border-y border-r border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-10 flex items-center justify-center group"
+          className="absolute -right-2 top-16 w-4 h-12 bg-background border border-border rounded-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-5 z-10 flex items-center justify-center group"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
         >
           <div className="w-0.5 h-6 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />

@@ -187,12 +187,12 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle>WASM Sources</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto space-y-6 pr-2">
           {/* Current Selection */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -220,17 +220,19 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
             
             <RadioGroup value={selectedSourceId} onValueChange={setSelectedSourceId}>
               {sources.map((source) => (
-                <div key={source.id} className="flex items-center space-x-2 p-3 border rounded-lg">
-                  <RadioGroupItem value={source.id} id={source.id} />
-                  <div className="flex-1 min-w-0">
-                    <Label htmlFor={source.id} className="font-medium">
+                <div key={source.id} className="flex items-start gap-3 p-3 border rounded-lg overflow-hidden">
+                  <RadioGroupItem value={source.id} id={source.id} className="mt-1 flex-shrink-0" />
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <Label htmlFor={source.id} className="font-medium cursor-pointer block">
                       {source.name} {source.isLocal && '(Local)'}
                     </Label>
-                    <p className="text-xs text-muted-foreground font-mono truncate">
-                      {source.url}
-                    </p>
+                    <div className="text-xs text-muted-foreground font-mono mt-1 overflow-hidden">
+                      <div className="break-all line-clamp-2 max-w-full">
+                        {source.url}
+                      </div>
+                    </div>
                     {source.authType !== 'none' && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground mt-1">
                         Auth: {source.authType}
                       </p>
                     )}
@@ -240,7 +242,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                       variant="ghost"
                       size="sm"
                       onClick={() => deleteSource(source.id)}
-                      className="text-destructive hover:text-destructive"
+                      className="text-destructive hover:text-destructive flex-shrink-0"
                     >
                       <X className="w-3 h-3" />
                     </Button>
@@ -255,7 +257,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
               <h4 className="font-medium">Add New WASM Source</h4>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="new-name">Name</Label>
                   <Input
@@ -406,7 +408,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex-shrink-0 mt-4">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

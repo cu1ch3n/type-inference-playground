@@ -147,13 +147,16 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       // Try to extract base64 encoded data from URL
       let encodedData = url;
       
+      // Check if it's infer:// protocol
+      if (url.startsWith('infer://')) {
+        encodedData = url.replace('infer://', '');
+      }
       // Check if it's a URL with hash fragment
-      if (url.includes('#')) {
+      else if (url.includes('#')) {
         encodedData = url.split('#')[1];
       }
-      
       // Check if it's a URL with query parameter
-      if (url.includes('wasm=')) {
+      else if (url.includes('wasm=')) {
         const match = url.match(/wasm=([^&]+)/);
         if (match) {
           encodedData = decodeURIComponent(match[1]);
@@ -166,7 +169,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       
       // Validate required fields
       if (!sourceData.name || !sourceData.url) {
-        throw new Error('Invalid subscription format: missing name or url');
+        throw new Error('Invalid URL format: missing name or url');
       }
       
       // Create source with validation
@@ -183,20 +186,20 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       
       return source;
     } catch (error) {
-      console.error('Failed to decode subscription URL:', error);
+      console.error('Failed to decode URL:', error);
       return null;
     }
   };
 
   const handleSubscriptionImport = () => {
     if (!subscriptionUrl.trim()) {
-      toast.error('Please enter a subscription URL');
+      toast.error('Please enter a URL');
       return;
     }
     
     const decodedSource = decodeSubscriptionUrl(subscriptionUrl.trim());
     if (!decodedSource) {
-      toast.error('Invalid subscription URL format');
+      toast.error('Invalid URL format');
       return;
     }
     
@@ -224,9 +227,9 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       };
       
       const encodedData = btoa(JSON.stringify(data));
-      return `wasm://subscribe#${encodedData}`;
+      return `infer://${encodedData}`;
     } catch (error) {
-      console.error('Failed to generate subscription URL:', error);
+      console.error('Failed to generate URL:', error);
       return '';
     }
   };
@@ -239,13 +242,13 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
     const subscriptionUrl = generateSubscriptionUrl(source);
     if (!subscriptionUrl) {
-      toast.error('Failed to generate subscription URL');
+      toast.error('Failed to generate URL');
       return;
     }
 
     try {
       await navigator.clipboard.writeText(subscriptionUrl);
-      toast.success('Subscription URL copied to clipboard');
+      toast.success('URL copied to clipboard');
     } catch (error) {
       console.error('Failed to copy to clipboard:', error);
       toast.error('Failed to copy to clipboard');
@@ -360,7 +363,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                          size="sm"
                          onClick={() => handleExportSource(source)}
                          className="text-muted-foreground hover:text-foreground"
-                         title="Export as subscription URL"
+                         title="Export as URL"
                        >
                          <Share2 className="w-3 h-3" />
                        </Button>
@@ -478,17 +481,17 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
           <Separator />
 
-          {/* Subscription Import */}
+          {/* URL Import */}
           <div className="space-y-3">
-            <Label>Import from Subscription URL</Label>
+            <Label>Import from URL</Label>
             <p className="text-xs text-muted-foreground">
-              Paste a subscription URL that contains encoded WASM source information
+              Paste a URL that contains encoded WASM source information
             </p>
             <div className="flex gap-2">
               <Input
                 value={subscriptionUrl}
                 onChange={(e) => setSubscriptionUrl(e.target.value)}
-                placeholder="wasm://subscribe#... or https://example.com?wasm=..."
+                placeholder="infer://..."
                 className="font-mono"
               />
               <Button

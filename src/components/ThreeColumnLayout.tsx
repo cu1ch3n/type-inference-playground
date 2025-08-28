@@ -40,13 +40,16 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
 
   const getColumnWidth = (position: 'left' | 'middle' | 'right') => {
     if (position === 'left') {
-      return leftColumnCollapsed ? 'w-1' : 'w-80';
+      return leftColumnCollapsed ? 'w-1' : 'w-[40%]';
     }
     if (position === 'middle') {
-      return middleColumnCollapsed ? 'w-1' : 'w-80';
+      return middleColumnCollapsed ? 'w-1' : 'w-[20%]';
     }
-    // Right column takes remaining space
-    return 'flex-1';
+    // Right column takes remaining space (40% when both open, more when others collapsed)
+    const leftSpace = leftColumnCollapsed ? 0 : 40;
+    const middleSpace = middleColumnCollapsed ? 0 : 20;
+    const rightSpace = 100 - leftSpace - middleSpace;
+    return `w-[${rightSpace}%]`;
   };
 
   return (
@@ -71,9 +74,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Always Visible */}
+        {/* Toggle Handle - Always Visible (Top Position) */}
         <div
-          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-20 flex items-center justify-center group"
+          className="absolute -right-3 top-8 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-20 flex items-center justify-center group"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
           <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />
@@ -106,9 +109,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Always Visible */}
+        {/* Toggle Handle - Always Visible (Staggered Position) */}
         <div
-          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-10 flex items-center justify-center group"
+          className="absolute -right-3 top-24 w-6 h-16 bg-background border border-border rounded-r-lg shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-7 z-10 flex items-center justify-center group"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
         >
           <div className="w-1 h-8 bg-border rounded-full group-hover:bg-primary/50 transition-colors duration-200" />

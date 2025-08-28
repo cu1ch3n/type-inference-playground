@@ -37,8 +37,8 @@ export const AlgorithmSelector = ({
   }, [algorithms, searchTerm]);
 
   return (
-    <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardContent className="space-y-3 pt-3 sm:pt-4">
+    <Card className="academic-panel hover-scale-sm transition-smooth h-full flex flex-col">
+      <CardContent className="space-y-3 pt-3 sm:pt-4 flex-1 flex flex-col">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
           <Input
@@ -49,8 +49,8 @@ export const AlgorithmSelector = ({
           />
         </div>
         
-        <div className="relative">
-          <div className="max-h-72 overflow-y-auto space-y-1.5 pr-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/40 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-border/60" 
+        <div className="relative flex-1 flex flex-col">
+          <div className="flex-1 overflow-y-auto space-y-1.5 pr-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/40 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-border/60"
                onScroll={(e) => {
                  const target = e.target as HTMLElement;
                  const isAtBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 5;

@@ -40,10 +40,10 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
 
   const getColumnWidth = (position: 'left' | 'middle' | 'right') => {
     if (position === 'left') {
-      return leftColumnCollapsed ? 'w-0' : 'w-80';
+      return leftColumnCollapsed ? 'w-1' : 'w-80';
     }
     if (position === 'middle') {
-      return middleColumnCollapsed ? 'w-0' : 'w-80';
+      return middleColumnCollapsed ? 'w-1' : 'w-80';
     }
     // Right column takes remaining space
     return 'flex-1';
@@ -53,44 +53,44 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
     <div ref={ref} className="flex h-screen w-full bg-background">
       {/* Left Column - Algorithm Selector */}
       <div className={cn(
-        "transition-all duration-300 flex-shrink-0 bg-muted/30 border-r border-border relative",
+        "transition-all duration-300 flex-shrink-0 relative",
         getColumnWidth('left'),
-        leftColumnCollapsed && "overflow-hidden"
+        leftColumnCollapsed ? "bg-border/20" : "bg-muted/30 border-r border-border"
       )}>
         {!leftColumnCollapsed && (
           <div className="h-full p-4 overflow-y-auto">
-            <AlgorithmSelector
-              algorithms={algorithms}
-              selectedAlgorithm={selectedAlgorithm}
-              selectedVariant={selectedVariant}
-              onAlgorithmChange={onAlgorithmChange}
-              onVariantChange={onVariantChange}
-            />
+            <div className="h-full">
+              <AlgorithmSelector
+                algorithms={algorithms}
+                selectedAlgorithm={selectedAlgorithm}
+                selectedVariant={selectedVariant}
+                onAlgorithmChange={onAlgorithmChange}
+                onVariantChange={onVariantChange}
+              />
+            </div>
           </div>
         )}
         
-        {/* Left Column Separator/Toggle */}
-        <div className="absolute right-0 top-0 h-full w-1 bg-border hover:bg-border/80 transition-colors cursor-col-resize group">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md group-hover:opacity-100 opacity-60 transition-opacity"
-            onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
-          >
-            {leftColumnCollapsed ? (
-              <ChevronRight className="h-3 w-3" />
-            ) : (
-              <ChevronLeft className="h-3 w-3" />
-            )}
-          </Button>
-        </div>
+        {/* Toggle Button - Always Visible */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md z-10"
+          onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
+        >
+          {leftColumnCollapsed ? (
+            <ChevronRight className="h-3 w-3" />
+          ) : (
+            <ChevronLeft className="h-3 w-3" />
+          )}
+        </Button>
       </div>
 
       {/* Middle Column - Expression Input */}
       <div className={cn(
-        "transition-all duration-300 flex-shrink-0 bg-muted/20 border-r border-border relative",
+        "transition-all duration-300 flex-shrink-0 relative",
         getColumnWidth('middle'),
-        middleColumnCollapsed && "overflow-hidden"
+        middleColumnCollapsed ? "bg-border/20" : "bg-muted/20 border-r border-border"
       )}>
         {!middleColumnCollapsed && (
           <div className="h-full p-4 overflow-y-auto">
@@ -112,21 +112,19 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Middle Column Separator/Toggle */}
-        <div className="absolute right-0 top-0 h-full w-1 bg-border hover:bg-border/80 transition-colors cursor-col-resize group">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md group-hover:opacity-100 opacity-60 transition-opacity"
-            onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
-          >
-            {middleColumnCollapsed ? (
-              <ChevronRight className="h-3 w-3" />
-            ) : (
-              <ChevronLeft className="h-3 w-3" />
-            )}
-          </Button>
-        </div>
+        {/* Toggle Button - Always Visible */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-8 p-0 bg-background border border-border shadow-sm hover:shadow-md z-10"
+          onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
+        >
+          {middleColumnCollapsed ? (
+            <ChevronRight className="h-3 w-3" />
+          ) : (
+            <ChevronLeft className="h-3 w-3" />
+          )}
+        </Button>
       </div>
 
       {/* Right Column - Main Content (Derivation + Rules) */}

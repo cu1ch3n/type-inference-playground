@@ -12,12 +12,13 @@ import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { allAlgorithms } from '@/data/algorithms';
+import { useAlgorithms } from '@/hooks/useAlgorithms';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
 import { getParamsFromUrl, cleanUrl } from '@/lib/shareUtils';
 
 export const TypeInferencePlayground = () => {
+  const { algorithms: allAlgorithms, loading: algorithmsLoading } = useAlgorithms();
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('W');
   const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [expression, setExpression] = useState<string>('');
@@ -31,15 +32,15 @@ export const TypeInferencePlayground = () => {
   const { toast } = useToast();
   
 
-  const selectedAlgorithmData = allAlgorithms.find(a => a.id === selectedAlgorithm);
+  const selectedAlgorithmData = allAlgorithms.find(a => a.Id === selectedAlgorithm);
 
   const handleAlgorithmChange = (algorithmId: string) => {
     setSelectedAlgorithm(algorithmId);
     
     // Reset variant to default when changing algorithm
-    const algorithmData = allAlgorithms.find(a => a.id === algorithmId);
-    if (algorithmData?.defaultVariant) {
-      setSelectedVariant(algorithmData.defaultVariant);
+    const algorithmData = allAlgorithms.find(a => a.Id === algorithmId);
+    if (algorithmData?.DefaultVariant) {
+      setSelectedVariant(algorithmData.DefaultVariant);
     } else {
       setSelectedVariant('');
     }
@@ -51,31 +52,39 @@ export const TypeInferencePlayground = () => {
 
   // Initialize from URL parameters once, then clean the URL
   useEffect(() => {
-    const { algorithm, expression: urlExpression, variant } = getParamsFromUrl();
-    
-    if (algorithm && allAlgorithms.find(a => a.id === algorithm)) {
-      setSelectedAlgorithm(algorithm);
+    if (!algorithmsLoading && allAlgorithms.length > 0) {
+      const { algorithm, expression: urlExpression, variant } = getParamsFromUrl();
       
-      // Set variant if provided and valid for this algorithm
-      const algorithmData = allAlgorithms.find(a => a.id === algorithm);
-      if (variant && algorithmData?.variants?.find(v => v.id === variant)) {
-        setSelectedVariant(variant);
-      } else if (algorithmData?.defaultVariant) {
-        setSelectedVariant(algorithmData.defaultVariant);
+      if (algorithm && allAlgorithms.find(a => a.Id === algorithm)) {
+        setSelectedAlgorithm(algorithm);
+        
+        // Set variant if provided and valid for this algorithm
+        const algorithmData = allAlgorithms.find(a => a.Id === algorithm);
+        if (variant && algorithmData?.Variants?.find(v => v.Id === variant)) {
+          setSelectedVariant(variant);
+        } else if (algorithmData?.DefaultVariant) {
+          setSelectedVariant(algorithmData.DefaultVariant);
+        }
+      } else if (allAlgorithms.length > 0) {
+        // Set first algorithm as default
+        setSelectedAlgorithm(allAlgorithms[0].Id);
+        setSelectedVariant(allAlgorithms[0].DefaultVariant || '');
       }
+      
+      if (urlExpression) {
+        setExpression(urlExpression);
+      } else {
+        setExpression('\\x -> x'); // Default expression
+      }
+      
+      // Clean URL after loading parameters
+      if (algorithm || urlExpression || variant) {
+        cleanUrl();
+      }
+      
+      setInitialized(true);
     }
-    
-    if (urlExpression) {
-      setExpression(urlExpression);
-    }
-    
-    // Clean URL after loading parameters
-    if (algorithm || urlExpression || variant) {
-      cleanUrl();
-    }
-    
-    setInitialized(true);
-  }, []);
+  }, [algorithmsLoading, allAlgorithms]);
 
 
   const handleInference = async () => {
@@ -88,7 +97,7 @@ export const TypeInferencePlayground = () => {
     try {
       let inferenceResult: AlgorithmResult;
       
-      if (selectedAlgorithmData?.mode === 'subtyping') {
+      if (selectedAlgorithmData?.Mode === 'subtyping') {
         // Handle subtyping mode
         const parts = expression.split(' <: ');
         if (parts.length !== 2) {
@@ -353,9 +362,9 @@ export const TypeInferencePlayground = () => {
                 <div className="animate-stagger-4 hover-scale-sm">
                   <TypingRules
                     rules={
-                      selectedVariant && selectedAlgorithmData.variantRules?.[selectedVariant]
-                        ? selectedAlgorithmData.variantRules[selectedVariant]
-                        : selectedAlgorithmData.rules
+                      selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                        ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                        : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
                     }
                     activeRuleId={activeRuleId}
                     onRuleClick={handleRuleClick}

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
-import { algorithmExamples, subtypingExamples, allAlgorithms } from '@/data/algorithms';
+import { algorithmExamples, subtypingExamples, allAlgorithms } from '@/lib/fallbackAlgorithms';
 import { HelpModal } from './HelpModal';
 import { LatexText } from './LatexText';
 

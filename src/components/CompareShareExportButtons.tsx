@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Share2, Check, Download, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { algorithms } from '@/data/algorithms';
+import { algorithms } from '@/lib/fallbackAlgorithms';
 
 interface ComparisonCell {
   algorithmId: string;

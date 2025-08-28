@@ -33,8 +33,8 @@ export const DerivationViewer = ({
 
   // Helper function to get flat rules for backward compatibility
   const getFlatRules = (rules: TypingRule[] | RuleSection[]): TypingRule[] => {
-    if (rules.length > 0 && 'rules' in rules[0]) {
-      return (rules as RuleSection[]).flatMap(section => section.rules);
+    if (rules.length > 0 && 'Rules' in rules[0]) {
+      return (rules as RuleSection[]).flatMap(section => section.Rules);
     }
     return rules as TypingRule[];
   };
@@ -69,7 +69,7 @@ export const DerivationViewer = ({
           
           <RuleTooltip 
             ruleId={step.ruleId}
-            rules={algorithm?.rules ? getFlatRules(algorithm.rules) : []}
+            rules={algorithm?.Rules ? getFlatRules(algorithm.Rules) : algorithm?.RuleGroups ? getFlatRules(algorithm.RuleGroups) : []}
             variant="secondary"
             className="text-xs font-medium ml-auto transition-smooth hover:scale-105"
           />
@@ -139,13 +139,13 @@ export const DerivationViewer = ({
     );
   }
 
-  const viewMode = algorithm?.viewMode || 'tree';
+  const viewMode = algorithm?.ViewMode || 'tree';
   const linearSteps = flattenSteps(result.derivation);
   const hasDerivation = result.derivation && result.derivation.length > 0;
 
   return (
     <Card 
-      key={`${algorithm?.id}-${expression}-${result?.success}-${result?.derivation?.length}`}
+      key={`${algorithm?.Id}-${expression}-${result?.success}-${result?.derivation?.length}`}
       className="academic-panel animate-fade-in" 
       data-derivation-viewer
     >
@@ -216,7 +216,7 @@ export const DerivationViewer = ({
               {viewMode === 'tree' ? (
                 <TreeViewer 
                   steps={result.derivation}
-                  rules={algorithm?.rules ? getFlatRules(algorithm.rules) : undefined}
+                  rules={algorithm?.Rules ? getFlatRules(algorithm.Rules) : algorithm?.RuleGroups ? getFlatRules(algorithm.RuleGroups) : undefined}
                   onStepClick={onStepClick}
                   activeStepPath={activeStepPath}
                   activeRuleId={activeRuleId}

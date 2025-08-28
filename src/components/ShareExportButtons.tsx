@@ -36,7 +36,7 @@ export const ShareExportButtons = ({
 
     setIsSharing(true);
     try {
-      const shareResult = await shareCurrentState(algorithm.id, expression, variant);
+      const shareResult = await shareCurrentState(algorithm.Id, expression, variant);
       
       if (shareResult.success) {
         toast({
@@ -103,12 +103,12 @@ export const ShareExportButtons = ({
       return;
     }
 
-    const isLinear = algorithm.viewMode === 'linear';
+    const isLinear = algorithm.ViewMode === 'linear';
     const markdown = isLinear ? 
       derivationToLinearMarkdown(result.derivation) :
       derivationToMarkdown(result.derivation);
     
-    const fullMarkdown = `# ${algorithm.name} - Type Derivation
+    const fullMarkdown = `# ${algorithm.Name} - Type Derivation
 
 ## Expression
 \`${expression.trim()}\`
@@ -131,7 +131,7 @@ ${markdown}`;
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${algorithm.id}-derivation.md`;
+      a.download = `${algorithm.Id}-derivation.md`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

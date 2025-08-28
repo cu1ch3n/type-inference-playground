@@ -22,6 +22,10 @@ export interface SubtypingRequest {
   };
 }
 
+export interface MetadataRequest {
+  command: "--meta";
+}
+
 export interface InferenceResponse {
   success: boolean;
   result?: Record<string, unknown>;
@@ -215,6 +219,55 @@ export class WasmTypeInference {
 
   getWasmUrl(): string {
     return this.wasmUrl;
+  }
+
+  async getMetadata(): Promise<import('@/types/inference').TypeInferenceAlgorithm[]> {
+    if (!this.isInitialized) {
+      const initialized = await this.initialize();
+      if (!initialized) {
+        throw new Error('WASM module not available');
+      }
+    }
+
+    try {
+      if (!this.wasmModule) {
+        throw new Error('WASM module not loaded');
+      }
+
+      // Reset output buffer
+      this.outputBuffer = '';
+
+      // Prepare command line arguments for metadata
+      const args = ['infer', '--meta'];
+      const env: string[] = [];
+      
+      const fds = [
+        null, // stdin
+        ConsoleStdout.lineBuffered((msg) => {
+          this.outputBuffer += `${msg}\n`;
+        }),
+      ];
+
+      const wasi = new WASI(args, env, fds);
+      const instance = await WebAssembly.instantiate(this.wasmModule, {
+        wasi_snapshot_preview1: wasi.wasiImport,
+      });
+
+      wasi.start(instance as any);
+
+      // Parse output as JSON
+      const output = this.outputBuffer.trim();
+      
+      try {
+        return JSON.parse(output);
+      } catch {
+        throw new Error('Failed to parse metadata JSON from WASM');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('WASM metadata error:', error);
+      throw error;
+    }
   }
 
   destroy() {

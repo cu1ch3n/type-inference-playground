@@ -27,7 +27,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useNavigate } from 'react-router-dom';
-import { algorithms } from '@/data/algorithms';
+import { algorithms } from '@/lib/fallbackAlgorithms';
 import { wasmInference } from '@/lib/wasmInterface';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';

@@ -40,14 +40,14 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
 
   const getColumnWidth = (position: 'left' | 'middle' | 'right') => {
     if (position === 'left') {
-      return leftColumnCollapsed ? 'w-1' : 'w-[30%]';
+      return leftColumnCollapsed ? 'w-12' : 'w-[30%]';
     }
     if (position === 'middle') {
-      return middleColumnCollapsed ? 'w-1' : 'w-[20%]';
+      return middleColumnCollapsed ? 'w-12' : 'w-[20%]';
     }
-    // Right column takes remaining space (50% when both open, more when others collapsed)
-    const leftSpace = leftColumnCollapsed ? 0 : 30;
-    const middleSpace = middleColumnCollapsed ? 0 : 20;
+    // Right column takes remaining space
+    const leftSpace = leftColumnCollapsed ? 3 : 30; // 3rem = w-12
+    const middleSpace = middleColumnCollapsed ? 3 : 20;
     const rightSpace = 100 - leftSpace - middleSpace;
     return `w-[${rightSpace}%]`;
   };
@@ -82,9 +82,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Right half only */}
+        {/* Toggle Handle - To the RIGHT of separator */}
         <div
-          className="absolute right-0 top-4 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-20"
+          className="absolute left-0 top-4 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-20"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         />
       </div>
@@ -133,9 +133,9 @@ export const ThreeColumnLayout = forwardRef<HTMLDivElement, ThreeColumnLayoutPro
           </div>
         )}
         
-        {/* Toggle Handle - Right half only */}
+        {/* Toggle Handle - To the RIGHT of separator */}
         <div
-          className="absolute right-0 top-16 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-10"
+          className="absolute left-0 top-16 w-3 h-12 bg-background border-t border-r border-b border-border rounded-r-md shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 hover:w-4 z-10"
           onClick={() => setMiddleColumnCollapsed(!middleColumnCollapsed)}
         />
       </div>

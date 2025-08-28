@@ -19,8 +19,8 @@ import {
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "32rem"
-const SIDEBAR_WIDTH_MOBILE = "28rem"
+const SIDEBAR_WIDTH = "50vw"
+const SIDEBAR_WIDTH_MOBILE = "85vw"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 

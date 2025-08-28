@@ -386,13 +386,6 @@ export const TypeInferencePlayground = () => {
         <div className="hidden lg:block w-full">
           <SidebarProvider defaultOpen={true}>
             <div className="flex min-h-screen w-full">
-              {/* Sidebar Toggle Header */}
-              <div className="absolute top-4 left-4 z-50">
-                <SidebarTrigger className="bg-background/80 backdrop-blur-sm border border-border/40 hover:bg-muted/50 transition-colors">
-                  <PanelLeft className="h-4 w-4" />
-                </SidebarTrigger>
-              </div>
-
               {/* Collapsible Sidebar */}
               <TwoColumnSidebar
                 algorithms={allAlgorithms}

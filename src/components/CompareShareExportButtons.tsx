@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Share2, Check, Download, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { algorithms } from '@/lib/fallbackAlgorithms';
+import { useAlgorithms } from '@/hooks/useAlgorithms';
 
 interface ComparisonCell {
   algorithmId: string;
@@ -27,6 +27,7 @@ export const CompareShareExportButtons = ({
   disabled = false
 }: CompareShareExportButtonsProps) => {
   const { toast } = useToast();
+  const { algorithms } = useAlgorithms();
   const [isSharing, setIsSharing] = React.useState(false);
 
   const handleShare = async () => {
@@ -86,8 +87,8 @@ export const CompareShareExportButtons = ({
     
     // Table header
     const algorithmNames = selectedAlgorithms.map(id => {
-      const algorithm = algorithms.find(a => a.id === id);
-      return algorithm?.name || id;
+      const algorithm = algorithms.find(a => a.Id === id);
+      return algorithm?.Name || id;
     });
     
     markdown += '| Expression | ' + algorithmNames.join(' | ') + ' |\n';

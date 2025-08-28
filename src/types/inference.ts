@@ -7,12 +7,19 @@ export interface AlgorithmVariant {
   Icon?: string;
 }
 
+export interface AlgorithmExample {
+  Name: string;
+  Description: string;
+  Expression: string;
+}
+
 export interface TypeInferenceAlgorithm {
   Id: string;
   Name: string;
   Labels: string[];
   ViewMode: 'tree' | 'linear';
   Mode: 'inference' | 'subtyping';
+  Examples?: AlgorithmExample[] | null;
   Variants?: AlgorithmVariant[] | null;
   DefaultVariant?: string | null;
   Paper?: {

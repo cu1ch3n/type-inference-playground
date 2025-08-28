@@ -27,7 +27,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useNavigate } from 'react-router-dom';
-import { algorithms } from '@/lib/fallbackAlgorithms';
+import { useAlgorithms } from '@/hooks/useAlgorithms';
 import { wasmInference } from '@/lib/wasmInterface';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
@@ -79,7 +79,7 @@ const SortableAlgorithmBadge = ({ algorithmId, algorithm, onRemove }: {
         }`}
       >
         <GripVertical className="h-3 w-3 text-muted-foreground" {...listeners} />
-        {algorithm?.name || algorithmId}
+        {algorithm?.Name || algorithmId}
         <X 
           className="h-3 w-3 cursor-pointer hover:text-destructive" 
           onClick={(e) => {
@@ -168,6 +168,7 @@ export const Compare = () => {
   const [modalData, setModalData] = useState<{algorithmId: string; expression: string; result?: InferenceResult} | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { algorithms } = useAlgorithms();
 
   // Configure sensors for both mouse and touch
   const sensors = useSensors(
@@ -195,7 +196,7 @@ export const Compare = () => {
     if (sharedAlgorithms.length > 0 || sharedExpressions.length > 0) {
       // Validate algorithms exist
       const validAlgorithms = sharedAlgorithms.filter(id => 
-        algorithms.some(alg => alg.id === id)
+        algorithms.some(alg => alg.Id === id)
       );
       
       if (validAlgorithms.length > 0) {
@@ -514,16 +515,16 @@ export const Compare = () => {
     );
   };
 
-  const availableAlgorithms = algorithms.filter(alg => !selectedAlgorithms.includes(alg.id));
+  const availableAlgorithms = algorithms.filter(alg => !selectedAlgorithms.includes(alg.Id));
   
   // Filter algorithms based on search query
   const filteredAlgorithms = availableAlgorithms.filter(algorithm => {
     if (!algorithmSearch.trim()) return true;
     
     const searchLower = algorithmSearch.toLowerCase();
-    const nameMatch = algorithm.name.toLowerCase().includes(searchLower);
-    const idMatch = algorithm.id.toLowerCase().includes(searchLower);
-    const labelsMatch = algorithm.labels?.some(label => 
+    const nameMatch = algorithm.Name.toLowerCase().includes(searchLower);
+    const idMatch = algorithm.Id.toLowerCase().includes(searchLower);
+    const labelsMatch = algorithm.Labels?.some(label => 
       label.toLowerCase().includes(searchLower)
     );
     
@@ -580,7 +581,7 @@ export const Compare = () => {
                   <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
                     <div className="flex flex-wrap gap-2">
                       {selectedAlgorithms.map((algorithmId) => {
-                        const algorithm = algorithms.find(a => a.id === algorithmId);
+                        const algorithm = algorithms.find(a => a.Id === algorithmId);
                         return (
                           <SortableAlgorithmBadge
                             key={algorithmId}
@@ -594,7 +595,7 @@ export const Compare = () => {
                   </SortableContext>
                   
                   <AlgorithmSelector
-                    algorithms={availableAlgorithms}
+                    algorithms={filteredAlgorithms}
                     onAlgorithmChange={(algorithmId) => {
                       addAlgorithm(algorithmId);
                       setAlgorithmSearch('');
@@ -673,10 +674,10 @@ export const Compare = () => {
                         <TableRow>
                           <TableHead className="min-w-[200px]">Expression</TableHead>
                           {selectedAlgorithms.map(algorithmId => {
-                            const algorithm = algorithms.find(a => a.id === algorithmId);
+                            const algorithm = algorithms.find(a => a.Id === algorithmId);
                             return (
                               <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                <div className="font-semibold">{algorithm?.name || algorithmId}</div>
+                                <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
                               </TableHead>
                             );
                           })}

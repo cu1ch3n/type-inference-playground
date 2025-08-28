@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { DerivationViewer } from './DerivationViewer';
 import { TypingRules } from './TypingRules';
 import { InferenceResult, TypeInferenceAlgorithm } from '@/types/inference';
-import { algorithms } from '@/lib/fallbackAlgorithms';
+import { useAlgorithms } from '@/hooks/useAlgorithms';
 import { KaTeXRenderer } from './KaTeXRenderer';
 
 interface DerivationModalProps {
@@ -30,8 +30,9 @@ export const DerivationModal = ({
 }: DerivationModalProps) => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>(undefined);
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>(undefined);
+  const { algorithms } = useAlgorithms();
 
-  const algorithm = algorithms.find(alg => alg.id === algorithmId);
+  const algorithm = algorithms.find(alg => alg.Id === algorithmId);
 
   const handleRuleClick = (ruleId: string) => {
     if (activeRuleId === ruleId) {
@@ -61,7 +62,7 @@ export const DerivationModal = ({
             <span>Derivation Details</span>
             {algorithm && (
               <Badge variant="outline" className="font-medium">
-                {algorithm.name}
+                {algorithm.Name}
               </Badge>
             )}
           </DialogTitle>
@@ -90,7 +91,7 @@ export const DerivationModal = ({
           {/* Typing Rules */}
           {algorithm && (
             <TypingRules
-              rules={algorithm.rules}
+              rules={algorithm.Rules}
               activeRuleId={activeRuleId}
               onRuleClick={handleRuleClick}
             />

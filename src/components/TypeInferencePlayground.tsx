@@ -336,6 +336,7 @@ export const TypeInferencePlayground = () => {
                   onInfer={handleInference}
                   isInferring={isInferring}
                   selectedAlgorithm={selectedAlgorithm}
+                  algorithms={allAlgorithms}
                   selectedVariant={selectedVariant}
                 />
               </div>

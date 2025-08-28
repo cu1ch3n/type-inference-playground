@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
-import { algorithmExamples, subtypingExamples, allAlgorithms } from '@/lib/fallbackAlgorithms';
+import { TypeInferenceAlgorithm } from '@/types/inference';
 import { HelpModal } from './HelpModal';
 import { LatexText } from './LatexText';
 
@@ -14,6 +14,7 @@ interface ExpressionInputProps {
   onInfer: () => void;
   isInferring: boolean;
   selectedAlgorithm: string;
+  algorithms: TypeInferenceAlgorithm[];
   selectedVariant?: string;
 }
 
@@ -23,6 +24,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   onInfer,
   isInferring,
   selectedAlgorithm,
+  algorithms,
   selectedVariant
 }, ref) => {
   const [selectedExample, setSelectedExample] = useState<string>('');
@@ -30,43 +32,29 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   const [leftType, setLeftType] = useState<string>('');
   const [rightType, setRightType] = useState<string>('');
   
-  const selectedAlgorithmData = allAlgorithms.find(a => a.id === selectedAlgorithm);
-  const isSubtypingMode = selectedAlgorithmData?.mode === 'subtyping';
+  const selectedAlgorithmData = algorithms.find(a => a.Id === selectedAlgorithm);
+  const isSubtypingMode = selectedAlgorithmData?.Mode === 'subtyping';
   
-  // Use appropriate examples based on mode
-  const currentExamples = isSubtypingMode 
-    ? (subtypingExamples[selectedAlgorithm as keyof typeof subtypingExamples] || [])
-    : (algorithmExamples[selectedAlgorithm as keyof typeof algorithmExamples] || []);
-
-  // Debug logging
-  console.log('ExpressionInput Debug:', {
-    selectedAlgorithm,
-    selectedAlgorithmData,
-    isSubtypingMode,
-    subtypingExamples,
-    algorithmExamples,
-    currentExamples,
-    'subtypingExamples[selectedAlgorithm]': subtypingExamples[selectedAlgorithm as keyof typeof subtypingExamples],
-    'algorithmExamples[selectedAlgorithm]': algorithmExamples[selectedAlgorithm as keyof typeof algorithmExamples]
-  });
+  // Get examples from the selected algorithm
+  const currentExamples = selectedAlgorithmData?.Examples || [];
 
   const handleExampleSelect = (exampleName: string) => {
-    const example = currentExamples.find(e => e.name === exampleName);
+    const example = currentExamples.find(e => e.Name === exampleName);
     if (example) {
       if (isSubtypingMode) {
         // Parse subtyping examples like "Int <: Top" into left and right types
-        const parts = example.expression.split(' <: ');
+        const parts = example.Expression.split(' <: ');
         if (parts.length === 2) {
           setLeftType(parts[0].trim());
           setRightType(parts[1].trim());
           onExpressionChange(`${parts[0].trim()} <: ${parts[1].trim()}`);
         } else {
-          setLeftType(example.expression);
+          setLeftType(example.Expression);
           setRightType('');
-          onExpressionChange(example.expression);
+          onExpressionChange(example.Expression);
         }
       } else {
-        onExpressionChange(example.expression);
+        onExpressionChange(example.Expression);
       }
       setSelectedExample(exampleName);
     }
@@ -89,8 +77,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   // Reset selected example when expression changes and doesn't match current example
   useEffect(() => {
     if (selectedExample) {
-      const currentExample = currentExamples.find(e => e.name === selectedExample);
-      if (currentExample && currentExample.expression !== expression) {
+      const currentExample = currentExamples.find(e => e.Name === selectedExample);
+      if (currentExample && currentExample.Expression !== expression) {
         setSelectedExample('');
       }
     }
@@ -154,7 +142,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                           textAlign: 'left'
                         }}
                       >
-                        {currentExamples.find(e => e.name === selectedExample)?.expression}
+                        {currentExamples.find(e => e.Name === selectedExample)?.Expression}
                       </span>
                     </div>
                   ) : (
@@ -163,17 +151,17 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                 </div>
               </SelectTrigger>
               <SelectContent className="animate-fade-in-scale">
-                {currentExamples.map((example, index) => (
+                 {currentExamples.map((example, index) => (
                   <SelectItem 
-                    key={example.name} 
-                    value={example.name}
+                    key={example.Name} 
+                    value={example.Name}
                     className="transition-fast hover:bg-accent/50"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex flex-col items-start">
-                      <span className="font-medium">{example.name}</span>
+                      <span className="font-medium">{example.Name}</span>
                       <span className="text-xs text-muted-foreground font-code truncate">
-                        {example.expression}
+                        {example.Expression}
                       </span>
                     </div>
                   </SelectItem>
@@ -282,7 +270,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
           {selectedExample && (
             <div className="p-3 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {currentExamples.find(e => e.name === selectedExample)?.description}
+                {currentExamples.find(e => e.Name === selectedExample)?.Description}
               </p>
             </div>
           )}
@@ -332,7 +320,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                         textAlign: 'left'
                       }}
                     >
-                      {currentExamples.find(e => e.name === selectedExample)?.expression}
+                      {currentExamples.find(e => e.Name === selectedExample)?.Expression}
                     </span>
                   </div>
                 ) : (
@@ -343,15 +331,15 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             <SelectContent className="animate-fade-in-scale">
               {currentExamples.map((example, index) => (
                 <SelectItem 
-                  key={example.name} 
-                  value={example.name}
+                  key={example.Name} 
+                  value={example.Name}
                   className="transition-fast hover:bg-accent/50"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex flex-col items-start">
-                    <span className="font-medium">{example.name}</span>
+                    <span className="font-medium">{example.Name}</span>
                     <span className="text-xs text-muted-foreground font-code truncate">
-                      {example.expression}
+                      {example.Expression}
                     </span>
                   </div>
                 </SelectItem>
@@ -413,7 +401,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
         {selectedExample && (
           <div className="p-3 bg-algorithm rounded-lg border border-primary/20 transition-smooth hover:border-primary/40 hover-scale-sm animate-fade-in-up">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              {currentExamples.find(e => e.name === selectedExample)?.description}
+              {currentExamples.find(e => e.Name === selectedExample)?.Description}
             </p>
           </div>
         )}

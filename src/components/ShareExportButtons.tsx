@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Share2, Check, Download, FileText } from 'lucide-react';
+import { Share2, Check, Download, FileText, FileCode } from 'lucide-react';
 import { shareCurrentState } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
 import { InferenceResult, TypeInferenceAlgorithm, DerivationStep } from '@/types/inference';
@@ -93,6 +93,85 @@ export const ShareExportButtons = ({
     ).join('\n');
   };
 
+  const latexToUnicode = (latex: string): string => {
+    return latex
+      .replace(/\\rightarrow|\\to/g, '→')
+      .replace(/\\Rightarrow/g, '⇒')
+      .replace(/\\leftarrow/g, '←')
+      .replace(/\\Leftarrow/g, '⇐')
+      .replace(/\\leftrightarrow/g, '↔')
+      .replace(/\\Leftrightarrow/g, '⇔')
+      .replace(/\\lambda/g, 'λ')
+      .replace(/\\alpha/g, 'α')
+      .replace(/\\beta/g, 'β')
+      .replace(/\\gamma/g, 'γ')
+      .replace(/\\delta/g, 'δ')
+      .replace(/\\mu/g, 'μ')
+      .replace(/\\tau/g, 'τ')
+      .replace(/\\sigma/g, 'σ')
+      .replace(/\\Gamma/g, 'Γ')
+      .replace(/\\Delta/g, 'Δ')
+      .replace(/\\vdash/g, '⊢')
+      .replace(/\\subseteq/g, '⊆')
+      .replace(/\\subset/g, '⊂')
+      .replace(/\\supset/g, '⊃')
+      .replace(/\\in/g, '∈')
+      .replace(/\\notin/g, '∉')
+      .replace(/\\cup/g, '∪')
+      .replace(/\\cap/g, '∩')
+      .replace(/\\times/g, '×')
+      .replace(/\\cdot/g, '·')
+      .replace(/\\leq/g, '≤')
+      .replace(/\\geq/g, '≥')
+      .replace(/\\neq/g, '≠')
+      .replace(/\\equiv/g, '≡')
+      .replace(/\\approx/g, '≈')
+      .replace(/\\emptyset/g, '∅')
+      .replace(/\\forall/g, '∀')
+      .replace(/\\exists/g, '∃')
+      .replace(/\\neg/g, '¬')
+      .replace(/\\land/g, '∧')
+      .replace(/\\lor/g, '∨')
+      .replace(/\\pm/g, '±')
+      .replace(/\\infty/g, '∞')
+      .replace(/\\\\/g, '\n')
+      .replace(/\\{/g, '{')
+      .replace(/\\}/g, '}')
+      .replace(/\\_/g, '_');
+  };
+
+  const derivationToUnicodeMarkdown = (steps: DerivationStep[], depth = 0): string => {
+    if (!steps.length) return '';
+    
+    const indent = '  '.repeat(depth);
+    return steps.map(step => {
+      const bullet = depth === 0 ? '-' : '-';
+      const unicodeExpression = latexToUnicode(step.expression.trim());
+      const line = `${indent}${bullet} [${step.ruleId}] \`${unicodeExpression}\``;
+      const childrenMarkdown = step.children ? 
+        derivationToUnicodeMarkdown(step.children, depth + 1) : '';
+      return childrenMarkdown ? `${line}\n${childrenMarkdown}` : line;
+    }).join('\n');
+  };
+
+  const derivationToLinearUnicodeMarkdown = (steps: DerivationStep[]): string => {
+    const flattenSteps = (steps: DerivationStep[]): DerivationStep[] => {
+      return steps.reduce<DerivationStep[]>((acc, step) => {
+        acc.push(step);
+        if (step.children) {
+          acc.push(...flattenSteps(step.children));
+        }
+        return acc;
+      }, []);
+    };
+
+    const flatSteps = flattenSteps(steps);
+    return flatSteps.map((step, index) => {
+      const unicodeExpression = latexToUnicode(step.expression.trim());
+      return `${index + 1}. [${step.ruleId}] \`${unicodeExpression}\``;
+    }).join('\n');
+  };
+
   const handleExportMarkdown = () => {
     if (!result?.derivation || result.derivation.length === 0) {
       toast({
@@ -145,6 +224,59 @@ ${markdown}`;
     });
   };
 
+  const handleExportUnicodeMarkdown = () => {
+    if (!result?.derivation || result.derivation.length === 0) {
+      toast({
+        title: "Cannot export",
+        description: "No derivation available to export.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const isLinear = algorithm.ViewMode === 'linear';
+    const markdown = isLinear ? 
+      derivationToLinearUnicodeMarkdown(result.derivation) :
+      derivationToUnicodeMarkdown(result.derivation);
+    
+    const unicodeFinalType = latexToUnicode(result.finalType?.trim() || 'Unknown');
+    const fullMarkdown = `# ${algorithm.Name} - Type Derivation
+
+## Expression
+\`${expression.trim()}\`
+
+## Final Type
+\`${unicodeFinalType}\`
+
+## Derivation Steps
+${markdown}`;
+
+    navigator.clipboard.writeText(fullMarkdown).then(() => {
+      toast({
+        title: "Unicode export copied!",
+        description: "Unicode derivation copied to clipboard.",
+        duration: 3000
+      });
+    }).catch(() => {
+      // Fallback: create downloadable file
+      const blob = new Blob([fullMarkdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${algorithm.Id}-derivation-unicode.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "File downloaded!",
+        description: "Unicode derivation downloaded as file.",
+        duration: 3000
+      });
+    });
+  };
+
   return (
     <div className="flex gap-2">
       <Button
@@ -181,6 +313,13 @@ ${markdown}`;
           >
             <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="text-xs sm:text-sm">Export as Markdown</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={handleExportUnicodeMarkdown}
+            className="cursor-pointer hover:bg-accent p-2 sm:p-3 touch-manipulation"
+          >
+            <FileCode className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="text-xs sm:text-sm">Export as Unicode</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

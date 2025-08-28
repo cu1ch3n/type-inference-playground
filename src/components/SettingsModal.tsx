@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Upload, FileCode } from 'lucide-react';
+import { Settings, RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
+
+interface WasmSource {
+  id: string;
+  name: string;
+  url: string;
+  authType?: 'none' | 'bearer' | 'header' | 'presigned';
+  authToken?: string;
+  authHeader?: string;
+  isLocal?: boolean;
+  createdAt: number;
+}
 
 interface SettingsModalProps {
   open: boolean;
@@ -21,42 +33,56 @@ interface SettingsModalProps {
 }
 
 const DEFAULT_WASM_URL = 'https://files.cuichen.cc/bin.wasm';
-const STORAGE_KEY = 'wasm-settings';
+const STORAGE_KEY = 'wasm-sources';
+
+const createDefaultSource = (): WasmSource => ({
+  id: 'default',
+  name: 'Default WASM',
+  url: DEFAULT_WASM_URL,
+  authType: 'none',
+  isLocal: false,
+  createdAt: Date.now()
+});
 
 export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsModalProps) => {
-  const [wasmUrl, setWasmUrl] = useState(DEFAULT_WASM_URL);
-  const [tempUrl, setTempUrl] = useState('');
+  const [sources, setSources] = useState<WasmSource[]>([createDefaultSource()]);
+  const [selectedSourceId, setSelectedSourceId] = useState('default');
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [newSource, setNewSource] = useState<Partial<WasmSource>>({
+    name: '',
+    url: '',
+    authType: 'none'
+  });
+  const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
+  const [isDragOver, setIsDragOver] = useState(false);
 
-  // Load settings from localStorage on mount
+  // Load sources from localStorage on mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem(STORAGE_KEY);
-    if (savedSettings) {
+    const savedSources = localStorage.getItem(STORAGE_KEY);
+    if (savedSources) {
       try {
-        const { wasmUrl: savedUrl } = JSON.parse(savedSettings);
-        if (savedUrl && typeof savedUrl === 'string') {
-          setWasmUrl(savedUrl);
-          setTempUrl(savedUrl);
-          onWasmUrlChange(savedUrl);
+        const parsed = JSON.parse(savedSources);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSources(parsed);
+          // Find the current source or use the first one
+          const currentSource = parsed.find(s => s.url === localStorage.getItem('current-wasm-url')) || parsed[0];
+          setSelectedSourceId(currentSource.id);
+          onWasmUrlChange(currentSource.url);
         }
       } catch (error) {
-        console.error('Failed to load settings:', error);
+        console.error('Failed to load sources:', error);
       }
     }
   }, [onWasmUrlChange]);
 
-  // Update tempUrl when dialog opens
-  useEffect(() => {
-    if (open) {
-      setTempUrl(wasmUrl);
-    }
-  }, [open, wasmUrl]);
-
   const saveSettings = () => {
     try {
-      const settings = { wasmUrl: tempUrl };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-      setWasmUrl(tempUrl);
-      onWasmUrlChange(tempUrl);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sources));
+      const selectedSource = sources.find(s => s.id === selectedSourceId);
+      if (selectedSource) {
+        localStorage.setItem('current-wasm-url', selectedSource.url);
+        onWasmUrlChange(selectedSource.url);
+      }
       onOpenChange(false);
       toast.success('Settings saved successfully');
     } catch (error) {
@@ -65,16 +91,64 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     }
   };
 
-  const resetToDefault = () => {
-    setTempUrl(DEFAULT_WASM_URL);
+  const addNewSource = () => {
+    if (!newSource.name || !newSource.url) {
+      toast.error('Please provide both name and URL');
+      return;
+    }
+    
+    const source: WasmSource = {
+      id: Date.now().toString(),
+      name: newSource.name,
+      url: newSource.url,
+      authType: newSource.authType || 'none',
+      authToken: newSource.authToken,
+      authHeader: newSource.authHeader,
+      isLocal: false,
+      createdAt: Date.now()
+    };
+    
+    setSources(prev => [...prev, source]);
+    setSelectedSourceId(source.id);
+    setIsAddingNew(false);
+    setNewSource({ name: '', url: '', authType: 'none' });
+    toast.success('WASM source added');
   };
 
-  const [isDragOver, setIsDragOver] = useState(false);
+  const deleteSource = (id: string) => {
+    if (id === 'default') {
+      toast.error('Cannot delete default source');
+      return;
+    }
+    
+    setSources(prev => prev.filter(s => s.id !== id));
+    if (selectedSourceId === id) {
+      setSelectedSourceId('default');
+    }
+    toast.success('WASM source deleted');
+  };
+
+  const clearAllSources = () => {
+    setSources([createDefaultSource()]);
+    setSelectedSourceId('default');
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem('current-wasm-url');
+    toast.success('All sources cleared');
+  };
 
   const handleFile = (file: File) => {
     if (file && file.name.endsWith('.wasm')) {
       const url = URL.createObjectURL(file);
-      setTempUrl(url);
+      const source: WasmSource = {
+        id: Date.now().toString(),
+        name: file.name,
+        url,
+        authType: 'none',
+        isLocal: true,
+        createdAt: Date.now()
+      };
+      setSources(prev => [...prev, source]);
+      setSelectedSourceId(source.id);
       toast.success('Local WASM file loaded');
     } else {
       toast.error('Please select a valid .wasm file');
@@ -86,7 +160,6 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     if (file) {
       handleFile(file);
     }
-    // Clear the input so the same file can be selected again
     event.target.value = '';
   };
 
@@ -109,48 +182,174 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     }
   };
 
-  const isUrlChanged = tempUrl !== wasmUrl;
-  const isValidUrl = tempUrl.trim() !== '' && (tempUrl.startsWith('http') || tempUrl.startsWith('blob:'));
+  const selectedSource = sources.find(s => s.id === selectedSourceId);
+  const hasChanges = selectedSourceId !== sources.find(s => s.url === localStorage.getItem('current-wasm-url'))?.id;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>WASM Settings</DialogTitle>
+          <DialogTitle>WASM Sources</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
+          {/* Current Selection */}
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="wasm-url">WASM Module URL</Label>
-              <div className="relative">
-                <Input
-                  id="wasm-url"
-                  value={tempUrl}
-                  onChange={(e) => setTempUrl(e.target.value)}
-                  placeholder="https://example.com/module.wasm"
-                  className="font-mono text-sm pr-8"
-                />
+            <div className="flex items-center justify-between">
+              <Label>Select WASM Source</Label>
+              <div className="flex gap-2">
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={resetToDefault}
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 hover:bg-muted"
-                  title="Reset to default"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAddingNew(!isAddingNew)}
                 >
-                  <RotateCcw className="w-3 h-3" />
+                  <Plus className="w-3 h-3 mr-1" />
+                  Add New
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={clearAllSources}
+                  disabled={sources.length <= 1}
+                >
+                  <Trash2 className="w-3 h-3 mr-1" />
+                  Clear All
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                URL of the WebAssembly module for type inference
-              </p>
             </div>
+            
+            <RadioGroup value={selectedSourceId} onValueChange={setSelectedSourceId}>
+              {sources.map((source) => (
+                <div key={source.id} className="flex items-center space-x-2 p-3 border rounded-lg">
+                  <RadioGroupItem value={source.id} id={source.id} />
+                  <div className="flex-1 min-w-0">
+                    <Label htmlFor={source.id} className="font-medium">
+                      {source.name} {source.isLocal && '(Local)'}
+                    </Label>
+                    <p className="text-xs text-muted-foreground font-mono truncate">
+                      {source.url}
+                    </p>
+                    {source.authType !== 'none' && (
+                      <p className="text-xs text-muted-foreground">
+                        Auth: {source.authType}
+                      </p>
+                    )}
+                  </div>
+                  {source.id !== 'default' && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteSource(source.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </RadioGroup>
           </div>
+
+          {/* Add New Source Form */}
+          {isAddingNew && (
+            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+              <h4 className="font-medium">Add New WASM Source</h4>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-name">Name</Label>
+                  <Input
+                    id="new-name"
+                    value={newSource.name || ''}
+                    onChange={(e) => setNewSource(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="My WASM Module"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="new-auth">Authentication</Label>
+                  <select
+                    id="new-auth"
+                    value={newSource.authType || 'none'}
+                    onChange={(e) => setNewSource(prev => ({ ...prev, authType: e.target.value as any }))}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="none">None</option>
+                    <option value="bearer">Bearer Token</option>
+                    <option value="header">Custom Header</option>
+                    <option value="presigned">Pre-signed URL</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="new-url">URL</Label>
+                <Input
+                  id="new-url"
+                  value={newSource.url || ''}
+                  onChange={(e) => setNewSource(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://your-domain.com/module.wasm"
+                  className="font-mono"
+                />
+              </div>
+
+              {newSource.authType === 'bearer' && (
+                <div className="space-y-2">
+                  <Label htmlFor="new-token">Bearer Token</Label>
+                  <div className="relative">
+                    <Input
+                      id="new-token"
+                      type={showTokens.new ? 'text' : 'password'}
+                      value={newSource.authToken || ''}
+                      onChange={(e) => setNewSource(prev => ({ ...prev, authToken: e.target.value }))}
+                      placeholder="your-bearer-token"
+                      className="font-mono pr-8"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowTokens(prev => ({ ...prev, new: !prev.new }))}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                    >
+                      {showTokens.new ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {newSource.authType === 'header' && (
+                <div className="space-y-2">
+                  <Label htmlFor="new-header">Authorization Header</Label>
+                  <Input
+                    id="new-header"
+                    value={newSource.authHeader || ''}
+                    onChange={(e) => setNewSource(prev => ({ ...prev, authHeader: e.target.value }))}
+                    placeholder="X-API-Key: your-api-key"
+                    className="font-mono"
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <Button onClick={addNewSource} size="sm">
+                  Add Source
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddingNew(false)}
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
 
           <Separator />
 
+          {/* File Upload */}
           <div className="space-y-3">
-            <Label>Load Local WASM File</Label>
+            <Label>Upload Local WASM File</Label>
             <div 
               className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
                 isDragOver 
@@ -189,14 +388,22 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
             </div>
           </div>
 
-          <div className="bg-muted/50 p-3 rounded-lg">
-            <p className="text-xs text-muted-foreground">
-              <strong>Current:</strong> {wasmUrl === DEFAULT_WASM_URL ? 'Default' : 'Custom'}
-            </p>
-            <p className="text-xs font-mono text-muted-foreground mt-1 break-all">
-              {wasmUrl}
-            </p>
-          </div>
+          {/* Current Status */}
+          {selectedSource && (
+            <div className="bg-muted/50 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground">
+                <strong>Selected:</strong> {selectedSource.name}
+              </p>
+              <p className="text-xs font-mono text-muted-foreground mt-1 break-all">
+                {selectedSource.url}
+              </p>
+              {selectedSource.authType !== 'none' && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Authentication: {selectedSource.authType}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <DialogFooter>
@@ -208,7 +415,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
           </Button>
           <Button
             onClick={saveSettings}
-            disabled={!isValidUrl || !isUrlChanged}
+            disabled={!hasChanges}
           >
             Save Changes
           </Button>

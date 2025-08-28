@@ -300,10 +300,10 @@ export const TypeInferencePlayground = () => {
       <Navbar />
       <div className="min-h-screen bg-background animate-page-enter">
         {/* Main Content */}
-        <div className="container mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-4">
-          <div className="grid grid-cols-1 lg:grid-cols-5 xl:grid-cols-8 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full">
+        <div className="w-full max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full">
             {/* Mobile: Stack vertically, Desktop: Left Column - Input & Algorithm */}
-            <div className="lg:col-span-2 xl:col-span-3 space-y-2 sm:space-y-3 lg:space-y-4">
+            <div className="lg:col-span-4 xl:col-span-4 2xl:col-span-3 space-y-2 sm:space-y-3 lg:space-y-4">
               <div className="animate-stagger-1 hover-scale-sm">
                 <AlgorithmSelector
                   algorithms={allAlgorithms}
@@ -333,7 +333,7 @@ export const TypeInferencePlayground = () => {
             </div>
 
             {/* Mobile: Stack below, Desktop: Right Columns - Derivation and Rules */}
-            <div className="lg:col-span-4 xl:col-span-5 space-y-2 sm:space-y-3 lg:space-y-4">
+            <div className="lg:col-span-8 xl:col-span-8 2xl:col-span-9 space-y-2 sm:space-y-3 lg:space-y-4">
               {/* Derivation */}
               <div className="animate-stagger-3 hover-scale-sm">
                 <DerivationViewer

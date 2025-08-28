@@ -20,7 +20,7 @@ import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { TwoColumnSidebar } from './TwoColumnSidebar';
+import { ThreeColumnLayout } from './ThreeColumnLayout';
 import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
@@ -382,58 +382,53 @@ export const TypeInferencePlayground = () => {
           </div>
         </div>
 
-        {/* Desktop: Sidebar layout */}
-        <div className="hidden lg:block w-full">
-          <SidebarProvider defaultOpen={true}>
-            <div className="flex min-h-screen w-full">
-              {/* Collapsible Sidebar */}
-              <TwoColumnSidebar
-                algorithms={allAlgorithms}
-                selectedAlgorithm={selectedAlgorithm}
-                selectedVariant={selectedVariant}
-                onAlgorithmChange={handleAlgorithmChange}
-                onVariantChange={handleVariantChange}
-                expression={expression}
-                onExpressionChange={setExpression}
-                onInfer={handleInference}
-                isInferring={isInferring}
-                setResult={setResult}
-                expressionInputRef={expressionInputRef}
-              />
-
-              {/* Main Content */}
-              <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 xl:px-6 py-4 space-y-3 lg:space-y-4 overflow-x-auto">
-                {/* Derivation */}
-                <div className="animate-stagger-3 hover-scale-sm">
-                  <DerivationViewer
-                    result={result}
-                    algorithm={selectedAlgorithmData}
-                    activeStepPath={activeStepPath}
+        {/* Desktop: Three Column Layout */}
+        <div className="hidden lg:block h-screen">
+          <ThreeColumnLayout
+            algorithms={allAlgorithms}
+            selectedAlgorithm={selectedAlgorithm}
+            selectedVariant={selectedVariant}
+            onAlgorithmChange={handleAlgorithmChange}
+            onVariantChange={handleVariantChange}
+            expression={expression}
+            onExpressionChange={setExpression}
+            onInfer={handleInference}
+            isInferring={isInferring}
+            setResult={setResult}
+            expressionInputRef={expressionInputRef}
+          >
+            {/* Main Content - Derivation and Rules */}
+            <div className="space-y-4 h-full overflow-y-auto">
+              {/* Derivation */}
+              <div className="animate-stagger-3 hover-scale-sm">
+                <DerivationViewer
+                  result={result}
+                  algorithm={selectedAlgorithmData}
+                  activeStepPath={activeStepPath}
+                  activeRuleId={activeRuleId}
+                  onStepClick={handleStepClick}
+                  expression={expression}
+                  isInferring={isInferring}
+                  variant={selectedVariant}
+                />
+              </div>
+              
+              {/* Typing Rules */}
+              {selectedAlgorithmData && (
+                <div className="animate-stagger-4 hover-scale-sm">
+                  <TypingRules
+                    rules={
+                      selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                        ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                        : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                    }
                     activeRuleId={activeRuleId}
-                    onStepClick={handleStepClick}
-                    expression={expression}
-                    isInferring={isInferring}
-                    variant={selectedVariant}
+                    onRuleClick={handleRuleClick}
                   />
                 </div>
-                
-                {/* Typing Rules */}
-                {selectedAlgorithmData && (
-                  <div className="animate-stagger-4 hover-scale-sm">
-                    <TypingRules
-                      rules={
-                        selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                          ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                          : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                      }
-                      activeRuleId={activeRuleId}
-                      onRuleClick={handleRuleClick}
-                    />
-                  </div>
-                )}
-              </main>
+              )}
             </div>
-          </SidebarProvider>
+          </ThreeColumnLayout>
         </div>
         
         {/* Footnote */}

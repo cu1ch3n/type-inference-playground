@@ -53,7 +53,7 @@ export const WasmStatusIndicator = ({ onClick }: WasmStatusIndicatorProps) => {
       <TooltipTrigger asChild>
         <button
           onClick={onClick}
-          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
+          className={`inline-flex items-center gap-2 px-3 h-7 sm:h-9 rounded-md text-xs font-medium border transition-colors ${
             onClick 
               ? 'hover:bg-accent hover:border-primary/50 cursor-pointer' 
               : 'cursor-default border-border'

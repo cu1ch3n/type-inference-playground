@@ -44,11 +44,17 @@ export const TwoColumnSidebar = forwardRef<HTMLDivElement, TwoColumnSidebarProps
     >
       <SidebarContent className="p-3 lg:p-4">
         {/* Two Column Layout with Independent Toggles */}
-        <div className="flex h-full gap-3 lg:gap-4">
+        <div className="flex h-full">
           {/* Left Column - Algorithm Selector */}
-          <div className={`relative transition-all duration-300 ${leftColumnCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'flex-1'}`}>
+          <div className={`relative transition-all duration-300 ${
+            leftColumnCollapsed 
+              ? 'w-0 min-w-0 overflow-hidden' 
+              : rightColumnCollapsed 
+                ? 'w-full' 
+                : 'w-1/2'
+          }`}>
             {!leftColumnCollapsed && (
-              <div className="animate-stagger-1 hover-scale-sm h-full">
+              <div className="animate-stagger-1 hover-scale-sm h-full pr-2">
                 <AlgorithmSelector
                   algorithms={algorithms}
                   selectedAlgorithm={selectedAlgorithm}
@@ -59,21 +65,41 @@ export const TwoColumnSidebar = forwardRef<HTMLDivElement, TwoColumnSidebarProps
               </div>
             )}
             
-            {/* Left Column Toggle Button */}
+            {/* Left Column Toggle Button - on the right edge */}
+            {!leftColumnCollapsed && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
+                onClick={() => setLeftColumnCollapsed(true)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          
+          {/* Collapsed Left Column Show Button */}
+          {leftColumnCollapsed && (
             <Button
               variant="ghost"
               size="sm"
-              className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
-              onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
+              onClick={() => setLeftColumnCollapsed(false)}
             >
-              {leftColumnCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              <ChevronRight className="h-4 w-4" />
             </Button>
-          </div>
+          )}
           
           {/* Right Column - Expression Input */}
-          <div className={`relative transition-all duration-300 ${rightColumnCollapsed ? 'w-0 opacity-0 overflow-hidden' : 'flex-1'}`}>
+          <div className={`relative transition-all duration-300 ${
+            rightColumnCollapsed 
+              ? 'w-0 min-w-0 overflow-hidden' 
+              : leftColumnCollapsed 
+                ? 'w-full' 
+                : 'w-1/2'
+          }`}>
             {!rightColumnCollapsed && (
-              <div className="animate-stagger-2 hover-scale-sm h-full">
+              <div className="animate-stagger-2 hover-scale-sm h-full pl-2">
                 <ExpressionInput
                   ref={expressionInputRef}
                   expression={expression}
@@ -92,16 +118,30 @@ export const TwoColumnSidebar = forwardRef<HTMLDivElement, TwoColumnSidebarProps
               </div>
             )}
             
-            {/* Right Column Toggle Button */}
+            {/* Right Column Toggle Button - on the right edge */}
+            {!rightColumnCollapsed && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
+                onClick={() => setRightColumnCollapsed(true)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          
+          {/* Collapsed Right Column Show Button */}
+          {rightColumnCollapsed && (
             <Button
               variant="ghost"
               size="sm"
-              className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
-              onClick={() => setRightColumnCollapsed(!rightColumnCollapsed)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background border border-border shadow-sm hover:shadow-md"
+              onClick={() => setRightColumnCollapsed(false)}
             >
-              {rightColumnCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              <ChevronRight className="h-4 w-4" />
             </Button>
-          </div>
+          )}
         </div>
       </SidebarContent>
     </Sidebar>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2, Link } from 'lucide-react';
+import { Settings, RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2, Link, Share2, Copy } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -231,6 +231,27 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     }
   };
 
+  const handleExportSource = async (source: WasmSource) => {
+    if (source.isLocal) {
+      toast.error('Cannot export local WASM files');
+      return;
+    }
+
+    const subscriptionUrl = generateSubscriptionUrl(source);
+    if (!subscriptionUrl) {
+      toast.error('Failed to generate subscription URL');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(subscriptionUrl);
+      toast.success('Subscription URL copied to clipboard');
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      toast.error('Failed to copy to clipboard');
+    }
+  };
+
   const handleFile = (file: File) => {
     if (file && file.name.endsWith('.wasm')) {
       const url = URL.createObjectURL(file);
@@ -331,17 +352,30 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                         Auth: {source.authType}
                       </p>
                     )}
-                  </div>
-                  {source.id !== 'default' && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => deleteSource(source.id)}
-                      className="text-destructive hover:text-destructive flex-shrink-0"
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  )}
+                   </div>
+                   <div className="flex gap-1 flex-shrink-0">
+                     {!source.isLocal && (
+                       <Button
+                         variant="ghost"
+                         size="sm"
+                         onClick={() => handleExportSource(source)}
+                         className="text-muted-foreground hover:text-foreground"
+                         title="Export as subscription URL"
+                       >
+                         <Share2 className="w-3 h-3" />
+                       </Button>
+                     )}
+                     {source.id !== 'default' && (
+                       <Button
+                         variant="ghost"
+                         size="sm"
+                         onClick={() => deleteSource(source.id)}
+                         className="text-destructive hover:text-destructive"
+                       >
+                         <X className="w-3 h-3" />
+                       </Button>
+                     )}
+                   </div>
                 </div>
               ))}
             </RadioGroup>

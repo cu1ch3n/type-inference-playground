@@ -199,7 +199,7 @@ export const Compare = () => {
     if (sharedAlgorithms.length > 0 || sharedExpressions.length > 0) {
       // Validate algorithms exist
       const validAlgorithms = sharedAlgorithms.filter(id => 
-        algorithms.some(alg => alg.Id === id)
+        algorithms?.some(alg => alg.Id === id)
       );
       
       if (validAlgorithms.length > 0) {

@@ -145,7 +145,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
                 </div>
 
                 {/* Section rules */}
-                {section.Rules.some(rule => rule.Reduction) ? (
+                {section.Rules?.some(rule => rule.Reduction) ? (
                   <div className="space-y-1.5">
                     {section.Rules.filter(rule => rule.Reduction).map(renderReductionRule)}
                   </div>
@@ -166,14 +166,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           // Legacy flat view (backward compatibility)
           <>
             {/* Reduction rules - single lines */}
-            {flatRules.some(rule => rule.Reduction) && (
+            {flatRules?.some(rule => rule.Reduction) && (
               <div className="space-y-1.5 mb-4">
                 {flatRules.filter(rule => rule.Reduction).map(renderReductionRule)}
               </div>
             )}
 
             {/* Traditional premise/conclusion rules - adaptive grid layout */}
-            {flatRules.some(rule => !rule.Reduction) && (
+            {flatRules?.some(rule => !rule.Reduction) && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 {flatRules.filter(rule => !rule.Reduction).map(renderRuleCard)}
               </div>

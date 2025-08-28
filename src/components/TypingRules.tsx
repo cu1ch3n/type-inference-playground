@@ -50,7 +50,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       </div>
 
       <div className="space-y-2">
-        {rule.Premises.length > 0 && (
+        {rule.Premises && rule.Premises.length > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-3">
             {rule.Premises.map((premise, index) => (
               <div key={index} className="text-center">
@@ -64,7 +64,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           </div>
         )}
         
-        {rule.Premises.length > 0 && (
+        {rule.Premises && rule.Premises.length > 0 && (
           <div className="border-t border-foreground/20 mx-2"></div>
         )}
         

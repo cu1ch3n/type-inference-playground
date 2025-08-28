@@ -157,7 +157,10 @@ export const AlgorithmSelector = ({
             {filteredAlgorithms.length === 0 && (
               <div className="text-center py-4 text-sm text-muted-foreground">
                 {loading ? (
-                  "Loading algorithms..."
+                  <div className="flex items-center justify-center gap-2">
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    Loading algorithms...
+                  </div>
                 ) : error ? (
                   <div className="space-y-2">
                     <div className="text-destructive">Failed to load algorithms</div>

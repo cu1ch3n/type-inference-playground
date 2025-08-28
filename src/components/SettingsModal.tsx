@@ -82,6 +82,11 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       if (selectedSource) {
         localStorage.setItem('current-wasm-url', selectedSource.url);
         onWasmUrlChange(selectedSource.url);
+        
+        // Dispatch custom event to notify AlgorithmContext
+        window.dispatchEvent(new CustomEvent('wasmUrlChanged', { 
+          detail: { url: selectedSource.url } 
+        }));
       }
       onOpenChange(false);
       toast.success('Settings saved successfully');

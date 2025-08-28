@@ -34,6 +34,9 @@ export const AlgorithmProvider = ({ children }: AlgorithmProviderProps) => {
       setError(null);
       console.log('AlgorithmContext: Starting to fetch algorithms...');
       
+      // Clear algorithms immediately when starting fetch
+      setAlgorithms([]);
+      
       // Add small delay to ensure WASM is ready in iframe environment
       await new Promise(resolve => setTimeout(resolve, 100));
       
@@ -52,6 +55,25 @@ export const AlgorithmProvider = ({ children }: AlgorithmProviderProps) => {
 
   useEffect(() => {
     fetchAlgorithms();
+  }, []);
+
+  // Listen for WASM URL changes and refetch algorithms
+  useEffect(() => {
+    const handleWasmUrlChange = () => {
+      console.log('AlgorithmContext: WASM URL changed, refetching algorithms...');
+      fetchAlgorithms();
+    };
+
+    // Listen for storage changes (when WASM URL is updated)
+    window.addEventListener('storage', handleWasmUrlChange);
+    
+    // Also listen for custom event when WASM URL changes
+    window.addEventListener('wasmUrlChanged', handleWasmUrlChange);
+
+    return () => {
+      window.removeEventListener('storage', handleWasmUrlChange);
+      window.removeEventListener('wasmUrlChanged', handleWasmUrlChange);
+    };
   }, []);
 
   const refreshAlgorithms = async () => {

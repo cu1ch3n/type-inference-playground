@@ -650,24 +650,24 @@ export const Compare = () => {
                             {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
                           </p>
                         </div>
-                        <div className="flex items-center border rounded-lg p-1 bg-muted/50">
+                        <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
                           <Button
                             variant={viewMode === 'table' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('table')}
-                            className={`h-7 px-3 ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
+                            className={`h-6 px-2 text-xs ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <Table2 className="h-3.5 w-3.5 mr-1.5" />
+                            <Table2 className="h-3 w-3 mr-1" />
                             Table
                           </Button>
                           <Button
                             variant={viewMode === 'sidebyside' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('sidebyside')}
-                            className={`h-7 px-3 ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
+                            className={`h-6 px-2 text-xs ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <SquareSplitHorizontal className="h-3.5 w-3.5 mr-1.5" />
-                            Side-by-Side
+                            <SquareSplitHorizontal className="h-3 w-3 mr-1" />
+                            Split
                           </Button>
                         </div>
                       </div>
@@ -935,24 +935,24 @@ export const Compare = () => {
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <Table2 className="w-4 h-4 text-primary flex-shrink-0" />
                         <h2 className="text-sm font-medium flex-shrink-0">Comparison</h2>
-                        <div className="flex items-center border rounded-lg p-1 bg-muted/50">
+                        <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
                           <Button
                             variant={viewMode === 'table' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('table')}
-                            className={`h-6 px-2 text-xs ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
+                            className={`h-5 px-1.5 text-xs ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <Table2 className="h-3 w-3 mr-1" />
+                            <Table2 className="h-2.5 w-2.5 mr-0.5" />
                             Table
                           </Button>
                           <Button
                             variant={viewMode === 'sidebyside' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('sidebyside')}
-                            className={`h-6 px-2 text-xs ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
+                            className={`h-5 px-1.5 text-xs ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <SquareSplitHorizontal className="h-3 w-3 mr-1" />
-                            Side-by-Side
+                            <SquareSplitHorizontal className="h-2.5 w-2.5 mr-0.5" />
+                            Split
                           </Button>
                         </div>
                       </div>

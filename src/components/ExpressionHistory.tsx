@@ -17,6 +17,7 @@ interface HistoryEntry {
 
 export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: ExpressionHistoryProps) => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  console.log('ExpressionHistory component initialized, onAddToHistory:', !!onAddToHistory);
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -71,7 +72,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
       console.log('Setting addToHistory function');
       onAddToHistory(addToHistory);
     }
-  }, [onAddToHistory]);
+  }, [onAddToHistory, history]);
 
   const clearHistory = () => {
     setHistory([]);

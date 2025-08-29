@@ -34,6 +34,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   const [rightType, setRightType] = useState<string>('');
   const [addToHistoryFunction, setAddToHistoryFunction] = useState<((expression: string) => void) | null>(null);
   
+  console.log('ExpressionInput render - addToHistoryFunction:', !!addToHistoryFunction);
+  
   const selectedAlgorithmData = algorithms.find(a => a.Id === selectedAlgorithm);
   const isSubtypingMode = selectedAlgorithmData?.Mode === 'subtyping';
   
@@ -290,7 +292,10 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
           {/* Expression History */}
           <ExpressionHistory 
             onSelectExpression={onExpressionChange}
-            onAddToHistory={setAddToHistoryFunction}
+            onAddToHistory={(func) => {
+              console.log('onAddToHistory callback called in subtyping mode');
+              setAddToHistoryFunction(() => func);
+            }}
           />
         </div>
         
@@ -420,7 +425,10 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
         {/* Expression History */}
         <ExpressionHistory 
           onSelectExpression={onExpressionChange}
-          onAddToHistory={setAddToHistoryFunction}
+          onAddToHistory={(func) => {
+            console.log('onAddToHistory callback called in regular mode');
+            setAddToHistoryFunction(() => func);
+          }}
         />
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />

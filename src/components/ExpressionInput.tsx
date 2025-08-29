@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Play, RotateCcw, Code, Lightbulb, Loader2, HelpCircle, ArrowRight } from 'lucide-react';
 import { TypeInferenceAlgorithm } from '@/types/inference';
 import { HelpModal } from './HelpModal';
+import { ExpressionHistory } from './ExpressionHistory';
 import { LatexText } from './LatexText';
 
 interface ExpressionInputProps {
@@ -274,6 +275,12 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               </p>
             </div>
           )}
+
+          {/* Expression History */}
+          <ExpressionHistory 
+            currentExpression={expression}
+            onSelectExpression={onExpressionChange}
+          />
         </div>
         
         <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
@@ -397,7 +404,13 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               {currentExamples.find(e => e.Name === selectedExample)?.Description}
             </p>
           </div>
-        )}
+          )}
+
+        {/* Expression History */}
+        <ExpressionHistory 
+          currentExpression={expression}
+          onSelectExpression={onExpressionChange}
+        />
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
     </div>

@@ -39,30 +39,20 @@ export const ModernStackedSidebar = ({
       {/* Left Column - Algorithm Selector */}
       <div className={cn(
         "transition-all duration-300 border-r border-border",
-        leftColumnCollapsed ? "w-16" : "w-96"
+        leftColumnCollapsed ? "w-12" : "w-80"
       )}>
         {/* Header with toggle */}
         <div 
           className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
-          {leftColumnCollapsed ? (
-            <div className="w-full flex justify-center">
-              <h3 className="text-sm font-medium writing-mode-vertical-rl text-orientation-mixed transform rotate-180">
-                Algorithms
-              </h3>
-            </div>
-          ) : (
-            <h3 className="text-sm font-medium">
-              Algorithms
-            </h3>
-          )}
-          {!leftColumnCollapsed && (
-            <div className={cn(
-              "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-              "rotate-[135deg]"
-            )} />
-          )}
+          <h3 className={cn("text-sm font-medium", leftColumnCollapsed && "hidden")}>
+            Algorithms
+          </h3>
+          <div className={cn(
+            "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
+            leftColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
+          )} />
         </div>
         
         {!leftColumnCollapsed && (
@@ -81,30 +71,20 @@ export const ModernStackedSidebar = ({
       {/* Right Column - Expression Input & History */}
       <div className={cn(
         "transition-all duration-300",
-        rightColumnCollapsed ? "w-16" : "w-96"
+        rightColumnCollapsed ? "w-12" : "w-80"
       )}>
         {/* Header with toggle */}
         <div 
           className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
           onClick={() => setRightColumnCollapsed(!rightColumnCollapsed)}
         >
-          {rightColumnCollapsed ? (
-            <div className="w-full flex justify-center">
-              <h3 className="text-sm font-medium writing-mode-vertical-rl text-orientation-mixed transform rotate-180">
-                Expression & History
-              </h3>
-            </div>
-          ) : (
-            <h3 className="text-sm font-medium">
-              Expression & History
-            </h3>
-          )}
-          {!rightColumnCollapsed && (
-            <div className={cn(
-              "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-              "rotate-[135deg]"
-            )} />
-          )}
+          <h3 className={cn("text-sm font-medium", rightColumnCollapsed && "hidden")}>
+            Expression & History
+          </h3>
+          <div className={cn(
+            "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
+            rightColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
+          )} />
         </div>
         
         {!rightColumnCollapsed && (

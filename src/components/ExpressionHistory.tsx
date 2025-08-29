@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { History, Clock, ArrowRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface ExpressionHistoryProps {
   currentExpression: string;
@@ -64,22 +63,8 @@ export const ExpressionHistory = ({ currentExpression, onSelectExpression }: Exp
     }
   }, [currentExpression, history]);
 
-  const clearHistory = () => {
-    setHistory([]);
-  };
-
   const removeEntry = (id: string) => {
     setHistory(prev => prev.filter(entry => entry.id !== id));
-  };
-
-  const formatTime = (timestamp: number) => {
-    const now = Date.now();
-    const diff = now - timestamp;
-    
-    if (diff < 60000) return 'Just now';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-    return `${Math.floor(diff / 86400000)}d ago`;
   };
 
   if (history.length === 0) {
@@ -87,66 +72,29 @@ export const ExpressionHistory = ({ currentExpression, onSelectExpression }: Exp
   }
 
   return (
-    <Card className="animate-fade-in bg-card/50 border-border/50">
-      <CardContent className="p-3">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <History className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-xs font-medium text-muted-foreground">Recent Expressions</span>
-            <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {history.length}
-            </Badge>
-          </div>
-          {history.length > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearHistory}
-              className="h-6 w-6 p-0 opacity-60 hover:opacity-100"
-            >
-              <X className="w-3 h-3" />
-            </Button>
-          )}
+    <div className="space-y-1">
+      {history.map((entry) => (
+        <div
+          key={entry.id}
+          className="group flex items-center justify-between px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
+          onClick={() => onSelectExpression(entry.expression)}
+        >
+          <code className="font-mono text-foreground truncate flex-1 pr-2">
+            {entry.expression}
+          </code>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeEntry(entry.id);
+            }}
+            className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0"
+          >
+            <X className="w-2.5 h-2.5" />
+          </Button>
         </div>
-        
-        <ScrollArea className="h-24">
-          <div className="space-y-1">
-            {history.map((entry) => (
-              <div
-                key={entry.id}
-                className="group flex items-center justify-between p-2 rounded border border-border/50 hover:border-primary/50 hover:bg-accent/30 transition-all cursor-pointer"
-                onClick={() => onSelectExpression(entry.expression)}
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <code className="text-xs font-mono text-foreground truncate flex-1">
-                      {entry.expression}
-                    </code>
-                    <ArrowRight className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                  </div>
-                  <div className="flex items-center gap-1 mt-0.5">
-                    <Clock className="w-2.5 h-2.5 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">
-                      {formatTime(entry.timestamp)}
-                    </span>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeEntry(entry.id);
-                  }}
-                  className="h-5 w-5 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0 ml-2"
-                >
-                  <X className="w-3 h-3" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+      ))}
+    </div>
   );
 };

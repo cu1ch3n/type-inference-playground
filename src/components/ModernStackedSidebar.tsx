@@ -44,11 +44,16 @@ export const ModernStackedSidebar = ({
       )}>
         {leftColumnCollapsed ? (
           <button
-            className="h-full w-full flex items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer"
+            className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative"
             onClick={() => setLeftColumnCollapsed(false)}
           >
+            {/* Expand button in the middle */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            </div>
+            {/* Rotated text */}
             <div 
-              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors mt-8"
               style={{ 
                 transform: 'rotate(270deg)',
                 transformOrigin: 'center'
@@ -85,11 +90,16 @@ export const ModernStackedSidebar = ({
       )}>
         {rightColumnCollapsed ? (
           <button
-            className="h-full w-full flex items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer"
+            className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative"
             onClick={() => setRightColumnCollapsed(false)}
           >
+            {/* Expand button in the middle */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            </div>
+            {/* Rotated text */}
             <div 
-              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors mt-8"
               style={{ 
                 transform: 'rotate(270deg)',
                 transformOrigin: 'center'

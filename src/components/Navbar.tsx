@@ -1,4 +1,4 @@
-import { Github, Table2, Settings, ChevronDown } from 'lucide-react';
+import { Github, Table2, Settings, ChevronDown, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
@@ -40,6 +40,9 @@ export const Navbar = () => {
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
+  // Check current mode
+  const isCompareMode = new URL(window.location.href).searchParams.get('compare') === 'true';
+
   return (
     <nav className="border-b border-border bg-background/95 backdrop-blur-sm flex-shrink-0">
       <div className="px-4 py-2">
@@ -66,15 +69,24 @@ export const Navbar = () => {
           
           {/* Navigation Items - Right aligned */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Compare Mode */}
+            {/* Mode Toggle */}
             <Button
               variant="outline"
               onClick={toggleCompareMode}
               className="btn-interactive"
               size="sm"
             >
-              <Table2 className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline text-xs">Compare</span>
+              {isCompareMode ? (
+                <>
+                  <Play className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline text-xs">Playground</span>
+                </>
+              ) : (
+                <>
+                  <Table2 className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline text-xs">Comparison</span>
+                </>
+              )}
             </Button>
 
 

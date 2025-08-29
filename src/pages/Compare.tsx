@@ -405,7 +405,7 @@ export const Compare = () => {
     if (!cell) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
+          className="flex items-center justify-center h-10 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
@@ -417,14 +417,14 @@ export const Compare = () => {
     if (cell.loading) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
+          className="flex items-center justify-center h-10 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-1"></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-2"></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-loading-dots-3"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-loading-dots-1"></div>
+            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-loading-dots-2"></div>
+            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-loading-dots-3"></div>
           </div>
         </div>
       );
@@ -433,7 +433,7 @@ export const Compare = () => {
     if (!cell.result) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          className="flex items-center justify-center h-10 cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
@@ -445,11 +445,11 @@ export const Compare = () => {
     if (!cell.result.success) {
       return (
         <div 
-          className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+          className="flex items-center justify-center h-10 cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
-          <CrossIcon className="h-5 w-5 text-destructive" />
+          <CrossIcon className="h-4 w-4 text-destructive" />
         </div>
       );
     }
@@ -457,11 +457,11 @@ export const Compare = () => {
     if (cell.result.finalType) {
       return (
         <div 
-          className="flex flex-col items-center justify-center h-16 gap-1 p-2 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
+          className="flex flex-col items-center justify-center h-10 gap-1 p-1 cursor-pointer hover:bg-accent/50 transition-all duration-200 card-hover"
           onClick={() => handleCellClick(algorithmId, expression)}
           title="Click to view detailed derivation"
         >
-          <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+          <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
           <div className="text-xs max-w-full overflow-hidden">
             <KaTeXRenderer 
               expression={cell.result.finalType} 
@@ -474,11 +474,11 @@ export const Compare = () => {
 
     return (
       <div 
-        className="flex items-center justify-center h-16 cursor-pointer hover:bg-accent/50 transition-colors"
+        className="flex items-center justify-center h-10 cursor-pointer hover:bg-accent/50 transition-colors"
         onClick={() => handleCellClick(algorithmId, expression)}
         title="Click to view detailed derivation"
       >
-        <Check className="h-5 w-5 text-green-500" />
+        <Check className="h-4 w-4 text-green-500" />
       </div>
     );
   };
@@ -582,8 +582,8 @@ export const Compare = () => {
                     <CardHeader className="flex flex-row items-center justify-between pb-3">
                       <CardTitle className="text-base">Test Expressions</CardTitle>
                       {expressions.length > 0 && (
-                        <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                          <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
+                        <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                          <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
                         </Button>
                       )}
                     </CardHeader>
@@ -600,16 +600,16 @@ export const Compare = () => {
                         </div>
                       </SortableContext>
                       
-                      <div className="flex gap-2">
+                      <div className="flex gap-1">
                         <Input
                           value={newExpression}
                           onChange={(e) => setNewExpression(e.target.value)}
                           placeholder="Add expression..."
                           onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                          className="flex-1 font-code"
+                          className="flex-1 font-code text-xs h-7 px-2"
                         />
-                        <Button onClick={addExpression} size="sm">
-                          <Plus className="h-4 w-4" />
+                        <Button onClick={addExpression} size="sm" className="h-7 w-7 p-0">
+                          <Plus className="h-3 w-3" />
                         </Button>
                       </div>
                     </CardContent>
@@ -664,15 +664,15 @@ export const Compare = () => {
                           </div>
                         ) : (
                           <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="table-fixed">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="min-w-[200px]">Expression</TableHead>
+                                  <TableHead className="min-w-[180px] h-8 py-1 px-2 text-xs">Expression</TableHead>
                                   {selectedAlgorithms.map(algorithmId => {
                                     const algorithm = algorithms.find(a => a.Id === algorithmId);
                                     return (
-                                      <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                        <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
+                                      <TableHead key={algorithmId} className="text-center min-w-[90px] h-8 py-1 px-1 text-xs">
+                                        <div className="font-semibold truncate">{algorithm?.Name || algorithmId}</div>
                                       </TableHead>
                                     );
                                   })}
@@ -680,12 +680,12 @@ export const Compare = () => {
                               </TableHeader>
                               <TableBody>
                                 {expressions.map(expression => (
-                                  <TableRow key={expression}>
-                                    <TableCell className="font-code text-sm border-r">
-                                      <code>{expression}</code>
+                                  <TableRow key={expression} className="border-b">
+                                    <TableCell className="font-code text-xs border-r py-1 px-2">
+                                      <code className="text-xs">{expression}</code>
                                     </TableCell>
                                     {selectedAlgorithms.map(algorithmId => (
-                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center">
+                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center py-0 px-1">
                                         {renderCell(algorithmId, expression)}
                                       </TableCell>
                                     ))}
@@ -807,9 +807,9 @@ export const Compare = () => {
                   ref={expressionRef}
                   id="expressions"
                   order={2}
-                  defaultSize={30} 
-                  minSize={20} 
-                  maxSize={50} 
+                  defaultSize={20} 
+                  minSize={15} 
+                  maxSize={35} 
                   collapsible={true}
                   collapsedSize={3}
                   onCollapse={() => setExpressionCollapsed(true)}
@@ -844,18 +844,18 @@ export const Compare = () => {
                         </h3>
                         <div className="flex items-center gap-1">
                           {expressions.length > 0 && (
-                            <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                              <RotateCcw className="w-3 h-3 transition-transform duration-200 hover:rotate-180" />
+                            <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-5 w-5 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                              <RotateCcw className="w-2.5 h-2.5 transition-transform duration-200 hover:rotate-180" />
                             </Button>
                           )}
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={handleCollapseExpression}
-                            className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                            className="h-5 w-5 p-0 opacity-60 hover:opacity-100 transition-smooth"
                             title="Minimize panel"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-2.5 h-2.5" />
                           </Button>
                         </div>
                       </div>
@@ -874,16 +874,16 @@ export const Compare = () => {
                             </div>
                           </SortableContext>
                           
-                          <div className="flex gap-2">
+                          <div className="flex gap-1">
                             <Input
                               value={newExpression}
                               onChange={(e) => setNewExpression(e.target.value)}
                               placeholder="Add expression..."
                               onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                              className="flex-1 font-code"
+                              className="flex-1 font-code text-xs h-7 px-2"
                             />
-                            <Button onClick={addExpression} size="sm">
-                              <Plus className="h-4 w-4" />
+                            <Button onClick={addExpression} size="sm" className="h-7 w-7 p-0">
+                              <Plus className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
@@ -895,7 +895,7 @@ export const Compare = () => {
                 <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
                 {/* Right Panel - Comparison Table */}
-                <Panel id="comparison" order={3} defaultSize={40} minSize={30}>
+                <Panel id="comparison" order={3} defaultSize={50} minSize={30}>
                   <div className="h-full flex flex-col bg-background">
                     <div className="p-2 flex items-center justify-between h-10">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -942,15 +942,15 @@ export const Compare = () => {
                           </div>
                         ) : (
                           <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="table-fixed">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="min-w-[200px]">Expression</TableHead>
+                                  <TableHead className="min-w-[160px] h-8 py-1 px-2 text-xs">Expression</TableHead>
                                   {selectedAlgorithms.map(algorithmId => {
                                     const algorithm = algorithms.find(a => a.Id === algorithmId);
                                     return (
-                                      <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                        <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
+                                      <TableHead key={algorithmId} className="text-center min-w-[100px] h-8 py-1 px-2 text-xs">
+                                        <div className="font-semibold truncate">{algorithm?.Name || algorithmId}</div>
                                       </TableHead>
                                     );
                                   })}
@@ -958,12 +958,12 @@ export const Compare = () => {
                               </TableHeader>
                               <TableBody>
                                 {expressions.map(expression => (
-                                  <TableRow key={expression}>
-                                    <TableCell className="font-code text-sm border-r">
-                                      <code>{expression}</code>
+                                  <TableRow key={expression} className="border-b">
+                                    <TableCell className="font-code text-xs border-r py-1 px-2">
+                                      <code className="text-xs">{expression}</code>
                                     </TableCell>
                                     {selectedAlgorithms.map(algorithmId => (
-                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center">
+                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center py-0 px-1">
                                         {renderCell(algorithmId, expression)}
                                       </TableCell>
                                     ))}

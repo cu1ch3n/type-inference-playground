@@ -10,9 +10,10 @@ interface TypingRulesProps {
   rules: TypingRule[] | RuleSection[];
   activeRuleId?: string;
   onRuleClick?: (ruleId: string) => void;
+  showHeader?: boolean;
 }
 
-export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesProps) => {
+export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = true }: TypingRulesProps) => {
   // Helper function to check if rules are sectioned
   const isSectioned = (rules: TypingRule[] | RuleSection[]): rules is RuleSection[] => {
     return rules && rules.length > 0 && 'Rules' in rules[0];
@@ -113,12 +114,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
   return (
     <div className="space-y-3">
-      <div className="border-b border-border pb-1">
-        <h3 className="text-sm font-medium flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-primary" />
-          Algorithmic Rules
-        </h3>
-      </div>
+      {showHeader && (
+        <div className="border-b border-border pb-1">
+          <h3 className="text-sm font-medium flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-primary" />
+            Algorithmic Rules
+          </h3>
+        </div>
+      )}
       <div>
         {isSectioned(rules) ? (
           // Sectioned view

@@ -14,12 +14,14 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
-import { PanelLeft, Workflow, Code, Binary } from 'lucide-react';
+import { PanelLeft, Workflow, Code, Binary, Maximize2, BookOpen } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { KaTeXRenderer } from './KaTeXRenderer';
 
 import { TypingRules } from './TypingRules';
+import { ZoomDialog } from './ZoomDialog';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
@@ -39,6 +41,10 @@ export const TypeInferencePlayground = () => {
   const [activeRuleId, setActiveRuleId] = useState<string | undefined>();
   const [activeStepPath, setActiveStepPath] = useState<number[] | undefined>();
   const [initialized, setInitialized] = useState(false);
+  const [zoomAlgorithms, setZoomAlgorithms] = useState(false);
+  const [zoomExpression, setZoomExpression] = useState(false);
+  const [zoomDerivation, setZoomDerivation] = useState(false);
+  const [zoomRules, setZoomRules] = useState(false);
   const expressionInputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -396,6 +402,14 @@ export const TypeInferencePlayground = () => {
                     <Binary className="w-4 h-4 text-primary" />
                     Algorithms
                   </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setZoomAlgorithms(true)}
+                    className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                  >
+                    <Maximize2 className="w-3 h-3" />
+                  </Button>
                 </div>
                 <div className="mx-2 border-b border-border"></div>
                 <div className="flex-1 p-3 overflow-y-auto">
@@ -426,6 +440,14 @@ export const TypeInferencePlayground = () => {
                             <Code className="w-4 h-4 text-primary" />
                             Expression
                           </h3>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setZoomExpression(true)}
+                            className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                          >
+                            <Maximize2 className="w-3 h-3" />
+                          </Button>
                         </div>
                         <div className="mx-2 border-b border-border"></div>
                         <div className="flex-1 p-3 overflow-y-auto">
@@ -477,6 +499,14 @@ export const TypeInferencePlayground = () => {
                                 disabled={isInferring}
                               />
                             )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setZoomDerivation(true)}
+                              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                            >
+                              <Maximize2 className="w-3 h-3" />
+                            </Button>
                           </div>
                         </div>
                         <div className="mx-2 border-b border-border"></div>
@@ -501,7 +531,15 @@ export const TypeInferencePlayground = () => {
 
                 {/* Bottom Row - Typing Rules (Full Width) */}
                 <Panel defaultSize={40} minSize={20} className="bg-background">
-                  <div className="h-full flex flex-col">
+                  <div className="h-full flex flex-col relative">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setZoomRules(true)}
+                      className="absolute top-2 right-2 h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth z-10"
+                    >
+                      <Maximize2 className="w-3 h-3" />
+                    </Button>
                     <div className="flex-1 p-3 overflow-y-auto">
                       {selectedAlgorithmData && (
                         <TypingRules
@@ -522,6 +560,102 @@ export const TypeInferencePlayground = () => {
           </PanelGroup>
         </div>
 
+        {/* Zoom Dialogs */}
+        <ZoomDialog
+          open={zoomAlgorithms}
+          onOpenChange={setZoomAlgorithms}
+          title="Algorithms"
+          icon={<Binary className="w-4 h-4 text-primary" />}
+        >
+          <div className="h-full">
+            <AlgorithmSelector
+              algorithms={allAlgorithms}
+              selectedAlgorithm={selectedAlgorithm}
+              selectedVariant={selectedVariant}
+              onAlgorithmChange={handleAlgorithmChange}
+              onVariantChange={handleVariantChange}
+            />
+          </div>
+        </ZoomDialog>
+
+        <ZoomDialog
+          open={zoomExpression}
+          onOpenChange={setZoomExpression}
+          title="Expression"
+          icon={<Code className="w-4 h-4 text-primary" />}
+        >
+          <div className="h-full">
+            <ExpressionInput
+              ref={expressionInputRef}
+              expression={expression}
+              onExpressionChange={(expr) => {
+                setExpression(expr);
+                if (!expr.trim()) {
+                  setResult(undefined);
+                }
+              }}
+              onInfer={handleInference}
+              isInferring={isInferring}
+              selectedAlgorithm={selectedAlgorithm}
+              algorithms={allAlgorithms}
+              selectedVariant={selectedVariant}
+            />
+          </div>
+        </ZoomDialog>
+
+        <ZoomDialog
+          open={zoomDerivation}
+          onOpenChange={setZoomDerivation}
+          title="Derivation"
+          icon={<Workflow className="w-4 h-4 text-primary" />}
+        >
+          <div className="h-full flex flex-col">
+            {result?.finalType && (
+              <div className="mb-4 p-3 bg-muted/20 rounded border">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Type:</span>
+                  <Badge variant="secondary" className="text-sm font-mono">
+                    <KaTeXRenderer expression={result.finalType} />
+                  </Badge>
+                </div>
+              </div>
+            )}
+            <div className="flex-1 overflow-y-auto">
+              <DerivationViewer
+                result={result}
+                algorithm={selectedAlgorithmData}
+                activeStepPath={activeStepPath}
+                activeRuleId={activeRuleId}
+                onStepClick={handleStepClick}
+                expression={expression}
+                isInferring={isInferring}
+                variant={selectedVariant}
+              />
+            </div>
+          </div>
+        </ZoomDialog>
+
+        <ZoomDialog
+          open={zoomRules}
+          onOpenChange={setZoomRules}
+          title="Algorithmic Rules"
+          icon={<BookOpen className="w-4 h-4 text-primary" />}
+        >
+          <div className="h-full">
+            {selectedAlgorithmData && (
+              <TypingRules
+                rules={
+                  selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                    ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                    : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                }
+                activeRuleId={activeRuleId}
+                onRuleClick={handleRuleClick}
+                showHeader={false}
+              />
+            )}
+          </div>
+        </ZoomDialog>
       </div>
     </div>
   );

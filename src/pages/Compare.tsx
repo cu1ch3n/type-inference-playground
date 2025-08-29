@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid, Binary, Code, Minus, Maximize2 } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -33,6 +33,8 @@ import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { ImperativePanelHandle } from 'react-resizable-panels';
 
 import { SideBySideComparison } from '@/components/SideBySideComparison';
 // Import compare utilities - access functions with bracket notation
@@ -171,6 +173,31 @@ export const Compare = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { algorithms, loading, error } = useAlgorithms();
+
+  // Panel collapse states
+  const [algorithmsCollapsed, setAlgorithmsCollapsed] = useState(false);
+  const [expressionCollapsed, setExpressionCollapsed] = useState(false);
+  
+  // Panel refs
+  const algorithmsRef = useRef<ImperativePanelHandle>(null);
+  const expressionRef = useRef<ImperativePanelHandle>(null);
+
+  // Panel collapse handlers
+  const handleCollapseAlgorithms = () => {
+    algorithmsRef.current?.collapse();
+  };
+
+  const handleExpandAlgorithms = () => {
+    algorithmsRef.current?.expand();
+  };
+
+  const handleCollapseExpression = () => {
+    expressionRef.current?.collapse();
+  };
+
+  const handleExpandExpression = () => {
+    expressionRef.current?.expand();
+  };
 
   // Configure sensors for both mouse and touch
   const sensors = useSensors(
@@ -479,198 +506,485 @@ export const Compare = () => {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div className="min-h-screen bg-background animate-page-enter">
+        <div className="h-screen bg-background flex flex-col overflow-hidden">
           <Navbar />
-          
-          <div className="container mx-auto px-1 sm:px-4 py-2 sm:py-4 animate-stagger-1">
-            <div className="mb-3">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                  <Table2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
-                  <h1 className="text-base sm:text-2xl font-bold truncate">Algorithm Comparison</h1>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('compare');
-                    window.history.pushState({}, '', url.toString());
-                    window.dispatchEvent(new PopStateEvent('popstate'));
-                  }}
-                  className="btn-interactive h-9 px-3 flex items-center gap-2"
-                >
-                  <Undo2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Return</span>
-                </Button>
-              </div>
-              <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3 animate-stagger-2">
-              {/* Algorithm Selection */}
-              <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between pb-3">
-                  <CardTitle className="text-base">Selected Algorithms</CardTitle>
-                  {selectedAlgorithms.length > 0 && (
-                    <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                      <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
-                    </Button>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedAlgorithms.map((algorithmId) => {
-                        const algorithm = algorithms.find(a => a.Id === algorithmId);
-                        return (
-                          <SortableAlgorithmBadge
-                            key={algorithmId}
-                            algorithmId={algorithmId}
-                            algorithm={algorithm}
-                            onRemove={removeAlgorithm}
-                          />
-                        );
-                      })}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Mobile: Traditional stacked layout */}
+            <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
+              <div className="space-y-2 sm:space-y-3">
+                {/* Mobile header */}
+                <div className="mb-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <Table2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
+                      <h1 className="text-base sm:text-2xl font-bold truncate">Algorithm Comparison</h1>
                     </div>
-                  </SortableContext>
-                  
-                  <AlgorithmSelector
-                    algorithms={algorithms}
-                    onAlgorithmChange={(algorithmId) => {
-                      addAlgorithm(algorithmId);
-                      setAlgorithmSearch('');
-                    }}
-                  />
-                </CardContent>
-              </Card>
-
-              {/* Expression Management */}
-              <Card className="academic-panel hover-scale-sm transition-smooth">
-                <CardHeader className="flex flex-row items-center justify-between pb-3">
-                  <CardTitle className="text-base">Test Expressions</CardTitle>
-                  {expressions.length > 0 && (
-                    <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                      <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const url = new URL(window.location.href);
+                        url.searchParams.delete('compare');
+                        window.history.pushState({}, '', url.toString());
+                        window.dispatchEvent(new PopStateEvent('popstate'));
+                      }}
+                      className="btn-interactive h-9 px-3 flex items-center gap-2"
+                    >
+                      <Undo2 className="w-4 h-4" />
+                      <span className="hidden sm:inline">Return</span>
                     </Button>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-2">
-                      {expressions.map((expression) => (
-                        <SortableExpressionItem
-                          key={expression}
-                          expression={expression}
-                          onRemove={removeExpression}
+                  </div>
+                  <p className="text-muted-foreground">Compare type inference algorithms across different expressions</p>
+                </div>
+
+                {/* Mobile Algorithm Selection */}
+                <div className="animate-stagger-1 hover-scale-sm">
+                  <Card className="academic-panel transition-smooth">
+                    <CardHeader className="flex flex-row items-center justify-between pb-3">
+                      <CardTitle className="text-base">Selected Algorithms</CardTitle>
+                      {selectedAlgorithms.length > 0 && (
+                        <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                          <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
+                        </Button>
+                      )}
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedAlgorithms.map((algorithmId) => {
+                            const algorithm = algorithms.find(a => a.Id === algorithmId);
+                            return (
+                              <SortableAlgorithmBadge
+                                key={algorithmId}
+                                algorithmId={algorithmId}
+                                algorithm={algorithm}
+                                onRemove={removeAlgorithm}
+                              />
+                            );
+                          })}
+                        </div>
+                      </SortableContext>
+                      
+                      <AlgorithmSelector
+                        algorithms={algorithms}
+                        onAlgorithmChange={(algorithmId) => {
+                          addAlgorithm(algorithmId);
+                          setAlgorithmSearch('');
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Mobile Test Expressions */}
+                <div className="animate-stagger-2 hover-scale-sm">
+                  <Card className="academic-panel transition-smooth">
+                    <CardHeader className="flex flex-row items-center justify-between pb-3">
+                      <CardTitle className="text-base">Test Expressions</CardTitle>
+                      {expressions.length > 0 && (
+                        <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                          <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
+                        </Button>
+                      )}
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
+                        <div className="space-y-2">
+                          {expressions.map((expression) => (
+                            <SortableExpressionItem
+                              key={expression}
+                              expression={expression}
+                              onRemove={removeExpression}
+                            />
+                          ))}
+                        </div>
+                      </SortableContext>
+                      
+                      <div className="flex gap-2">
+                        <Input
+                          value={newExpression}
+                          onChange={(e) => setNewExpression(e.target.value)}
+                          placeholder="Add expression..."
+                          onKeyDown={(e) => e.key === 'Enter' && addExpression()}
+                          className="flex-1 font-code"
                         />
-                      ))}
-                    </div>
-                  </SortableContext>
-                  
-                   <div className="flex gap-2">
-                     <Input
-                       value={newExpression}
-                       onChange={(e) => setNewExpression(e.target.value)}
-                       placeholder="Add expression..."
-                       onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                       className="flex-1 font-code"
-                     />
-                    <Button onClick={addExpression} size="sm">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                        <Button onClick={addExpression} size="sm">
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Mobile Comparison */}
+                <div className="animate-stagger-3 hover-scale-sm">
+                  <Card className="academic-panel">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div>
+                          <CardTitle>Comparison</CardTitle>
+                          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
+                            <Lightbulb className="w-3 h-3" />
+                            {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant={viewMode === 'table' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setViewMode('table')}
+                          >
+                            <Table2 className="h-4 w-4 mr-2" />
+                            Table
+                          </Button>
+                          <Button
+                            variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setViewMode('sidebyside')}
+                          >
+                            <LayoutGrid className="h-4 w-4 mr-2" />
+                            Side-by-Side
+                          </Button>
+                        </div>
+                      </div>
+                      <CompareShareExportButtons
+                        selectedAlgorithms={selectedAlgorithms}
+                        expressions={expressions}
+                        comparisonResults={comparisonResults}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      {viewMode === 'table' ? (
+                        selectedAlgorithms.length === 0 || expressions.length === 0 ? (
+                          <div className="text-center py-8 text-muted-foreground">
+                            {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
+                            {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
+                            {expressions.length === 0 && "add at least one expression"}
+                            {" to start comparing."}
+                          </div>
+                        ) : (
+                          <div className="overflow-x-auto">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead className="min-w-[200px]">Expression</TableHead>
+                                  {selectedAlgorithms.map(algorithmId => {
+                                    const algorithm = algorithms.find(a => a.Id === algorithmId);
+                                    return (
+                                      <TableHead key={algorithmId} className="text-center min-w-[120px]">
+                                        <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
+                                      </TableHead>
+                                    );
+                                  })}
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {expressions.map(expression => (
+                                  <TableRow key={expression}>
+                                    <TableCell className="font-code text-sm border-r">
+                                      <code>{expression}</code>
+                                    </TableCell>
+                                    {selectedAlgorithms.map(algorithmId => (
+                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center">
+                                        {renderCell(algorithmId, expression)}
+                                      </TableCell>
+                                    ))}
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        )
+                      ) : (
+                        <SideBySideComparison
+                          selectedAlgorithms={selectedAlgorithms}
+                          expressions={expressions}
+                          comparisonResults={comparisonResults}
+                        />
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </div>
 
-            {/* Comparison Table */}
-            <Card className="academic-panel animate-stagger-3">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div>
-                    <CardTitle>Comparison</CardTitle>
-                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                      <Lightbulb className="w-3 h-3" />
-                      {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant={viewMode === 'table' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setViewMode('table')}
+            {/* Desktop: Panel-based layout similar to main page */}
+            <div className="hidden lg:flex flex-1 overflow-hidden">
+              <PanelGroup direction="horizontal" className="h-full">
+                {/* Left Panel - Algorithm Selector */}
+                <Panel 
+                  ref={algorithmsRef}
+                  id="algorithms"
+                  order={1}
+                  defaultSize={30} 
+                  minSize={20} 
+                  maxSize={45} 
+                  collapsible={true}
+                  collapsedSize={3}
+                  onCollapse={() => setAlgorithmsCollapsed(true)}
+                  onExpand={() => setAlgorithmsCollapsed(false)}
+                >
+                  {algorithmsCollapsed ? (
+                    <div 
+                      className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                      onClick={handleExpandAlgorithms}
                     >
-                      <Table2 className="h-4 w-4 mr-2" />
-                      Table
-                    </Button>
-                    <Button
-                      variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setViewMode('sidebyside')}
-                    >
-                      <LayoutGrid className="h-4 w-4 mr-2" />
-                      Side-by-Side
-                    </Button>
-                  </div>
-                </div>
-                <CompareShareExportButtons
-                  selectedAlgorithms={selectedAlgorithms}
-                  expressions={expressions}
-                  comparisonResults={comparisonResults}
-                />
-              </CardHeader>
-              <CardContent>
-                {viewMode === 'table' ? (
-                  selectedAlgorithms.length === 0 || expressions.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
-                      {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
-                      {expressions.length === 0 && "add at least one expression"}
-                      {" to start comparing."}
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                          <span 
+                            className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                            style={{ 
+                              transform: 'rotate(270deg)',
+                              transformOrigin: 'center'
+                            }}
+                          >
+                            Algorithms
+                          </span>
+                        </div>
+                        <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                      </div>
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="min-w-[200px]">Expression</TableHead>
-                            {selectedAlgorithms.map(algorithmId => {
-                              const algorithm = algorithms.find(a => a.Id === algorithmId);
-                              return (
-                                <TableHead key={algorithmId} className="text-center min-w-[120px]">
-                                  <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
-                                </TableHead>
-                              );
-                            })}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {expressions.map(expression => (
-                            <TableRow key={expression}>
-                              <TableCell className="font-code text-sm border-r">
-                                <code>{expression}</code>
-                              </TableCell>
-                              {selectedAlgorithms.map(algorithmId => (
-                                <TableCell key={`${expression}-${algorithmId}`} className="text-center">
-                                  {renderCell(algorithmId, expression)}
-                                </TableCell>
-                              ))}
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                    <div className="h-full flex flex-col bg-background border-r border-border">
+                      <div className="p-2 flex items-center justify-between h-10">
+                        <h3 className="text-sm font-medium flex items-center gap-2">
+                          <Binary className="w-4 h-4 text-primary" />
+                          Algorithms
+                        </h3>
+                        <div className="flex items-center gap-1">
+                          {selectedAlgorithms.length > 0 && (
+                            <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                              <RotateCcw className="w-3 h-3 transition-transform duration-200 hover:rotate-180" />
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCollapseAlgorithms}
+                            className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                            title="Minimize panel"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="mx-2 border-b border-border"></div>
+                      <div className="flex-1 p-3 overflow-y-auto">
+                        <div className="space-y-3">
+                          <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedAlgorithms.map((algorithmId) => {
+                                const algorithm = algorithms.find(a => a.Id === algorithmId);
+                                return (
+                                  <SortableAlgorithmBadge
+                                    key={algorithmId}
+                                    algorithmId={algorithmId}
+                                    algorithm={algorithm}
+                                    onRemove={removeAlgorithm}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </SortableContext>
+                          
+                          <AlgorithmSelector
+                            algorithms={algorithms}
+                            onAlgorithmChange={(algorithmId) => {
+                              addAlgorithm(algorithmId);
+                              setAlgorithmSearch('');
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  )
-                ) : (
-                  <SideBySideComparison
-                    selectedAlgorithms={selectedAlgorithms}
-                    expressions={expressions}
-                    comparisonResults={comparisonResults}
-                  />
-                )}
-              </CardContent>
-            </Card>
+                  )}
+                </Panel>
+
+                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+                {/* Middle Panel - Test Expressions */}
+                <Panel 
+                  ref={expressionRef}
+                  id="expressions"
+                  order={2}
+                  defaultSize={30} 
+                  minSize={20} 
+                  maxSize={50} 
+                  collapsible={true}
+                  collapsedSize={3}
+                  onCollapse={() => setExpressionCollapsed(true)}
+                  onExpand={() => setExpressionCollapsed(false)}
+                >
+                  {expressionCollapsed ? (
+                    <div 
+                      className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                      onClick={handleExpandExpression}
+                    >
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                          <span 
+                            className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                            style={{ 
+                              transform: 'rotate(270deg)',
+                              transformOrigin: 'center'
+                            }}
+                          >
+                            Test Expressions
+                          </span>
+                        </div>
+                        <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-full flex flex-col bg-background border-r border-border">
+                      <div className="p-2 flex items-center justify-between h-10">
+                        <h3 className="text-sm font-medium flex items-center gap-2">
+                          <Code className="w-4 h-4 text-primary" />
+                          Test Expressions
+                        </h3>
+                        <div className="flex items-center gap-1">
+                          {expressions.length > 0 && (
+                            <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                              <RotateCcw className="w-3 h-3 transition-transform duration-200 hover:rotate-180" />
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCollapseExpression}
+                            className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                            title="Minimize panel"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="mx-2 border-b border-border"></div>
+                      <div className="flex-1 p-3 overflow-y-auto">
+                        <div className="space-y-3">
+                          <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
+                            <div className="space-y-2">
+                              {expressions.map((expression) => (
+                                <SortableExpressionItem
+                                  key={expression}
+                                  expression={expression}
+                                  onRemove={removeExpression}
+                                />
+                              ))}
+                            </div>
+                          </SortableContext>
+                          
+                          <div className="flex gap-2">
+                            <Input
+                              value={newExpression}
+                              onChange={(e) => setNewExpression(e.target.value)}
+                              placeholder="Add expression..."
+                              onKeyDown={(e) => e.key === 'Enter' && addExpression()}
+                              className="flex-1 font-code"
+                            />
+                            <Button onClick={addExpression} size="sm">
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Panel>
+
+                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+                {/* Right Panel - Comparison Table */}
+                <Panel id="comparison" order={3} defaultSize={40} minSize={30}>
+                  <div className="h-full flex flex-col bg-background">
+                    <div className="p-2 flex items-center justify-between h-10">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <Table2 className="w-4 h-4 text-primary flex-shrink-0" />
+                        <h2 className="text-sm font-medium flex-shrink-0">Comparison</h2>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant={viewMode === 'table' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setViewMode('table')}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <Table2 className="h-3 w-3 mr-1" />
+                            Table
+                          </Button>
+                          <Button
+                            variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setViewMode('sidebyside')}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <LayoutGrid className="h-3 w-3 mr-1" />
+                            Side-by-Side
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <CompareShareExportButtons
+                          selectedAlgorithms={selectedAlgorithms}
+                          expressions={expressions}
+                          comparisonResults={comparisonResults}
+                        />
+                      </div>
+                    </div>
+                    <div className="mx-2 border-b border-border"></div>
+                    <div className="flex-1 p-3 overflow-y-auto">
+                      {viewMode === 'table' ? (
+                        selectedAlgorithms.length === 0 || expressions.length === 0 ? (
+                          <div className="text-center py-8 text-muted-foreground">
+                            {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
+                            {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
+                            {expressions.length === 0 && "add at least one expression"}
+                            {" to start comparing."}
+                          </div>
+                        ) : (
+                          <div className="overflow-x-auto">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead className="min-w-[200px]">Expression</TableHead>
+                                  {selectedAlgorithms.map(algorithmId => {
+                                    const algorithm = algorithms.find(a => a.Id === algorithmId);
+                                    return (
+                                      <TableHead key={algorithmId} className="text-center min-w-[120px]">
+                                        <div className="font-semibold">{algorithm?.Name || algorithmId}</div>
+                                      </TableHead>
+                                    );
+                                  })}
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {expressions.map(expression => (
+                                  <TableRow key={expression}>
+                                    <TableCell className="font-code text-sm border-r">
+                                      <code>{expression}</code>
+                                    </TableCell>
+                                    {selectedAlgorithms.map(algorithmId => (
+                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center">
+                                        {renderCell(algorithmId, expression)}
+                                      </TableCell>
+                                    ))}
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        )
+                      ) : (
+                        <SideBySideComparison
+                          selectedAlgorithms={selectedAlgorithms}
+                          expressions={expressions}
+                          comparisonResults={comparisonResults}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </Panel>
+              </PanelGroup>
+            </div>
           </div>
         </div>
       </DndContext>

@@ -155,12 +155,12 @@ export const CompareShareExportButtons = ({
         variant="outline"
         size="sm"
         disabled={disabled || isSharing || !hasData}
-        className="btn-interactive touch-manipulation h-8 w-8 sm:w-auto sm:h-9 p-0 sm:px-3"
+        className="btn-interactive touch-manipulation h-7 w-7 sm:w-auto sm:h-7 p-0 sm:px-2"
       >
         {isSharing ? (
-          <Check className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
+          <Check className="w-3 h-3 sm:w-3 sm:h-3 sm:mr-1 flex-shrink-0" />
         ) : (
-          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
+          <Share2 className="w-3 h-3 sm:w-3 sm:h-3 sm:mr-1 flex-shrink-0" />
         )}
         <span className="hidden sm:inline text-sm">{isSharing ? 'Copied!' : 'Share'}</span>
       </Button>
@@ -171,9 +171,9 @@ export const CompareShareExportButtons = ({
             variant="outline"
             size="sm"
             disabled={disabled || !hasData}
-            className="btn-interactive touch-manipulation h-8 w-8 sm:w-auto sm:h-9 p-0 sm:px-3"
+            className="btn-interactive touch-manipulation h-7 w-7 sm:w-auto sm:h-7 p-0 sm:px-2"
           >
-            <Download className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2 flex-shrink-0" />
+            <Download className="w-3 h-3 sm:w-3 sm:h-3 sm:mr-1 flex-shrink-0" />
             <span className="hidden sm:inline text-sm">Export</span>
           </Button>
         </DropdownMenuTrigger>

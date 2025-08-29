@@ -44,47 +44,40 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     >
       {/* Premises section - grows to fill available space and aligns to bottom */}
       <div className="flex-1 flex flex-col justify-end">
-        {/* Content area for premises - constrained width */}
-        <div className="max-w-[70%] mx-auto">
-          <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
-            {rule.Premises && rule.Premises.length > 0 && (
-              rule.Premises.map((premise, index) => (
-                <div key={index} className="text-center">
-                  <KaTeXRenderer 
-                    expression={premise} 
-                    displayMode={false}
-                    className="text-xs"
-                  />
-                </div>
-              ))
-            )}
-          </div>
+        <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
+          {rule.Premises && rule.Premises.length > 0 && (
+            rule.Premises.map((premise, index) => (
+              <div key={index} className="text-center">
+                <KaTeXRenderer 
+                  expression={premise} 
+                  displayMode={false}
+                  className="text-xs"
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
       
       {/* Horizontal line with label positioned outside content area */}
       <div className="relative flex items-center mt-1">
-        <div className="flex-1 border-t border-foreground/20"></div>
-        <div className="absolute right-0 translate-x-2">
-          <RuleTooltip 
-            ruleId={rule.Id}
-            rules={[rule]}
-            variant={activeRuleId === rule.Id ? "default" : "secondary"}
-            className="text-xs font-medium"
-            isActive={activeRuleId === rule.Id}
-          />
-        </div>
+        <div className="flex-1 border-t border-foreground/20 mr-2"></div>
+        <RuleTooltip 
+          ruleId={rule.Id}
+          rules={[rule]}
+          variant={activeRuleId === rule.Id ? "default" : "secondary"}
+          className="text-xs font-medium shrink-0"
+          isActive={activeRuleId === rule.Id}
+        />
       </div>
       
-      {/* Conclusion section - constrained width */}
-      <div className="max-w-[70%] mx-auto mt-1">
-        <div className="text-center">
-          <KaTeXRenderer 
-            expression={rule.Conclusion} 
-            displayMode={false}
-            className="text-xs"
-          />
-        </div>
+      {/* Conclusion section */}
+      <div className="text-center mt-1">
+        <KaTeXRenderer 
+          expression={rule.Conclusion} 
+          displayMode={false}
+          className="text-xs"
+        />
       </div>
     </div>
   );

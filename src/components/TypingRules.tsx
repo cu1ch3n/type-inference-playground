@@ -32,7 +32,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
+        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col w-fit
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -40,6 +40,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         ${onRuleClick ? 'cursor-pointer' : ''}
       `}
       onClick={() => onRuleClick?.(rule.Id)}
+      style={{ minWidth: 'fit-content' }}
     >
       {/* Premises section - grows to fill available space and aligns to bottom */}
       <div className="flex-1 flex flex-col justify-end">
@@ -58,15 +59,17 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         </div>
       </div>
       
-      {/* Horizontal line with label inline on the right */}
-      <div className="flex items-center mt-1 gap-3">
-        <div className="flex-1 border-t border-foreground/20"></div>
-        <Badge 
-          variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="text-xs font-medium px-1.5 py-0.5 shrink-0"
-        >
-          {rule.Name}
-        </Badge>
+      {/* Horizontal line with label - content area + label area */}
+      <div className="flex items-center mt-1 min-w-0">
+        <div className="flex-1 border-t border-foreground/20 min-w-0"></div>
+        <div className="ml-3 shrink-0">
+          <Badge 
+            variant={activeRuleId === rule.Id ? "default" : "secondary"}
+            className="text-xs font-medium px-1.5 py-0.5"
+          >
+            {rule.Name}
+          </Badge>
+        </div>
       </div>
       
       {/* Conclusion section */}

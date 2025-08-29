@@ -72,7 +72,8 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-card': 'var(--gradient-card)'
+				'gradient-card': 'var(--gradient-card)',
+				'gradient-conic': 'conic-gradient(from 0deg at 50% 50%, var(--tw-gradient-stops))'
 			},
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',

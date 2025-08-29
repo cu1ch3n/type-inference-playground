@@ -1,7 +1,7 @@
-import { Github, Sun, Moon, Table2, Settings, ChevronDown } from 'lucide-react';
+import { Github, Table2, Settings, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useTheme } from 'next-themes';
+import { ThemeToggle } from './ThemeToggle';
 import { useState } from 'react';
 import { 
   DropdownMenu,
@@ -17,7 +17,6 @@ import { wasmInference } from '@/lib/wasmInterface';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export const Navbar = () => {
-  const { theme, setTheme } = useTheme();
 
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -81,16 +80,7 @@ export const Navbar = () => {
 
 
             {/* Theme Toggle */}
-            <Button
-              variant="outline"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="btn-interactive relative"
-              size="sm"
-            >
-              <Sun className="h-4 w-4 mr-1 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 mr-1 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="hidden sm:inline text-xs dark:pl-5 pl-0">Theme</span>
-            </Button>
+            <ThemeToggle />
 
             {/* More Options Dropdown (GitHub + Settings) */}
             <DropdownMenu>

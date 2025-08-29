@@ -391,12 +391,13 @@ export const TypeInferencePlayground = () => {
             {/* Left Sidebar - Algorithm Selector */}
             <Panel defaultSize={20} minSize={15} maxSize={35} collapsible={true}>
               <div className="h-full flex flex-col bg-background border-r border-border">
-                <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                <div className="p-2 flex items-center justify-between h-10">
                   <h3 className="text-sm font-medium flex items-center gap-2">
                     <Binary className="w-4 h-4 text-primary" />
                     Algorithms
                   </h3>
                 </div>
+                <div className="mx-2 border-b border-border"></div>
                 <div className="flex-1 p-3 overflow-y-auto">
                   <AlgorithmSelector
                     algorithms={allAlgorithms}
@@ -420,12 +421,13 @@ export const TypeInferencePlayground = () => {
                     {/* Expression Input Column */}
                     <Panel defaultSize={30} minSize={20} maxSize={50} collapsible={true}>
                       <div className="h-full flex flex-col bg-background border-r border-border">
-                        <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                        <div className="p-2 flex items-center justify-between h-10">
                           <h3 className="text-sm font-medium flex items-center gap-2">
                             <Code className="w-4 h-4 text-primary" />
                             Expression
                           </h3>
                         </div>
+                        <div className="mx-2 border-b border-border"></div>
                         <div className="flex-1 p-3 overflow-y-auto">
                           <ExpressionInput
                             ref={expressionInputRef}
@@ -451,7 +453,7 @@ export const TypeInferencePlayground = () => {
                     {/* Derivation Column */}
                     <Panel defaultSize={70} minSize={50}>
                       <div className="h-full flex flex-col bg-background">
-                        <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                        <div className="p-2 flex items-center justify-between h-10">
                           <div className="flex items-center gap-2 min-w-0 flex-1">
                             <Workflow className="w-4 h-4 text-primary flex-shrink-0" />
                             <h2 className="text-sm font-medium flex-shrink-0">Derivation</h2>
@@ -477,6 +479,7 @@ export const TypeInferencePlayground = () => {
                             )}
                           </div>
                         </div>
+                        <div className="mx-2 border-b border-border"></div>
                         <div className="flex-1 p-3 overflow-y-auto">
                           <DerivationViewer
                             result={result}

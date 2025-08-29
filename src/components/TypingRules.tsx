@@ -31,27 +31,27 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
     <div
       key={rule.Id}
       className={`
-        p-4 rounded-lg border transition-all duration-300 hover:scale-[1.02]
+        p-2 rounded border transition-all duration-200 hover:scale-[1.01]
         ${activeRuleId === rule.Id 
-          ? 'bg-highlight/30 border-primary shadow-md' 
-          : 'bg-rule border-border hover:bg-rule/80 hover:shadow-md'
+          ? 'bg-highlight/30 border-primary shadow-sm' 
+          : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
         }
         ${onRuleClick ? 'cursor-pointer' : ''}
       `}
       onClick={() => onRuleClick?.(rule.Id)}
     >
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-center mb-1">
         <Badge 
           variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="font-medium text-xs"
+          className="font-medium text-xs px-1.5 py-0.5"
         >
           {rule.Name}
         </Badge>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1">
         {rule.Premises && rule.Premises.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
             {rule.Premises.map((premise, index) => (
               <div key={index} className="text-center">
                 <KaTeXRenderer 
@@ -65,14 +65,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
         )}
         
         {rule.Premises && rule.Premises.length > 0 && (
-          <div className="border-t border-foreground/20 mx-2"></div>
+          <div className="border-t border-foreground/20 mx-1"></div>
         )}
         
         <div className="text-center">
           <KaTeXRenderer 
             expression={rule.Conclusion} 
             displayMode={false}
-            className="text-xs font-medium"
+            className="text-xs"
           />
         </div>
       </div>
@@ -84,7 +84,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
     <div
       key={rule.Id}
       className={`
-        flex items-center justify-between p-2 rounded-md border transition-all duration-300 hover:scale-[1.005]
+        flex items-center justify-between p-1.5 rounded border transition-all duration-200
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -102,7 +102,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       </div>
       <Badge 
         variant={activeRuleId === rule.Id ? "default" : "secondary"}
-        className="font-medium text-xs ml-2"
+        className="font-medium text-xs ml-1.5 px-1.5 py-0.5"
       >
         {rule.Name}
       </Badge>
@@ -112,8 +112,8 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
   const flatRules = getFlatRules(rules);
 
   return (
-    <div className="space-y-4">
-      <div className="border-b border-border pb-2">
+    <div className="space-y-3">
+      <div className="border-b border-border pb-1">
         <h3 className="text-sm font-medium flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-primary" />
           Algorithmic Rules
@@ -122,7 +122,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
       <div>
         {isSectioned(rules) ? (
           // Sectioned view
-          <div className="space-y-6">
+          <div className="space-y-4">
             {rules.map((section, sectionIndex) => (
               <div key={section.Id}>
                 {/* Section header */}
@@ -146,11 +146,11 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
 
                 {/* Section rules */}
                 {section.Rules?.some(rule => rule.Reduction) ? (
-                  <div className="space-y-1.5">
+                  <div className={`${section.Name?.toLowerCase().includes('worklist') || section.Name?.toLowerCase().includes('work list') ? 'grid grid-cols-1 lg:grid-cols-2 gap-2' : 'space-y-1'}`}>
                     {section.Rules.filter(rule => rule.Reduction).map(renderReductionRule)}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
                     {section.Rules.filter(rule => !rule.Reduction).map(renderRuleCard)}
                   </div>
                 )}
@@ -167,14 +167,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
           <>
             {/* Reduction rules - single lines */}
             {flatRules?.some(rule => rule.Reduction) && (
-              <div className="space-y-1.5 mb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-3">
                 {flatRules.filter(rule => rule.Reduction).map(renderReductionRule)}
               </div>
             )}
 
-            {/* Traditional premise/conclusion rules - adaptive grid layout */}
+            {/* Traditional premise/conclusion rules - dense grid layout */}
             {flatRules?.some(rule => !rule.Reduction) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
                 {flatRules.filter(rule => !rule.Reduction).map(renderRuleCard)}
               </div>
             )}

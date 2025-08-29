@@ -39,49 +39,46 @@ export const ModernStackedSidebar = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="h-full bg-background border-r border-border overflow-hidden">
-      <PanelGroup direction="horizontal" className="h-full">
-        {/* Left Column - Algorithm Selector */}
-        <Panel 
-          defaultSize={25} 
-          minSize={15} 
-          maxSize={40}
-          collapsible={true}
-          collapsedSize={3}
-          onCollapse={() => setLeftColumnCollapsed(true)}
-          onExpand={() => setLeftColumnCollapsed(false)}
-          className="border-r border-border relative flex flex-col"
-        >
-          {leftColumnCollapsed ? (
-            <button
-              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative min-w-12 max-w-12"
-              onClick={() => setLeftColumnCollapsed(false)}
+    <PanelGroup direction="horizontal" className="h-full">
+      {/* Algorithm Selector Panel */}
+      <Panel 
+        defaultSize={25} 
+        minSize={15} 
+        maxSize={40}
+        collapsible={true}
+        collapsedSize={4}
+        onCollapse={() => setLeftColumnCollapsed(true)}
+        onExpand={() => setLeftColumnCollapsed(false)}
+        className="bg-background border-r border-border"
+      >
+        {leftColumnCollapsed ? (
+          <div 
+            className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors cursor-pointer group"
+            onClick={() => setLeftColumnCollapsed(false)}
+          >
+            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground mb-4" />
+            <div 
+              className="text-xs font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+              style={{ 
+                transform: 'rotate(270deg)',
+                transformOrigin: 'center'
+              }}
             >
-              {/* Expand button in the middle */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </div>
-              {/* Rotated text */}
-              <div 
-                className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors mt-8"
-                style={{ 
-                  transform: 'rotate(270deg)',
-                  transformOrigin: 'center'
-                }}
-              >
-                Algorithms
-              </div>
-            </button>
-          ) : (
-            <div className="p-4 h-full overflow-y-auto relative">
-              {/* Collapse button */}
+              Algorithms
+            </div>
+          </div>
+        ) : (
+          <div className="h-full flex flex-col">
+            <div className="p-3 border-b border-border flex items-center justify-between">
+              <h3 className="text-sm font-medium">Algorithms</h3>
               <button
-                className="absolute top-2 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
+                className="p-1 rounded hover:bg-muted transition-colors"
                 onClick={() => setLeftColumnCollapsed(true)}
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3 h-3" />
               </button>
-              <h3 className="text-base font-semibold mb-4 text-foreground">Algorithms</h3>
+            </div>
+            <div className="flex-1 p-3 overflow-y-auto">
               <AlgorithmSelector
                 algorithms={algorithms}
                 selectedAlgorithm={selectedAlgorithm}
@@ -90,98 +87,84 @@ export const ModernStackedSidebar = ({
                 onVariantChange={onVariantChange}
               />
             </div>
-          )}
-        </Panel>
+          </div>
+        )}
+      </Panel>
 
-        <PanelResizeHandle className="w-1 bg-border hover:bg-accent transition-colors" />
+      <PanelResizeHandle className="w-1 bg-border hover:bg-primary/20 transition-colors" />
 
-        {/* Right Column - Expression Input & History */}
-        <Panel 
-          defaultSize={30} 
-          minSize={20} 
-          maxSize={50}
-          collapsible={true}
-          collapsedSize={3}
-          onCollapse={() => setRightColumnCollapsed(true)}
-          onExpand={() => setRightColumnCollapsed(false)}
-          className="relative flex flex-col"
-        >
-          {rightColumnCollapsed ? (
-            <button
-              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative min-w-12 max-w-12"
-              onClick={() => setRightColumnCollapsed(false)}
+      {/* Expression Input Panel */}
+      <Panel 
+        defaultSize={30} 
+        minSize={20} 
+        maxSize={50}
+        collapsible={true}
+        collapsedSize={4}
+        onCollapse={() => setRightColumnCollapsed(true)}
+        onExpand={() => setRightColumnCollapsed(false)}
+        className="bg-background border-r border-border"
+      >
+        {rightColumnCollapsed ? (
+          <div 
+            className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors cursor-pointer group"
+            onClick={() => setRightColumnCollapsed(false)}
+          >
+            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground mb-4" />
+            <div 
+              className="text-xs font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+              style={{ 
+                transform: 'rotate(270deg)',
+                transformOrigin: 'center'
+              }}
             >
-              {/* Expand button in the middle */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </div>
-              {/* Rotated text */}
-              <div 
-                className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors mt-8"
-                style={{ 
-                  transform: 'rotate(270deg)',
-                  transformOrigin: 'center'
-                }}
-              >
-                Expression
-              </div>
-            </button>
-          ) : (
-            <div className="p-4 h-full overflow-y-auto flex flex-col space-y-4 relative">
-              {/* Collapse button */}
+              Expression
+            </div>
+          </div>
+        ) : (
+          <div className="h-full flex flex-col">
+            <div className="p-3 border-b border-border flex items-center justify-between">
+              <h3 className="text-sm font-medium">Expression</h3>
               <button
-                className="absolute top-2 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
+                className="p-1 rounded hover:bg-muted transition-colors"
                 onClick={() => setRightColumnCollapsed(true)}
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3 h-3" />
               </button>
+            </div>
+            <div className="flex-1 p-3 overflow-y-auto space-y-4">
+              <ExpressionInput
+                ref={expressionInputRef}
+                expression={expression}
+                onExpressionChange={(expr) => {
+                  onExpressionChange(expr);
+                  if (!expr.trim()) {
+                    setResult(undefined);
+                  }
+                }}
+                onInfer={onInfer}
+                isInferring={isInferring}
+                selectedAlgorithm={selectedAlgorithm}
+                algorithms={algorithms}
+                selectedVariant={selectedVariant}
+              />
               
-              <div>
-                <h3 className="text-base font-semibold mb-4 text-foreground">Expression & Input</h3>
-                <div className="border-l-2 border-border pl-3">
-                  <ExpressionInput
-                    ref={expressionInputRef}
-                    expression={expression}
-                    onExpressionChange={(expr) => {
-                      onExpressionChange(expr);
-                      if (!expr.trim()) {
-                        setResult(undefined);
-                      }
-                    }}
-                    onInfer={onInfer}
-                    isInferring={isInferring}
-                    selectedAlgorithm={selectedAlgorithm}
-                    algorithms={algorithms}
-                    selectedVariant={selectedVariant}
-                  />
-                </div>
-              </div>
-              
-              {/* History Section */}
-              <div className={cn(
-                "flex-1 min-h-32 p-3 border-l-2 border-border",
-                isMobile && "bg-card border border-border rounded-lg p-4"
-              )}>
-                <h4 className="text-sm font-medium mb-3 text-foreground">Expression History</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="text-muted-foreground">Recent expressions will appear here</div>
+              <div className="border-t border-border pt-3">
+                <h4 className="text-xs font-medium mb-2 text-muted-foreground uppercase tracking-wide">History</h4>
+                <div className="text-xs text-muted-foreground">
+                  Recent expressions will appear here
                 </div>
               </div>
 
-              {/* Program Information */}
-              <div className={cn(
-                "p-3 border-l-2 border-border",
-                isMobile && "bg-card border border-border rounded-lg p-4"
-              )}>
-                <h4 className="text-sm font-medium mb-3 text-foreground">Program Information</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="text-muted-foreground">Program details and metadata will appear here</div>
+              <div className="border-t border-border pt-3">
+                <h4 className="text-xs font-medium mb-2 text-muted-foreground uppercase tracking-wide">Program Info</h4>
+                <div className="text-xs text-muted-foreground">
+                  Program details will appear here
                 </div>
               </div>
             </div>
-          )}
-        </Panel>
-      </PanelGroup>
-    </div>
+          </div>
+        )}
+      </Panel>
+    </PanelGroup>
   );
 };

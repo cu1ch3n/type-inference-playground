@@ -92,19 +92,17 @@ export const DerivationViewer = ({
 
   if (isInferring) {
     return (
-      <div className="border-l-2 border-border pl-4">
-        <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-          <div className="text-center space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-1"></div>
-              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-2"></div>
-              <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-3"></div>
-            </div>
-            <p className="font-medium animate-pulse">Running type inference...</p>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-              <Activity className="w-3 h-3 animate-pulse" />
-              <span>Analyzing expression types</span>
-            </div>
+      <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+        <div className="text-center space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-1"></div>
+            <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-2"></div>
+            <div className="w-3 h-3 bg-primary rounded-full animate-loading-dots-3"></div>
+          </div>
+          <p className="font-medium animate-pulse">Running type inference...</p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+            <Activity className="w-3 h-3 animate-pulse" />
+            <span>Analyzing expression types</span>
           </div>
         </div>
       </div>
@@ -113,14 +111,12 @@ export const DerivationViewer = ({
 
   if (!result) {
     return (
-      <div className="border-l-2 border-border pl-4">
-        <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-          <div className="text-center space-y-2">
-            <p className="font-medium">No derivation yet</p>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-              <Zap className="w-3 h-3" />
-              <span>Enter an expression to start type inference</span>
-            </div>
+      <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+        <div className="text-center space-y-2">
+          <p className="font-medium">No derivation yet</p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+            <Zap className="w-3 h-3" />
+            <span>Enter an expression to start type inference</span>
           </div>
         </div>
       </div>
@@ -134,12 +130,12 @@ export const DerivationViewer = ({
   return (
     <div 
       key={`${algorithm?.Id}-${expression}-${result?.success}-${result?.derivation?.length}`}
-      className="animate-fade-in border-l-2 border-border pl-4" 
+      className="space-y-4" 
       data-derivation-viewer
     >
       {/* Show error if present */}
       {!result.success && result.error && (
-        <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg animate-slide-in-right mb-4" style={{ animationDelay: '100ms' }}>
+        <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
           <p className="text-destructive font-medium flex items-center gap-2">
             <Activity className="w-4 h-4" />
             Error
@@ -166,7 +162,7 @@ export const DerivationViewer = ({
               Partial derivation before error:
             </div>
           )}
-          <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+          <div>
             {viewMode === 'tree' ? (
               <TreeViewer 
                 steps={result.derivation}
@@ -179,7 +175,7 @@ export const DerivationViewer = ({
             ) : (
               <div className="space-y-1">
                 {linearSteps.map(({step, path}, index) => (
-                  <div key={path.join('-')} className="animate-fade-in" style={{ animationDelay: `${300 + index * 50}ms` }}>
+                  <div key={path.join('-')}>
                     {renderLinearStep(step, path)}
                   </div>
                 ))}

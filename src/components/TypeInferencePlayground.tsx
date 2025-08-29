@@ -401,24 +401,27 @@ export const TypeInferencePlayground = () => {
             expressionInputRef={expressionInputRef}
           />
           
-          <div className="flex-1 h-full overflow-hidden">
+          {/* Main Content Area */}
+          <div className="flex-1 h-full">
             <PanelGroup direction="vertical" className="h-full">
               {/* Derivation Panel */}
-              <Panel defaultSize={60} minSize={30} className="p-4 overflow-y-auto">
-                <div className="h-full">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Workflow className="w-5 h-5 text-primary" />
-                    <h2 className="text-lg font-semibold">Derivation</h2>
-                    {result?.finalType && (
-                      <div className="flex items-center gap-2 ml-4">
-                        <Separator orientation="vertical" className="h-6" />
-                        <span className="text-sm text-muted-foreground">Type:</span>
-                        <Badge variant="secondary" className="font-math">
-                          <KaTeXRenderer expression={result.finalType} />
-                        </Badge>
-                      </div>
-                    )}
-                    <div className="ml-auto">
+              <Panel defaultSize={60} minSize={30} className="bg-background">
+                <div className="h-full flex flex-col">
+                  <div className="p-3 border-b border-border flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Workflow className="w-4 h-4 text-primary" />
+                      <h2 className="text-sm font-medium">Derivation</h2>
+                      {result?.finalType && (
+                        <div className="flex items-center gap-2 ml-4">
+                          <Separator orientation="vertical" className="h-4" />
+                          <span className="text-xs text-muted-foreground">Type:</span>
+                          <Badge variant="secondary" className="text-xs font-mono">
+                            <KaTeXRenderer expression={result.finalType} />
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
                       {selectedAlgorithmData && expression && (
                         <ShareExportButtons
                           algorithm={selectedAlgorithmData}
@@ -430,47 +433,49 @@ export const TypeInferencePlayground = () => {
                       )}
                     </div>
                   </div>
-                  <Separator className="mb-4" />
-                  <DerivationViewer
-                    result={result}
-                    algorithm={selectedAlgorithmData}
-                    activeStepPath={activeStepPath}
-                    activeRuleId={activeRuleId}
-                    onStepClick={handleStepClick}
-                    expression={expression}
-                    isInferring={isInferring}
-                    variant={selectedVariant}
-                  />
+                  <div className="flex-1 p-3 overflow-y-auto">
+                    <DerivationViewer
+                      result={result}
+                      algorithm={selectedAlgorithmData}
+                      activeStepPath={activeStepPath}
+                      activeRuleId={activeRuleId}
+                      onStepClick={handleStepClick}
+                      expression={expression}
+                      isInferring={isInferring}
+                      variant={selectedVariant}
+                    />
+                  </div>
                 </div>
               </Panel>
 
-              <PanelResizeHandle className="h-1 bg-border hover:bg-accent transition-colors" />
+              <PanelResizeHandle className="h-1 bg-border hover:bg-primary/20 transition-colors" />
 
               {/* Typing Rules Panel */}
-              <Panel defaultSize={40} minSize={20} className="p-4 overflow-y-auto">
-                {selectedAlgorithmData && (
-                  <div className="h-full">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Activity className="w-5 h-5 text-primary" />
-                      <h2 className="text-lg font-semibold">Typing Rules</h2>
-                    </div>
-                    <Separator className="mb-4" />
-                    <TypingRules
-                      rules={
-                        selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                          ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                          : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                      }
-                      activeRuleId={activeRuleId}
-                      onRuleClick={handleRuleClick}
-                    />
+              <Panel defaultSize={40} minSize={20} className="bg-background">
+                <div className="h-full flex flex-col">
+                  <div className="p-3 border-b border-border flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-primary" />
+                    <h2 className="text-sm font-medium">Typing Rules</h2>
                   </div>
-                )}
+                  <div className="flex-1 p-3 overflow-y-auto">
+                    {selectedAlgorithmData && (
+                      <TypingRules
+                        rules={
+                          selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                            ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                            : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                        }
+                        activeRuleId={activeRuleId}
+                        onRuleClick={handleRuleClick}
+                      />
+                    )}
+                  </div>
+                </div>
               </Panel>
             </PanelGroup>
             
-            {/* Footer moved to bottom of main content */}
-            <div className="p-4 border-t border-muted-foreground/20">
+            {/* Footer */}
+            <div className="p-3 border-t border-border bg-background">
               <div className="text-center text-xs text-muted-foreground">
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                   <span>

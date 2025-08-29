@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { LatexText } from './LatexText';
 import { TypingRule, RuleSection } from '@/types/inference';
+import { RuleTooltip } from './RuleTooltip';
 import { BookOpen } from 'lucide-react';
 
 interface TypingRulesProps {
@@ -32,7 +33,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
+        relative p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -41,6 +42,17 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       `}
       onClick={() => onRuleClick?.(rule.Id)}
     >
+      {/* Rule label positioned outside content area */}
+      <div className="absolute -top-2 -right-2 z-10">
+        <RuleTooltip 
+          ruleId={rule.Id}
+          rules={[rule]}
+          variant={activeRuleId === rule.Id ? "default" : "secondary"}
+          className="text-xs font-medium"
+          isActive={activeRuleId === rule.Id}
+        />
+      </div>
+
       {/* Premises section - grows to fill available space and aligns to bottom */}
       <div className="flex-1 flex flex-col justify-end">
         <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
@@ -58,16 +70,8 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         </div>
       </div>
       
-      {/* Horizontal line with badge - always at same level */}
-      <div className="relative flex items-center mt-1">
-        <div className="flex-1 border-t border-foreground/20"></div>
-        <Badge 
-          variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="font-medium text-xs px-1.5 py-0.5 ml-2 bg-background"
-        >
-          {rule.Name}
-        </Badge>
-      </div>
+      {/* Horizontal line - always at same level */}
+      <div className="border-t border-foreground/20 mt-1"></div>
       
       {/* Conclusion section */}
       <div className="text-center mt-1">

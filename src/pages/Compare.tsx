@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { KaTeXRenderer } from '@/components/KaTeXRenderer';
+import { ExpressionHistory } from '@/components/ExpressionHistory';
 import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
@@ -623,6 +624,16 @@ export const Compare = () => {
                           <Plus className="h-3 w-3" />
                         </Button>
                       </div>
+                      
+                      {/* Expression History */}
+                      <ExpressionHistory 
+                        onSelectExpression={(expression) => {
+                          if (!expressions.includes(expression)) {
+                            setExpressions(prev => [...prev, expression]);
+                          }
+                        }}
+                        onAddToHistory={() => {}} // Not used in compare mode, history comes from main playground
+                      />
                     </CardContent>
                   </Card>
                 </div>
@@ -897,6 +908,16 @@ export const Compare = () => {
                               <Plus className="h-3 w-3" />
                             </Button>
                           </div>
+                          
+                          {/* Expression History */}
+                          <ExpressionHistory 
+                            onSelectExpression={(expression) => {
+                              if (!expressions.includes(expression)) {
+                                setExpressions(prev => [...prev, expression]);
+                              }
+                            }}
+                            onAddToHistory={() => {}} // Not used in compare mode, history comes from main playground
+                          />
                         </div>
                       </div>
                     </div>

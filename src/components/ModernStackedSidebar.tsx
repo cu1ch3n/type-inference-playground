@@ -42,22 +42,13 @@ export const ModernStackedSidebar = ({
         "transition-all duration-300 border-r border-border relative flex flex-col",
         leftColumnCollapsed ? "w-12" : "w-full max-w-sm xl:max-w-md 2xl:max-w-lg"
       )}>
-        {/* Collapse button */}
-        <button
-          className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
-          onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
-        >
-          {leftColumnCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <ChevronLeft className="w-4 h-4" />
-          )}
-        </button>
-
         {leftColumnCollapsed ? (
-          <div className="h-full flex items-center justify-center pt-12">
+          <button
+            className="h-full w-full flex items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer"
+            onClick={() => setLeftColumnCollapsed(false)}
+          >
             <div 
-              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors"
               style={{ 
                 transform: 'rotate(270deg)',
                 transformOrigin: 'center'
@@ -65,9 +56,16 @@ export const ModernStackedSidebar = ({
             >
               Algorithms
             </div>
-          </div>
+          </button>
         ) : (
-          <div className="p-6 h-full overflow-y-auto">
+          <div className="p-6 h-full overflow-y-auto relative">
+            {/* Collapse button */}
+            <button
+              className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
+              onClick={() => setLeftColumnCollapsed(true)}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
             <h3 className="text-lg font-semibold mb-4">Algorithms</h3>
             <AlgorithmSelector
               algorithms={algorithms}
@@ -85,22 +83,13 @@ export const ModernStackedSidebar = ({
         "transition-all duration-300 relative flex flex-col",
         rightColumnCollapsed ? "w-12" : "w-full max-w-sm xl:max-w-md 2xl:max-w-lg"
       )}>
-        {/* Collapse button */}
-        <button
-          className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
-          onClick={() => setRightColumnCollapsed(!rightColumnCollapsed)}
-        >
-          {rightColumnCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <ChevronLeft className="w-4 h-4" />
-          )}
-        </button>
-
         {rightColumnCollapsed ? (
-          <div className="h-full flex items-center justify-center pt-12">
+          <button
+            className="h-full w-full flex items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer"
+            onClick={() => setRightColumnCollapsed(false)}
+          >
             <div 
-              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none group-hover:text-foreground transition-colors"
               style={{ 
                 transform: 'rotate(270deg)',
                 transformOrigin: 'center'
@@ -108,9 +97,16 @@ export const ModernStackedSidebar = ({
             >
               Expression
             </div>
-          </div>
+          </button>
         ) : (
-          <div className="p-6 h-full overflow-y-auto flex flex-col space-y-6">
+          <div className="p-6 h-full overflow-y-auto flex flex-col space-y-6 relative">
+            {/* Collapse button */}
+            <button
+              className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
+              onClick={() => setRightColumnCollapsed(true)}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
             <div>
               <h3 className="text-lg font-semibold mb-4">Expression & Input</h3>
               <ExpressionInput

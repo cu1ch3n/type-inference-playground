@@ -43,14 +43,14 @@ export const Navbar = () => {
 
   return (
     <nav className="border-b border-border bg-background/95 backdrop-blur-sm flex-shrink-0">
-      <div className="container mx-auto px-3 py-2">
-        <div className="flex items-center justify-between gap-2">
+      <div className="px-4 py-2">
+        <div className="flex items-center justify-between">
           {/* Logo and Title - Left aligned */}
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-6 h-6 bg-primary rounded flex items-center justify-center flex-shrink-0">
               <span className="text-primary-foreground font-bold text-xs">λ</span>
             </div>
-            <h1 className="text-sm font-semibold min-w-0">
+            <h1 className="text-base font-semibold min-w-0">
               <button
                 onClick={() => {
                   const url = new URL(window.location.href);
@@ -66,7 +66,7 @@ export const Navbar = () => {
           </div>
           
           {/* Navigation Items - Right aligned */}
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Compare Mode */}
             <Button
               variant="outline"

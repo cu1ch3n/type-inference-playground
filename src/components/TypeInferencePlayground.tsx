@@ -444,19 +444,23 @@ export const TypeInferencePlayground = () => {
             >
               {algorithmsCollapsed ? (
                 <div 
-                  className="h-full w-full flex items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                  className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
                   onClick={handleExpandAlgorithms}
                 >
-                  <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground mr-2" />
-                  <span 
-                    className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
-                    style={{ 
-                      transform: 'rotate(270deg)',
-                      transformOrigin: 'center'
-                    }}
-                  >
-                    Algorithms
-                  </span>
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                      <span 
+                        className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                        style={{ 
+                          transform: 'rotate(270deg)',
+                          transformOrigin: 'center'
+                        }}
+                      >
+                        Algorithms
+                      </span>
+                    </div>
+                    <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                  </div>
                 </div>
               ) : (
                 <div className="h-full flex flex-col bg-background border-r border-border">
@@ -523,19 +527,23 @@ export const TypeInferencePlayground = () => {
                     >
                       {expressionCollapsed ? (
                         <div 
-                          className="h-full w-full flex items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                          className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
                           onClick={handleExpandExpression}
                         >
-                          <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground mr-2" />
-                          <span 
-                            className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
-                            style={{ 
-                              transform: 'rotate(270deg)',
-                              transformOrigin: 'center'
-                            }}
-                          >
-                            Expression
-                          </span>
+                          <div className="flex flex-col items-center justify-center gap-3">
+                            <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                              <span 
+                                className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                                style={{ 
+                                  transform: 'rotate(270deg)',
+                                  transformOrigin: 'center'
+                                }}
+                              >
+                                Expression
+                              </span>
+                            </div>
+                            <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                          </div>
                         </div>
                       ) : (
                         <div className="h-full flex flex-col bg-background border-r border-border">
@@ -661,11 +669,13 @@ export const TypeInferencePlayground = () => {
                 >
                   {rulesCollapsed ? (
                     <div 
-                      className="h-full w-full flex items-center justify-center bg-background border-t border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                      className="h-full w-full flex items-center justify-center bg-background border-t border-border hover:bg-muted/30 transition-colors cursor-pointer group gap-2"
                       onClick={handleExpandRules}
                     >
-                      <BookOpen className="w-4 h-4 text-muted-foreground group-hover:text-foreground mr-2" />
-                      <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                      <BookOpen className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
+                      <span 
+                        className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                      >
                         Typing Rules
                       </span>
                     </div>

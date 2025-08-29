@@ -6,7 +6,7 @@ import { History, X } from 'lucide-react';
 
 interface ExpressionHistoryProps {
   onSelectExpression: (expression: string) => void;
-  onAddToHistory: (addFunction: (expression: string) => void) => void;
+  onAddToHistory?: (addFunction: (expression: string) => void) => void;
 }
 
 interface HistoryEntry {
@@ -39,7 +39,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   // Provide addToHistory function to parent
   useEffect(() => {
     const addToHistory = (expression: string) => {
-      if (expression.trim()) {
+      if (expression && expression.trim()) {
         const trimmedExpression = expression.trim();
         
         // Don't add if it's the same as the last entry
@@ -64,8 +64,10 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
       }
     };
 
-    onAddToHistory(addToHistory);
-  }, [history, onAddToHistory]);
+    if (onAddToHistory) {
+      onAddToHistory(addToHistory);
+    }
+  }, [onAddToHistory]);
 
   const clearHistory = () => {
     setHistory([]);

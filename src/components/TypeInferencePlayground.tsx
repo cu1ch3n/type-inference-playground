@@ -317,9 +317,9 @@ export const TypeInferencePlayground = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background animate-page-enter">
+      <div className="h-screen bg-background animate-page-enter flex flex-col overflow-hidden">
         {/* Mobile: Traditional stacked layout */}
-        <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4">
+        <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
           <div className="space-y-2 sm:space-y-3">
             {/* Mobile Algorithm Selector */}
             <div className="animate-stagger-1 hover-scale-sm">
@@ -383,7 +383,7 @@ export const TypeInferencePlayground = () => {
         </div>
 
         {/* Modern sidebar layout for larger screens */}
-        <div className="hidden lg:flex h-full">
+        <div className="hidden lg:flex h-full flex-1">
            <ModernStackedSidebar
             algorithms={allAlgorithms}
             selectedAlgorithm={selectedAlgorithm}
@@ -398,30 +398,32 @@ export const TypeInferencePlayground = () => {
             expressionInputRef={expressionInputRef}
           />
           
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="space-y-6">
-              <DerivationViewer
-                result={result}
-                algorithm={selectedAlgorithmData}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                onStepClick={handleStepClick}
-                expression={expression}
-                isInferring={isInferring}
-                variant={selectedVariant}
-              />
-              
-              {selectedAlgorithmData && (
-                <TypingRules
-                  rules={
-                    selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                      ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                      : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                  }
+          <div className="flex-1 h-full overflow-hidden">
+            <div className="h-full p-6 overflow-y-auto">
+              <div className="space-y-6">
+                <DerivationViewer
+                  result={result}
+                  algorithm={selectedAlgorithmData}
+                  activeStepPath={activeStepPath}
                   activeRuleId={activeRuleId}
-                  onRuleClick={handleRuleClick}
+                  onStepClick={handleStepClick}
+                  expression={expression}
+                  isInferring={isInferring}
+                  variant={selectedVariant}
                 />
-              )}
+                
+                {selectedAlgorithmData && (
+                  <TypingRules
+                    rules={
+                      selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                        ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                        : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                    }
+                    activeRuleId={activeRuleId}
+                    onRuleClick={handleRuleClick}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

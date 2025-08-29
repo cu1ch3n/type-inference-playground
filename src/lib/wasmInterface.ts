@@ -110,7 +110,7 @@ export class WasmTypeInference {
 
       // Prepare command line arguments exactly like your original implementation
       const args = request.variant 
-        ? ['infer', '--typing', request.algorithm, request.variant, request.expression]
+        ? ['infer', '--typing', request.algorithm, '--variant', request.variant, request.expression]
         : ['infer', '--typing', request.algorithm, request.expression];
       const env: string[] = [];
       
@@ -174,7 +174,9 @@ export class WasmTypeInference {
       this.outputBuffer = '';
 
       // Prepare command line arguments for subtyping
-      const args = ['infer', '--subtyping', request.algorithm, request.variant, request.leftType, request.rightType];
+      const args = request.variant  
+        ? ['infer', '--subtyping', request.algorithm, '--variant', request.variant, request.leftType, request.rightType]
+        : ['infer', '--subtyping', request.algorithm, request.leftType, request.rightType];
       const env: string[] = [];
       
       const fds = [
@@ -280,44 +282,6 @@ export class WasmTypeInference {
     console.log('WASM module unloaded');
   }
 }
-
-/* UNCOMMENT TO ENABLE WASM
-// Global WASM interface - uncommented when WASM is enabled
-let wasmModule: Record<string, unknown> | null = null;
-let wasmWorker: Worker | null = null;
-
-export async function initializeWasm(): Promise<boolean> {
-  try {
-    wasmWorker = new Worker('/wasm/inference-worker.js');
-    
-    return new Promise((resolve) => {
-      const timeout = setTimeout(() => resolve(false), 5000);
-      
-      wasmWorker?.addEventListener('message', (event) => {
-        if (event.data.type === 'wasm_ready') {
-          clearTimeout(timeout);
-          wasmModule = event.data.module;
-          // eslint-disable-next-line no-console
-          console.log('✅ WASM module initialized successfully');
-          resolve(true);
-        }
-      });
-      
-      wasmWorker?.postMessage({ type: 'init' });
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to initialize WASM:', error);
-    return false;
-  }
-}
-
-export function getWasmModule() {
-  return wasmModule;
-}
-
-export { initializeWasm, getWasmModule };
-*/
 
 // Global instance (disabled by default)
 export const wasmInference = new WasmTypeInference();

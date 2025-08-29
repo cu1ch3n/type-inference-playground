@@ -68,7 +68,7 @@ export const WasmStatusIndicator = ({ onClick }: WasmStatusIndicatorProps) => {
           <span>{getStatusText()}</span>
         </button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className="z-50">
         <div className="space-y-1">
           <p className="font-medium">{
             status === 'connected' ? 'WASM Connected' :

@@ -27,57 +27,54 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     return rules;
   };
 
-  // Render individual rule card as horizontal list item
+  // Render individual rule card
   const renderRuleCard = (rule: TypingRule) => (
     <div
       key={rule.Id}
       className={`
-        flex items-center gap-3 p-3 rounded border transition-all duration-200 hover:bg-muted/50
+        p-2 rounded border transition-all duration-200 hover:scale-[1.01]
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
-          : 'bg-rule border-border hover:border-muted-foreground/40'
+          : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
         }
         ${onRuleClick ? 'cursor-pointer' : ''}
       `}
       onClick={() => onRuleClick?.(rule.Id)}
     >
-      {/* Rule name badge */}
-      <div className="flex-shrink-0">
+      <div className="flex items-center justify-center mb-1">
         <Badge 
           variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="font-medium text-xs px-2 py-1"
+          className="font-medium text-xs px-1.5 py-0.5"
         >
           {rule.Name}
         </Badge>
       </div>
 
-      {/* Rule content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          {rule.Premises && rule.Premises.length > 0 && (
-            <>
-              <div className="flex items-center gap-2 flex-wrap">
-                {rule.Premises.map((premise, index) => (
-                  <div key={index}>
-                    <KaTeXRenderer 
-                      expression={premise} 
-                      displayMode={false}
-                      className="text-sm"
-                    />
-                  </div>
-                ))}
+      <div className="space-y-1">
+        {rule.Premises && rule.Premises.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            {rule.Premises.map((premise, index) => (
+              <div key={index} className="text-center">
+                <KaTeXRenderer 
+                  expression={premise} 
+                  displayMode={false}
+                  className="text-xs"
+                />
               </div>
-              <div className="text-muted-foreground text-sm font-medium">⊢</div>
-            </>
-          )}
-          
-          <div>
-            <KaTeXRenderer 
-              expression={rule.Conclusion} 
-              displayMode={false}
-              className="text-sm"
-            />
+            ))}
           </div>
+        )}
+        
+        {rule.Premises && rule.Premises.length > 0 && (
+          <div className="border-t border-foreground/20 mx-1"></div>
+        )}
+        
+        <div className="text-center">
+          <KaTeXRenderer 
+            expression={rule.Conclusion} 
+            displayMode={false}
+            className="text-xs"
+          />
         </div>
       </div>
     </div>
@@ -156,7 +153,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
                     {section.Rules.filter(rule => rule.Reduction).map(renderReductionRule)}
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
                     {section.Rules.filter(rule => !rule.Reduction).map(renderRuleCard)}
                   </div>
                 )}
@@ -178,9 +175,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
               </div>
             )}
 
-            {/* Traditional premise/conclusion rules - vertical layout */}
+            {/* Traditional premise/conclusion rules - dense grid layout */}
             {flatRules?.some(rule => !rule.Reduction) && (
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
                 {flatRules.filter(rule => !rule.Reduction).map(renderRuleCard)}
               </div>
             )}

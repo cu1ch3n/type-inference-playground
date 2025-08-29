@@ -315,9 +315,9 @@ export const TypeInferencePlayground = () => {
   });
 
   return (
-    <>
+    <div className="h-screen bg-background animate-page-enter flex flex-col overflow-hidden">
       <Navbar />
-      <div className="h-screen bg-background animate-page-enter flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile: Traditional stacked layout */}
         <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
           <div className="space-y-2 sm:space-y-3">
@@ -461,6 +461,6 @@ export const TypeInferencePlayground = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

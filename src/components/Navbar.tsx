@@ -42,15 +42,15 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm bg-background/95">
-      <div className="container mx-auto px-4 sm:px-6 py-3">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          {/* Logo and Title */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded flex items-center justify-center flex-shrink-0">
-              <span className="text-primary-foreground font-bold text-xs sm:text-sm">λ</span>
+    <nav className="border-b border-border bg-background/95 backdrop-blur-sm flex-shrink-0">
+      <div className="container mx-auto px-3 py-2">
+        <div className="flex items-center justify-between gap-2">
+          {/* Logo and Title - Left aligned */}
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 bg-primary rounded flex items-center justify-center flex-shrink-0">
+              <span className="text-primary-foreground font-bold text-xs">λ</span>
             </div>
-            <h1 className="text-xs sm:text-lg font-semibold min-w-0">
+            <h1 className="text-sm font-semibold min-w-0">
               <button
                 onClick={() => {
                   const url = new URL(window.location.href);
@@ -60,23 +60,22 @@ export const Navbar = () => {
                 }}
                 className="hover:text-primary transition-colors block text-left"
               >
-                <span className="sm:hidden leading-tight">Type Inference<br />Playground</span>
-                <span className="hidden sm:inline">Type Inference Playground</span>
+                Type Inference Playground
               </button>
             </h1>
           </div>
           
-          {/* Navigation Items */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Compare Mode - Always visible with text on desktop */}
+          {/* Navigation Items - Right aligned */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {/* Compare Mode */}
             <Button
               variant="outline"
               onClick={toggleCompareMode}
               className="btn-interactive"
-              size={isMobile ? "sm" : "default"}
+              size="sm"
             >
-              <Table2 className="w-4 h-4 sm:mr-2" />
-              {!isMobile && <span>Compare</span>}
+              <Table2 className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline text-xs">Compare</span>
             </Button>
 
             {/* Help & Shortcuts Dropdown */}
@@ -85,11 +84,11 @@ export const Navbar = () => {
                 <Button 
                   variant="outline" 
                   className="btn-interactive"
-                  size={isMobile ? "sm" : "default"}
+                  size="sm"
                 >
-                  <HelpCircle className="w-4 h-4 sm:mr-2" />
-                  {!isMobile && <span>Help</span>}
-                  <ChevronDown className="w-3 h-3 ml-1 sm:ml-2" />
+                  <HelpCircle className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline text-xs">Help</span>
+                  <ChevronDown className="w-3 h-3 ml-1" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -115,11 +114,11 @@ export const Navbar = () => {
               variant="outline"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="btn-interactive relative"
-              size={isMobile ? "sm" : "default"}
+              size="sm"
             >
-              <Sun className="h-4 w-4 sm:mr-2 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 sm:mr-2 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              {!isMobile && <span className="dark:pl-6 pl-0">Theme</span>}
+              <Sun className="h-4 w-4 mr-1 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 mr-1 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="hidden sm:inline text-xs dark:pl-5 pl-0">Theme</span>
             </Button>
 
             {/* More Options Dropdown (GitHub + Settings) */}
@@ -128,11 +127,11 @@ export const Navbar = () => {
                 <Button 
                   variant="outline" 
                   className="btn-interactive"
-                  size={isMobile ? "sm" : "default"}
+                  size="sm"
                 >
-                  <Settings className="w-4 h-4 sm:mr-2" />
-                  {!isMobile && <span>More</span>}
-                  <ChevronDown className="w-3 h-3 ml-1 sm:ml-2" />
+                  <Settings className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline text-xs">More</span>
+                  <ChevronDown className="w-3 h-3 ml-1" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">

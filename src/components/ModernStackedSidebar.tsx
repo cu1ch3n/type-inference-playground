@@ -55,12 +55,10 @@ export const ModernStackedSidebar = ({
         </button>
 
         {leftColumnCollapsed ? (
-          <div className="h-full flex flex-col items-center pt-16">
+          <div className="h-full flex flex-col items-center justify-center">
             <div 
-              className="text-xs font-medium text-muted-foreground"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap"
               style={{ 
-                writingMode: 'vertical-rl', 
-                textOrientation: 'mixed',
                 transform: 'rotate(90deg)',
                 transformOrigin: 'center'
               }}
@@ -100,12 +98,10 @@ export const ModernStackedSidebar = ({
         </button>
 
         {rightColumnCollapsed ? (
-          <div className="h-full flex flex-col items-center pt-16">
+          <div className="h-full flex flex-col items-center justify-center">
             <div 
-              className="text-xs font-medium text-muted-foreground"
+              className="text-sm font-medium text-muted-foreground whitespace-nowrap"
               style={{ 
-                writingMode: 'vertical-rl', 
-                textOrientation: 'mixed',
                 transform: 'rotate(90deg)',
                 transformOrigin: 'center'
               }}

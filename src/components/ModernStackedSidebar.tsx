@@ -31,28 +31,31 @@ export const ModernStackedSidebar = ({
   setResult,
   expressionInputRef
 }: ModernStackedSidebarProps) => {
-  const [topSectionCollapsed, setTopSectionCollapsed] = useState(false);
-  const [bottomSectionCollapsed, setBottomSectionCollapsed] = useState(false);
+  const [leftColumnCollapsed, setLeftColumnCollapsed] = useState(false);
+  const [rightColumnCollapsed, setRightColumnCollapsed] = useState(false);
 
   return (
-    <div className="w-80 h-full bg-background border-r border-border flex flex-col">
-      {/* Top Section - Algorithm Selector */}
+    <div className="flex h-full bg-background border-r border-border">
+      {/* Left Column - Algorithm Selector */}
       <div className={cn(
-        "transition-all duration-300 border-b border-border",
-        topSectionCollapsed ? "h-12" : "flex-1"
+        "transition-all duration-300 border-r border-border",
+        leftColumnCollapsed ? "w-12" : "w-80"
       )}>
+        {/* Header with toggle */}
         <div 
-          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
-          onClick={() => setTopSectionCollapsed(!topSectionCollapsed)}
+          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
+          onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
-          <h3 className="text-sm font-medium">Algorithms</h3>
+          <h3 className={cn("text-sm font-medium", leftColumnCollapsed && "hidden")}>
+            Algorithms
+          </h3>
           <div className={cn(
             "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-            topSectionCollapsed ? "rotate-45" : "-rotate-45"
+            leftColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
           )} />
         </div>
         
-        {!topSectionCollapsed && (
+        {!leftColumnCollapsed && (
           <div className="p-4 h-full overflow-y-auto">
             <AlgorithmSelector
               algorithms={algorithms}
@@ -65,23 +68,26 @@ export const ModernStackedSidebar = ({
         )}
       </div>
 
-      {/* Bottom Section - Expression Input & History */}
+      {/* Right Column - Expression Input & History */}
       <div className={cn(
         "transition-all duration-300",
-        bottomSectionCollapsed ? "h-12" : "flex-1"
+        rightColumnCollapsed ? "w-12" : "w-80"
       )}>
+        {/* Header with toggle */}
         <div 
-          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
-          onClick={() => setBottomSectionCollapsed(!bottomSectionCollapsed)}
+          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
+          onClick={() => setRightColumnCollapsed(!rightColumnCollapsed)}
         >
-          <h3 className="text-sm font-medium">Expression & History</h3>
+          <h3 className={cn("text-sm font-medium", rightColumnCollapsed && "hidden")}>
+            Expression & History
+          </h3>
           <div className={cn(
             "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-            bottomSectionCollapsed ? "rotate-45" : "-rotate-45"
+            rightColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
           )} />
         </div>
         
-        {!bottomSectionCollapsed && (
+        {!rightColumnCollapsed && (
           <div className="p-4 h-full overflow-y-auto flex flex-col space-y-4">
             <ExpressionInput
               ref={expressionInputRef}

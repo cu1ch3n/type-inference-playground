@@ -65,7 +65,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       {/* Horizontal line with label positioned outside content area */}
       <div className="relative flex items-center mt-3">
         <div className="flex-1 border-t border-foreground/20"></div>
-        <div className="absolute right-0 translate-x-2">
+        <div className="absolute right-0 translate-x-4">
           <RuleTooltip 
             ruleId={rule.Id}
             rules={[rule]}

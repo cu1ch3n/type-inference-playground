@@ -4,7 +4,7 @@ import { ExpressionInput } from './ExpressionInput';
 import { AlgorithmResult } from '@/types/inference';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from '@/components/ui/resizable';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ModernStackedSidebarProps {
@@ -39,9 +39,9 @@ export const ModernStackedSidebar = ({
   const isMobile = useIsMobile();
 
   return (
-    <PanelGroup direction="horizontal" className="h-full">
+    <ResizablePanelGroup direction="horizontal" className="h-full">
       {/* Algorithm Selector Panel */}
-      <Panel 
+      <ResizablePanel 
         defaultSize={25} 
         minSize={15} 
         maxSize={40}
@@ -49,7 +49,10 @@ export const ModernStackedSidebar = ({
         collapsedSize={4}
         onCollapse={() => setLeftColumnCollapsed(true)}
         onExpand={() => setLeftColumnCollapsed(false)}
-        className="bg-background border-r border-border"
+        className={cn(
+          "bg-background border-r border-border transition-all duration-300",
+          leftColumnCollapsed && "w-12"
+        )}
       >
         {leftColumnCollapsed ? (
           <div 
@@ -89,12 +92,12 @@ export const ModernStackedSidebar = ({
             </div>
           </div>
         )}
-      </Panel>
+      </ResizablePanel>
 
-      <PanelResizeHandle className="w-1 bg-border hover:bg-primary/20 transition-colors" />
+      <ResizableHandle withHandle className="w-2 bg-border hover:bg-primary/20 transition-colors" />
 
       {/* Expression Input Panel */}
-      <Panel 
+      <ResizablePanel 
         defaultSize={30} 
         minSize={20} 
         maxSize={50}
@@ -102,7 +105,10 @@ export const ModernStackedSidebar = ({
         collapsedSize={4}
         onCollapse={() => setRightColumnCollapsed(true)}
         onExpand={() => setRightColumnCollapsed(false)}
-        className="bg-background border-r border-border"
+        className={cn(
+          "bg-background border-r border-border transition-all duration-300",
+          rightColumnCollapsed && "w-12"
+        )}
       >
         {rightColumnCollapsed ? (
           <div 
@@ -164,7 +170,7 @@ export const ModernStackedSidebar = ({
             </div>
           </div>
         )}
-      </Panel>
-    </PanelGroup>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 };

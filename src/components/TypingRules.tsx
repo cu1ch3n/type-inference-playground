@@ -112,14 +112,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
   const flatRules = getFlatRules(rules);
 
   return (
-    <Card className="academic-panel">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <BookOpen className="w-5 h-5 text-primary" />
+    <div className="space-y-4">
+      <div className="border-b border-border pb-2">
+        <h3 className="text-sm font-medium flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-primary" />
           Algorithmic Rules
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div>
         {isSectioned(rules) ? (
           // Sectioned view
           <div className="space-y-6">
@@ -180,7 +180,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick }: TypingRulesPro
             )}
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

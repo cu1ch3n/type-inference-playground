@@ -105,14 +105,14 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
   if (isSubtypingMode) {
     return (
-      <Card className="academic-panel hover-scale-sm transition-smooth">
-        <CardHeader className="pb-2 sm:pb-2">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
+      <div className="space-y-4">
+        <div className="border-b border-border pb-2">
+          <h3 className="text-sm font-medium flex items-center gap-2">
             <Code className="w-4 h-4 text-primary" />
             Subtyping Check
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 pt-0">
+          </h3>
+        </div>
+        <div className="space-y-3">
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <Select value={selectedExample} onValueChange={handleExampleSelect}>
               <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
@@ -274,23 +274,23 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               </p>
             </div>
           )}
-        </CardContent>
+        </div>
         
         <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
-      </Card>
+      </div>
     );
   }
 
   // Original single input mode for type inference
   return (
-    <Card className="academic-panel hover-scale-sm transition-smooth">
-      <CardHeader className="pb-2 sm:pb-2">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
+    <div className="space-y-4">
+      <div className="border-b border-border pb-2">
+        <h3 className="text-sm font-medium flex items-center gap-2">
           <Code className="w-4 h-4 text-primary" />
           Input Program
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 pt-0">
+        </h3>
+      </div>
+      <div className="space-y-3">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
             <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
@@ -405,9 +405,9 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             </p>
           </div>
         )}
-      </CardContent>
+      </div>
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
-    </Card>
+    </div>
   );
 });

@@ -32,7 +32,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-2 rounded border transition-all duration-200 hover:scale-[1.01]
+        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -41,9 +41,9 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       `}
       onClick={() => onRuleClick?.(rule.Id)}
     >
-      <div className="space-y-1">
-        {/* Premises section - fixed height to ensure alignment */}
-        <div className="h-6 flex flex-wrap items-center justify-center gap-1.5">
+      {/* Premises section - grows to fill available space and aligns to bottom */}
+      <div className="flex-1 flex flex-col justify-end">
+        <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
           {rule.Premises && rule.Premises.length > 0 && (
             rule.Premises.map((premise, index) => (
               <div key={index} className="text-center">
@@ -56,25 +56,26 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
             ))
           )}
         </div>
-        
-        {/* Horizontal line with badge - always present for alignment */}
-        <div className="relative flex items-center">
-          <div className="flex-1 border-t border-foreground/20"></div>
-          <Badge 
-            variant={activeRuleId === rule.Id ? "default" : "secondary"}
-            className="font-medium text-xs px-1.5 py-0.5 ml-2 bg-background"
-          >
-            {rule.Name}
-          </Badge>
-        </div>
-        
-        <div className="text-center">
-          <KaTeXRenderer 
-            expression={rule.Conclusion} 
-            displayMode={false}
-            className="text-xs"
-          />
-        </div>
+      </div>
+      
+      {/* Horizontal line with badge - always at same level */}
+      <div className="relative flex items-center mt-1">
+        <div className="flex-1 border-t border-foreground/20"></div>
+        <Badge 
+          variant={activeRuleId === rule.Id ? "default" : "secondary"}
+          className="font-medium text-xs px-1.5 py-0.5 ml-2 bg-background"
+        >
+          {rule.Name}
+        </Badge>
+      </div>
+      
+      {/* Conclusion section */}
+      <div className="text-center mt-1">
+        <KaTeXRenderer 
+          expression={rule.Conclusion} 
+          displayMode={false}
+          className="text-xs"
+        />
       </div>
     </div>
   );

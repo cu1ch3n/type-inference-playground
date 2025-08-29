@@ -139,19 +139,19 @@ const SortableExpressionItem = ({ expression, onRemove }: {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`flex items-center gap-2 p-2 border rounded cursor-move select-none transition-all duration-200 ${
+      className={`flex items-center gap-1 px-2 py-1 border rounded cursor-move select-none transition-all duration-200 ${
         isDragging ? 'scale-95 shadow-lg' : ''
       }`}
     >
-      <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" {...listeners} />
+      <GripVertical className="h-3 w-3 text-muted-foreground flex-shrink-0" {...listeners} />
       <code 
-        className="flex-1 text-sm font-code cursor-pointer hover:bg-accent/50 px-1 py-0.5 rounded transition-colors"
+        className="flex-1 text-xs font-code cursor-pointer hover:bg-accent/50 px-1 py-0.5 rounded transition-colors"
         onClick={handleCopyExpression}
       >
         {expression}
       </code>
       <X 
-        className="h-4 w-4 cursor-pointer hover:text-destructive flex-shrink-0" 
+        className="h-3 w-3 cursor-pointer hover:text-destructive flex-shrink-0" 
         onClick={(e) => {
           e.stopPropagation();
           onRemove(expression);

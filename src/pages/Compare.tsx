@@ -526,11 +526,6 @@ export const Compare = () => {
           Algorithms
         </h3>
         <div className="flex items-center gap-1">
-          {selectedAlgorithms.length > 0 && (
-            <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-              <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
-            </Button>
-          )}
           <Button
             variant="ghost"
             size="sm"
@@ -540,6 +535,11 @@ export const Compare = () => {
           >
             <Minus className="w-3 w-3" />
           </Button>
+          {selectedAlgorithms.length > 0 && (
+            <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+              <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+            </Button>
+          )}
         </div>
       </div>
       <div className="mx-2 border-b border-border"></div>
@@ -578,13 +578,18 @@ export const Compare = () => {
       <div className="p-2 flex items-center justify-between h-10">
         <h3 className="text-sm font-medium flex items-center gap-2">
           <Code className="w-4 h-4 text-primary" />
-          Test Expressions
+          Expressions
         </h3>
-        {expressions.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-            <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" onClick={() => setExpressionCollapsed(true)} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+            <Minus className="h-3 w-3" />
           </Button>
-        )}
+          {expressions.length > 0 && (
+            <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+              <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+            </Button>
+          )}
+        </div>
       </div>
       <div className="mx-2 border-b border-border"></div>
       <div className="flex-1 p-3 overflow-y-auto">
@@ -633,11 +638,11 @@ export const Compare = () => {
       <div className="p-2 flex items-center justify-between h-10">
         <div className="flex items-center gap-4">
           <div>
-            <h3 className="text-sm font-medium">Comparison</h3>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-              <Lightbulb className="w-3 w-3" />
-              {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
-            </p>
+            <h3 className="text-sm font-medium flex items-center gap-2">
+              <Table2 className="w-4 h-4 text-primary" />
+              Comparison
+            </h3>
+
           </div>
           <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
             <Button
@@ -763,11 +768,16 @@ export const Compare = () => {
                   <Card className="academic-panel transition-smooth">
                     <CardHeader className="flex flex-row items-center justify-between pb-3">
                       <CardTitle className="text-base">Selected Algorithms</CardTitle>
-                      {selectedAlgorithms.length > 0 && (
-                        <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-7 w-7 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                          <RotateCcw className="h-4 w-4 transition-transform duration-200 hover:rotate-180" />
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => setAlgorithmsCollapsed(true)} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                          <Minus className="h-3 w-3" />
                         </Button>
-                      )}
+                        {selectedAlgorithms.length > 0 && (
+                          <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                            <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+                          </Button>
+                        )}
+                      </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
@@ -797,16 +807,21 @@ export const Compare = () => {
                   </Card>
                 </div>
 
-                {/* Mobile Test Expressions */}
+                {/* Mobile Expressions */}
                 <div className="animate-stagger-2 hover-scale-sm">
                   <Card className="academic-panel transition-smooth">
                     <CardHeader className="flex flex-row items-center justify-between pb-3">
-                      <CardTitle className="text-base">Test Expressions</CardTitle>
-                      {expressions.length > 0 && (
-                        <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                          <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+                      <CardTitle className="text-base">Expressions</CardTitle>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="sm" onClick={() => setExpressionCollapsed(true)} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                          <Minus className="h-3 w-3" />
                         </Button>
-                      )}
+                        {expressions.length > 0 && (
+                          <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                            <RotateCcw className="h-3 w-3 transition-transform duration-200 hover:rotate-180" />
+                          </Button>
+                        )}
+                      </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
@@ -854,10 +869,7 @@ export const Compare = () => {
                       <div className="flex items-center gap-4">
                         <div>
                           <CardTitle>Comparison</CardTitle>
-                          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                            <Lightbulb className="w-3 h-3" />
-                            {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
-                          </p>
+
                         </div>
                         <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
                           <Button
@@ -1067,7 +1079,7 @@ export const Compare = () => {
 
                 <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
-                    {/* Middle Panel - Test Expressions */}
+                    {/* Middle Panel - Expressions */}
                     <Panel 
                       ref={expressionRef}
                       id="expressions"
@@ -1094,7 +1106,7 @@ export const Compare = () => {
                                   transformOrigin: 'center'
                                 }}
                               >
-                                Test Expressions
+                                Expressions
                               </span>
                             </div>
                             <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />

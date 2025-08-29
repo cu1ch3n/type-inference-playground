@@ -472,4 +472,28 @@ All colors MUST be HSL. Mathematical typography optimized.
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
+  
+  /* Responsive auto-grid for Typing Rules */
+  .auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-column-width, 280px), 1fr));
+    grid-auto-columns: minmax(var(--min-column-width, 280px), 1fr);
+    max-width: 100%;
+  }
+  
+  /* Ensure rules don't get too wide on large screens */
+  .auto-grid > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+  
+  /* Responsive grid for worklist/reduction rules */
+  .auto-grid[style*="--min-column-width: 350px"] {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+  
+  /* Responsive grid for traditional premise/conclusion rules */
+  .auto-grid[style*="--min-column-width: 280px"] {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }

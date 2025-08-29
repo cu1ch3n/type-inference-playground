@@ -211,42 +211,56 @@ export const SideBySideComparison = ({
                   </div>
                 </div>
                 <div className="flex-1 overflow-y-auto">
-                  <PanelGroup direction="horizontal" className="h-full">
-                    {selectedAlgorithms.map((algorithmId, index) => {
-                      const algorithm = algorithms.find(alg => alg.Id === algorithmId);
-                      if (!algorithm) return null;
+                  {selectedAlgorithms.length === 1 ? (
+                    // Single algorithm - full width
+                    <div className="h-full p-3">
+                      <TypingRules
+                        rules={algorithms.find(alg => alg.Id === selectedAlgorithms[0])?.Rules || []}
+                        activeRuleId={activeRuleId}
+                        onRuleClick={handleRuleClick}
+                        showHeader={false}
+                      />
+                    </div>
+                  ) : (
+                    // Multiple algorithms - horizontal layout with better spacing
+                    <PanelGroup direction="horizontal" className="h-full">
+                      {selectedAlgorithms.map((algorithmId, index) => {
+                        const algorithm = algorithms.find(alg => alg.Id === algorithmId);
+                        if (!algorithm) return null;
 
-                      return (
-                        <div key={algorithmId} className="contents">
-                          <Panel 
-                            id={`rules-${algorithmId}`} 
-                            order={index + 1} 
-                            defaultSize={100 / selectedAlgorithms.length} 
-                            minSize={20}
-                          >
-                            <div className="h-full flex flex-col">
-                              <div className="p-2 border-b border-border bg-muted/20">
-                                <Badge variant="secondary" className="text-xs">
-                                  {algorithm.Name}
-                                </Badge>
+                        return (
+                          <div key={algorithmId} className="contents">
+                            <Panel 
+                              id={`rules-${algorithmId}`} 
+                              order={index + 1} 
+                              defaultSize={100 / selectedAlgorithms.length} 
+                              minSize={25}
+                              maxSize={100 / Math.max(1, selectedAlgorithms.length - 1)}
+                            >
+                              <div className="h-full flex flex-col">
+                                <div className="p-2 border-b border-border bg-muted/20">
+                                  <Badge variant="secondary" className="text-xs">
+                                    {algorithm.Name}
+                                  </Badge>
+                                </div>
+                                <div className="flex-1 p-3 overflow-y-auto">
+                                  <TypingRules
+                                    rules={algorithm.Rules}
+                                    activeRuleId={activeRuleId}
+                                    onRuleClick={handleRuleClick}
+                                    showHeader={false}
+                                  />
+                                </div>
                               </div>
-                              <div className="flex-1 p-3 overflow-y-auto">
-                                <TypingRules
-                                  rules={algorithm.Rules}
-                                  activeRuleId={activeRuleId}
-                                  onRuleClick={handleRuleClick}
-                                  showHeader={false}
-                                />
-                              </div>
-                            </div>
-                          </Panel>
-                          {index < selectedAlgorithms.length - 1 && (
-                            <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </PanelGroup>
+                            </Panel>
+                            {index < selectedAlgorithms.length - 1 && (
+                              <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '1px' }} />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </PanelGroup>
+                  )}
                 </div>
               </div>
             )}

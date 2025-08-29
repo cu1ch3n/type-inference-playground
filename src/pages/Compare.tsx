@@ -520,8 +520,8 @@ export const Compare = () => {
         <div className="h-screen bg-background flex flex-col overflow-hidden">
           <Navbar />
           <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Mobile: Traditional stacked layout */}
-            <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
+            {/* Mobile: Hide the traditional stacked layout - we'll use the panel layout for all screens */}
+            <div className="hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
               <div className="space-y-2 sm:space-y-3">
                 {/* Mobile header */}
                 <div className="mb-3">
@@ -719,17 +719,17 @@ export const Compare = () => {
               </div>
             </div>
 
-            {/* Desktop: Panel-based layout similar to main page */}
-            <div className="hidden lg:flex flex-1 overflow-hidden">
+            {/* Panel-based layout for all screens */}
+            <div className="flex flex-1 overflow-hidden">
               <PanelGroup direction="horizontal" className="h-full">
                 {/* Left Panel - Algorithm Selector */}
                 <Panel 
                   ref={algorithmsRef}
                   id="algorithms"
                   order={1}
-                  defaultSize={30} 
-                  minSize={20} 
-                  maxSize={45} 
+                  defaultSize={25} 
+                  minSize={15} 
+                  maxSize={40} 
                   collapsible={true}
                   collapsedSize={3}
                   onCollapse={() => setAlgorithmsCollapsed(true)}
@@ -818,9 +818,9 @@ export const Compare = () => {
                   ref={expressionRef}
                   id="expressions"
                   order={2}
-                  defaultSize={20} 
-                  minSize={15} 
-                  maxSize={35} 
+                  defaultSize={25} 
+                  minSize={20} 
+                  maxSize={40} 
                   collapsible={true}
                   collapsedSize={3}
                   onCollapse={() => setExpressionCollapsed(true)}
@@ -906,7 +906,7 @@ export const Compare = () => {
                 <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
                 {/* Right Panel - Comparison Table */}
-                <Panel id="comparison" order={3} defaultSize={50} minSize={30}>
+                <Panel id="comparison" order={3} defaultSize={50} minSize={35}>
                   <div className="h-full flex flex-col bg-background">
                     <div className="p-2 flex items-center justify-between h-10">
                       <div className="flex items-center gap-2 min-w-0 flex-1">

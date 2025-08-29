@@ -302,81 +302,17 @@ export const TypeInferencePlayground = () => {
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       <Navbar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile: Traditional stacked layout */}
-        <div className="lg:hidden w-full max-w-[1600px] mx-auto px-2 sm:px-4 py-2 sm:py-4 flex-1 overflow-y-auto">
-          <div className="space-y-2 sm:space-y-3">
-            {/* Mobile Algorithm Selector */}
-            <div className="animate-stagger-1 hover-scale-sm">
-              <AlgorithmSelector
-                algorithms={allAlgorithms}
-                selectedAlgorithm={selectedAlgorithm}
-                selectedVariant={selectedVariant}
-                onAlgorithmChange={handleAlgorithmChange}
-                onVariantChange={handleVariantChange}
-              />
-            </div>
-            
-            {/* Mobile Expression Input */}
-            <div className="animate-stagger-2 hover-scale-sm">
-              <ExpressionInput
-                ref={expressionInputRef}
-                expression={expression}
-                onExpressionChange={(expr) => {
-                  setExpression(expr);
-                  if (!expr.trim()) {
-                    setResult(undefined);
-                  }
-                }}
-                onInfer={handleInference}
-                isInferring={isInferring}
-                selectedAlgorithm={selectedAlgorithm}
-                algorithms={allAlgorithms}
-                selectedVariant={selectedVariant}
-              />
-            </div>
-            
-            {/* Mobile Derivation */}
-            <div className="animate-stagger-3 hover-scale-sm">
-              <DerivationViewer
-                result={result}
-                algorithm={selectedAlgorithmData}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                onStepClick={handleStepClick}
-                expression={expression}
-                isInferring={isInferring}
-                variant={selectedVariant}
-              />
-            </div>
-            
-            {/* Mobile Typing Rules */}
-            {selectedAlgorithmData && (
-              <div className="animate-stagger-4 hover-scale-sm">
-                <TypingRules
-                  rules={
-                    selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                      ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                      : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                  }
-                  activeRuleId={activeRuleId}
-                  onRuleClick={handleRuleClick}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-                {/* Modern resizable layout for larger screens */}
-        <div className="hidden lg:flex flex-1 overflow-hidden">
+        {/* Modern resizable layout for all screens */}
+        <div className="flex flex-1 overflow-hidden">
           <PanelGroup direction="horizontal" className="h-full">
             {/* Left Sidebar - Algorithm Selector */}
             <Panel 
               ref={algorithmsRef}
               id="algorithms"
               order={1}
-              defaultSize={30} 
-              minSize={20} 
-              maxSize={45} 
+              defaultSize={25} 
+              minSize={15} 
+              maxSize={40} 
               collapsible={true}
               collapsedSize={3}
               onCollapse={() => setAlgorithmsCollapsed(true)}
@@ -447,7 +383,7 @@ export const TypeInferencePlayground = () => {
             <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
             {/* Main Content Area */}
-            <Panel id="main" order={2} defaultSize={70} minSize={45}>
+            <Panel id="main" order={2} defaultSize={75} minSize={50}>
               <PanelGroup direction="vertical" className="h-full">
                 {/* Top Row - Expression and Derivation */}
                 <Panel id="top-row" order={1} defaultSize={60} minSize={30} className="bg-background">
@@ -457,9 +393,9 @@ export const TypeInferencePlayground = () => {
                       ref={expressionRef}
                       id="expression"
                       order={1}
-                      defaultSize={30} 
-                      minSize={20} 
-                      maxSize={50} 
+                      defaultSize={35} 
+                      minSize={25} 
+                      maxSize={55} 
                       collapsible={true}
                       collapsedSize={3}
                       onCollapse={() => setExpressionCollapsed(true)}
@@ -538,7 +474,7 @@ export const TypeInferencePlayground = () => {
                     <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
                     {/* Derivation Column */}
-                    <Panel id="derivation" order={2} defaultSize={70} minSize={50}>
+                    <Panel id="derivation" order={2} defaultSize={65} minSize={45}>
                       <div className="h-full flex flex-col bg-background">
                         <div className="p-2 flex items-center justify-between h-10">
                           <div className="flex items-center gap-2 min-w-0 flex-1">

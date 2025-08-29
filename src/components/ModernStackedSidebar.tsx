@@ -55,7 +55,7 @@ export const ModernStackedSidebar = ({
         </button>
 
         {leftColumnCollapsed ? (
-          <div className="flex-1 flex items-center justify-center min-h-0">
+          <div className="flex-1 flex items-center justify-center min-h-0 pt-12">
             <div 
               className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none"
               style={{ 
@@ -98,7 +98,7 @@ export const ModernStackedSidebar = ({
         </button>
 
         {rightColumnCollapsed ? (
-          <div className="flex-1 flex items-center justify-center min-h-0">
+          <div className="flex-1 flex items-center justify-center min-h-0 pt-12">
             <div 
               className="text-sm font-medium text-muted-foreground whitespace-nowrap select-none"
               style={{ 

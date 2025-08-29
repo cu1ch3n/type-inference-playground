@@ -82,7 +82,7 @@ export const Navbar = () => {
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* More Options Dropdown (GitHub + Settings) */}
+            {/* GitHub Links Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
@@ -90,17 +90,10 @@ export const Navbar = () => {
                   className="btn-interactive"
                   size="sm"
                 >
-                  <Settings className="w-4 h-4 mr-1" />
-                  <span className="hidden sm:inline text-xs">More</span>
-                  <ChevronDown className="w-3 h-3 ml-1" />
+                  <Github className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => setSettingsModalOpen(true)}>
-                  <Settings className="w-4 h-4 mr-2" />
-                  WASM Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
                 >

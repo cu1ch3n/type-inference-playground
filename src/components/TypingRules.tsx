@@ -41,19 +41,11 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       `}
       onClick={() => onRuleClick?.(rule.Id)}
     >
-      <div className="flex items-center justify-center mb-1">
-        <Badge 
-          variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="font-medium text-xs px-1.5 py-0.5"
-        >
-          {rule.Name}
-        </Badge>
-      </div>
-
       <div className="space-y-1">
-        {rule.Premises && rule.Premises.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            {rule.Premises.map((premise, index) => (
+        {/* Premises section - fixed height to ensure alignment */}
+        <div className="h-6 flex flex-wrap items-center justify-center gap-1.5">
+          {rule.Premises && rule.Premises.length > 0 && (
+            rule.Premises.map((premise, index) => (
               <div key={index} className="text-center">
                 <KaTeXRenderer 
                   expression={premise} 
@@ -61,13 +53,20 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
                   className="text-xs"
                 />
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
         
-        {rule.Premises && rule.Premises.length > 0 && (
-          <div className="border-t border-foreground/20 mx-1"></div>
-        )}
+        {/* Horizontal line with badge - always present for alignment */}
+        <div className="relative flex items-center">
+          <div className="flex-1 border-t border-foreground/20"></div>
+          <Badge 
+            variant={activeRuleId === rule.Id ? "default" : "secondary"}
+            className="font-medium text-xs px-1.5 py-0.5 ml-2 bg-background"
+          >
+            {rule.Name}
+          </Badge>
+        </div>
         
         <div className="text-center">
           <KaTeXRenderer 

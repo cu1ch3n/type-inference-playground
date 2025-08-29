@@ -139,9 +139,6 @@ export const SideBySideComparison = ({
                           <h3 className="text-sm font-medium truncate">
                             {algorithm?.Name || algorithmId}
                           </h3>
-                          <Badge variant="outline" className="text-xs flex-shrink-0">
-                            {algorithm?.Id || algorithmId}
-                          </Badge>
                         </div>
                         {/* Derivation Content */}
                         <div className="flex-1 p-3 overflow-y-auto">

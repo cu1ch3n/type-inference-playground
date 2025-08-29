@@ -3,6 +3,7 @@ import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
 import { AlgorithmResult } from '@/types/inference';
 import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ModernStackedSidebarProps {
   algorithms: any[];
@@ -38,25 +39,38 @@ export const ModernStackedSidebar = ({
     <div className="flex h-full bg-background border-r border-border">
       {/* Left Column - Algorithm Selector */}
       <div className={cn(
-        "transition-all duration-300 border-r border-border",
-        leftColumnCollapsed ? "w-12" : "w-80"
+        "transition-all duration-300 border-r border-border relative",
+        leftColumnCollapsed ? "w-16" : "w-[28rem]"
       )}>
-        {/* Header with toggle */}
-        <div 
-          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
+        {/* Collapse button */}
+        <button
+          className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
           onClick={() => setLeftColumnCollapsed(!leftColumnCollapsed)}
         >
-          <h3 className={cn("text-sm font-medium", leftColumnCollapsed && "hidden")}>
-            Algorithms
-          </h3>
-          <div className={cn(
-            "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-            leftColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
-          )} />
-        </div>
-        
-        {!leftColumnCollapsed && (
-          <div className="p-4 h-full overflow-y-auto">
+          {leftColumnCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
+
+        {leftColumnCollapsed ? (
+          <div className="h-full flex flex-col items-center pt-16">
+            <div 
+              className="text-xs font-medium text-muted-foreground"
+              style={{ 
+                writingMode: 'vertical-rl', 
+                textOrientation: 'mixed',
+                transform: 'rotate(90deg)',
+                transformOrigin: 'center'
+              }}
+            >
+              Algorithms
+            </div>
+          </div>
+        ) : (
+          <div className="p-6 h-full overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">Algorithms</h3>
             <AlgorithmSelector
               algorithms={algorithms}
               selectedAlgorithm={selectedAlgorithm}
@@ -70,53 +84,68 @@ export const ModernStackedSidebar = ({
 
       {/* Right Column - Expression Input & History */}
       <div className={cn(
-        "transition-all duration-300",
-        rightColumnCollapsed ? "w-12" : "w-80"
+        "transition-all duration-300 relative",
+        rightColumnCollapsed ? "w-16" : "w-[28rem]"
       )}>
-        {/* Header with toggle */}
-        <div 
-          className="h-12 px-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
+        {/* Collapse button */}
+        <button
+          className="absolute top-4 right-2 z-10 p-1 rounded hover:bg-muted/50 transition-colors"
           onClick={() => setRightColumnCollapsed(!rightColumnCollapsed)}
         >
-          <h3 className={cn("text-sm font-medium", rightColumnCollapsed && "hidden")}>
-            Expression & History
-          </h3>
-          <div className={cn(
-            "w-4 h-4 border-r-2 border-b-2 border-muted-foreground transition-transform duration-200",
-            rightColumnCollapsed ? "rotate-45" : "rotate-[135deg]"
-          )} />
-        </div>
-        
-        {!rightColumnCollapsed && (
-          <div className="p-4 h-full overflow-y-auto flex flex-col space-y-4">
-            <ExpressionInput
-              ref={expressionInputRef}
-              expression={expression}
-              onExpressionChange={(expr) => {
-                onExpressionChange(expr);
-                if (!expr.trim()) {
-                  setResult(undefined);
-                }
+          {rightColumnCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
+
+        {rightColumnCollapsed ? (
+          <div className="h-full flex flex-col items-center pt-16">
+            <div 
+              className="text-xs font-medium text-muted-foreground"
+              style={{ 
+                writingMode: 'vertical-rl', 
+                textOrientation: 'mixed',
+                transform: 'rotate(90deg)',
+                transformOrigin: 'center'
               }}
-              onInfer={onInfer}
-              isInferring={isInferring}
-              selectedAlgorithm={selectedAlgorithm}
-              algorithms={algorithms}
-              selectedVariant={selectedVariant}
-            />
+            >
+              Expression
+            </div>
+          </div>
+        ) : (
+          <div className="p-6 h-full overflow-y-auto flex flex-col space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Expression & Input</h3>
+              <ExpressionInput
+                ref={expressionInputRef}
+                expression={expression}
+                onExpressionChange={(expr) => {
+                  onExpressionChange(expr);
+                  if (!expr.trim()) {
+                    setResult(undefined);
+                  }
+                }}
+                onInfer={onInfer}
+                isInferring={isInferring}
+                selectedAlgorithm={selectedAlgorithm}
+                algorithms={algorithms}
+                selectedVariant={selectedVariant}
+              />
+            </div>
             
             {/* History Section */}
-            <div className="flex-1 bg-card border border-border rounded-lg p-3 min-h-32">
-              <h4 className="text-sm font-medium mb-2">Expression History</h4>
-              <div className="space-y-1 text-xs">
+            <div className="flex-1 bg-card border border-border rounded-lg p-4 min-h-32">
+              <h4 className="text-base font-medium mb-3">Expression History</h4>
+              <div className="space-y-2 text-sm">
                 <div className="text-muted-foreground">Recent expressions will appear here</div>
               </div>
             </div>
 
             {/* Program Card */}
-            <div className="bg-card border border-border rounded-lg p-3">
-              <h4 className="text-sm font-medium mb-2">Program Information</h4>
-              <div className="space-y-1 text-xs">
+            <div className="bg-card border border-border rounded-lg p-4">
+              <h4 className="text-base font-medium mb-3">Program Information</h4>
+              <div className="space-y-2 text-sm">
                 <div className="text-muted-foreground">Program details and metadata will appear here</div>
               </div>
             </div>

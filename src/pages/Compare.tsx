@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid, Binary, Code, Minus, Maximize2, SquareSplitHorizontal } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   DndContext,
   closestCenter,
@@ -178,6 +180,10 @@ export const Compare = () => {
   // Panel collapse states
   const [algorithmsCollapsed, setAlgorithmsCollapsed] = useState(false);
   const [expressionCollapsed, setExpressionCollapsed] = useState(false);
+  
+  // Mobile tab state
+  const [activeTab, setActiveTab] = useState('algorithms');
+  const isMobile = useIsMobile();
   
   // Panel refs
   const algorithmsRef = useRef<ImperativePanelHandle>(null);
@@ -732,295 +738,181 @@ export const Compare = () => {
               </div>
             </div>
 
-            {/* Panel-based layout for all screens */}
-            <div className="flex flex-1 overflow-hidden">
-              <PanelGroup direction="horizontal" className="h-full">
-                {/* Left Panel - Algorithm Selector */}
-                <Panel 
-                  ref={algorithmsRef}
-                  id="algorithms"
-                  order={1}
-                  defaultSize={25} 
-                  minSize={15} 
-                  maxSize={40} 
-                  collapsible={true}
-                  collapsedSize={3}
-                  onCollapse={() => setAlgorithmsCollapsed(true)}
-                  onExpand={() => setAlgorithmsCollapsed(false)}
-                >
-                  {algorithmsCollapsed ? (
-                    <div 
-                      className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
-                      onClick={handleExpandAlgorithms}
+              {isMobile ? (
+                // Mobile tab layout
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+                  <div className="border-b border-border bg-background">
+                    <TabsList className="grid w-full grid-cols-3 h-auto p-1">
+                      <TabsTrigger value="algorithms" className="text-xs py-2">
+                        <Binary className="w-3 h-3 mr-1" />
+                        Algorithms
+                      </TabsTrigger>
+                      <TabsTrigger value="expressions" className="text-xs py-2">
+                        <Code className="w-3 h-3 mr-1" />
+                        Expressions
+                      </TabsTrigger>
+                      <TabsTrigger value="comparison" className="text-xs py-2">
+                        <Table2 className="w-3 h-3 mr-1" />
+                        Comparison
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <TabsContent value="algorithms" className="h-full m-0">
+                      {algorithmsContent}
+                    </TabsContent>
+                    <TabsContent value="expressions" className="h-full m-0">
+                      {expressionsContent}
+                    </TabsContent>
+                    <TabsContent value="comparison" className="h-full m-0">
+                      {comparisonContent}
+                    </TabsContent>
+                  </div>
+                </Tabs>
+              ) : (
+                // Desktop panel layout
+                <div className="flex flex-1 overflow-hidden">
+                  <PanelGroup direction="horizontal" className="h-full">
+                    {/* Left Panel - Algorithm Selector */}
+                    <Panel 
+                      ref={algorithmsRef}
+                      id="algorithms"
+                      order={1}
+                      defaultSize={25} 
+                      minSize={15} 
+                      maxSize={40} 
+                      collapsible={true}
+                      collapsedSize={3}
+                      onCollapse={() => setAlgorithmsCollapsed(true)}
+                      onExpand={() => setAlgorithmsCollapsed(false)}
                     >
-                      <div className="flex flex-col items-center justify-center gap-3">
-                        <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
-                          <span 
-                            className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
-                            style={{ 
-                              transform: 'rotate(270deg)',
-                              transformOrigin: 'center'
-                            }}
-                          >
-                            Algorithms
-                          </span>
-                        </div>
-                        <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-full flex flex-col bg-background border-r border-border">
-                      <div className="p-2 flex items-center justify-between h-10">
-                        <h3 className="text-sm font-medium flex items-center gap-2">
-                          <Binary className="w-4 h-4 text-primary" />
-                          Algorithms
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          {selectedAlgorithms.length > 0 && (
-                            <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                              <RotateCcw className="w-3 h-3 transition-transform duration-200 hover:rotate-180" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleCollapseAlgorithms}
-                            className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
-                            title="Minimize panel"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="mx-2 border-b border-border"></div>
-                      <div className="flex-1 p-3 overflow-y-auto">
-                        <div className="space-y-3">
-                          <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
-                            <div className="flex flex-wrap gap-2">
-                              {selectedAlgorithms.map((algorithmId) => {
-                                const algorithm = algorithms.find(a => a.Id === algorithmId);
-                                return (
-                                  <SortableAlgorithmBadge
-                                    key={algorithmId}
-                                    algorithmId={algorithmId}
-                                    algorithm={algorithm}
-                                    onRemove={removeAlgorithm}
-                                  />
-                                );
-                              })}
+                      {algorithmsCollapsed ? (
+                        <div 
+                          className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                          onClick={handleExpandAlgorithms}
+                        >
+                          <div className="flex flex-col items-center justify-center gap-3">
+                            <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                              <span 
+                                className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                                style={{ 
+                                  transform: 'rotate(270deg)',
+                                  transformOrigin: 'center'
+                                }}
+                              >
+                                Algorithms
+                              </span>
                             </div>
-                          </SortableContext>
-                          
-                          <AlgorithmSelector
-                            algorithms={algorithms}
-                            onAlgorithmChange={(algorithmId) => {
-                              addAlgorithm(algorithmId);
-                              setAlgorithmSearch('');
-                            }}
-                          />
+                            <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  )}
-                </Panel>
-
-                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
-
-                {/* Middle Panel - Test Expressions */}
-                <Panel 
-                  ref={expressionRef}
-                  id="expressions"
-                  order={2}
-                  defaultSize={25} 
-                  minSize={20} 
-                  maxSize={40} 
-                  collapsible={true}
-                  collapsedSize={3}
-                  onCollapse={() => setExpressionCollapsed(true)}
-                  onExpand={() => setExpressionCollapsed(false)}
-                >
-                  {expressionCollapsed ? (
-                    <div 
-                      className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
-                      onClick={handleExpandExpression}
-                    >
-                      <div className="flex flex-col items-center justify-center gap-3">
-                        <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
-                          <span 
-                            className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
-                            style={{ 
-                              transform: 'rotate(270deg)',
-                              transformOrigin: 'center'
-                            }}
-                          >
-                            Test Expressions
-                          </span>
-                        </div>
-                        <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-full flex flex-col bg-background border-r border-border">
-                      <div className="p-2 flex items-center justify-between h-10">
-                        <h3 className="text-sm font-medium flex items-center gap-2">
-                          <Code className="w-4 h-4 text-primary" />
-                          Test Expressions
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          {expressions.length > 0 && (
-                            <Button variant="ghost" size="sm" onClick={clearAllExpressions} className="h-5 w-5 p-0 opacity-60 hover:opacity-100 transition-smooth">
-                              <RotateCcw className="w-2.5 h-2.5 transition-transform duration-200 hover:rotate-180" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleCollapseExpression}
-                            className="h-5 w-5 p-0 opacity-60 hover:opacity-100 transition-smooth"
-                            title="Minimize panel"
-                          >
-                            <Minus className="w-2.5 h-2.5" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="mx-2 border-b border-border"></div>
-                      <div className="flex-1 p-3 overflow-y-auto">
-                        <div className="space-y-3">
-                          <SortableContext items={expressions} strategy={verticalListSortingStrategy}>
-                            <div className="space-y-2">
-                              {expressions.map((expression) => (
-                                <SortableExpressionItem
-                                  key={expression}
-                                  expression={expression}
-                                  onRemove={removeExpression}
-                                />
-                              ))}
+                      ) : (
+                        <div className="h-full flex flex-col bg-background border-r border-border">
+                          <div className="p-2 flex items-center justify-between h-10">
+                            <h3 className="text-sm font-medium flex items-center gap-2">
+                              <Binary className="w-4 h-4 text-primary" />
+                              Algorithms
+                            </h3>
+                            <div className="flex items-center gap-1">
+                              {selectedAlgorithms.length > 0 && (
+                                <Button variant="ghost" size="sm" onClick={clearAllAlgorithms} className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth">
+                                  <RotateCcw className="w-3 h-3 transition-transform duration-200 hover:rotate-180" />
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleCollapseAlgorithms}
+                                className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+                                title="Minimize panel"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </Button>
                             </div>
-                          </SortableContext>
-                          
-                          <div className="flex gap-1">
-                            <Input
-                              value={newExpression}
-                              onChange={(e) => setNewExpression(e.target.value)}
-                              placeholder="Add expression..."
-                              onKeyDown={(e) => e.key === 'Enter' && addExpression()}
-                              className="flex-1 font-code text-xs h-7 px-2"
-                            />
-                            <Button onClick={addExpression} size="sm" className="h-7 w-7 p-0">
-                              <Plus className="h-3 w-3" />
-                            </Button>
                           </div>
-                          
-                          {/* Expression History */}
-                          <ExpressionHistory 
-                            onSelectExpression={(expression) => {
-                              if (!expressions.includes(expression)) {
-                                setExpressions(prev => [...prev, expression]);
-                              }
-                            }}
-                            onAddToHistory={() => {}} // Not used in compare mode, history comes from main playground
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </Panel>
-
-                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
-
-                {/* Right Panel - Comparison Table */}
-                <Panel id="comparison" order={3} defaultSize={50} minSize={35}>
-                  <div className="h-full flex flex-col bg-background">
-                    <div className="p-2 flex items-center justify-between h-10">
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Table2 className="w-4 h-4 text-primary flex-shrink-0" />
-                        <h2 className="text-sm font-medium flex-shrink-0">Comparison</h2>
-                        <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
-                          <Button
-                            variant={viewMode === 'table' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => setViewMode('table')}
-                            className={`h-5 px-1.5 text-xs ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
-                          >
-                            <Table2 className="h-2.5 w-2.5 mr-0.5" />
-                            Table
-                          </Button>
-                          <Button
-                            variant={viewMode === 'sidebyside' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => setViewMode('sidebyside')}
-                            className={`h-5 px-1.5 text-xs ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
-                          >
-                            <SquareSplitHorizontal className="h-2.5 w-2.5 mr-0.5" />
-                            Split
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <CompareShareExportButtons
-                          selectedAlgorithms={selectedAlgorithms}
-                          expressions={expressions}
-                          comparisonResults={comparisonResults}
-                        />
-                      </div>
-                    </div>
-                    <div className="mx-2 border-b border-border"></div>
-                    <div className="flex-1 p-3 overflow-y-auto">
-                      {viewMode === 'table' ? (
-                        selectedAlgorithms.length === 0 || expressions.length === 0 ? (
-                          <div className="text-center py-8 text-muted-foreground">
-                            {selectedAlgorithms.length === 0 && "Select at least one algorithm"}
-                            {selectedAlgorithms.length === 0 && expressions.length === 0 && " and "}
-                            {expressions.length === 0 && "add at least one expression"}
-                            {" to start comparing."}
-                          </div>
-                        ) : (
-                          <div className="overflow-x-auto">
-                            <Table className="table-fixed">
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead className="min-w-[160px] h-8 py-1 px-2 text-xs">Expression</TableHead>
-                                  {selectedAlgorithms.map(algorithmId => {
+                          <div className="mx-2 border-b border-border"></div>
+                          <div className="flex-1 p-3 overflow-y-auto">
+                            <div className="space-y-3">
+                              <SortableContext items={selectedAlgorithms} strategy={horizontalListSortingStrategy}>
+                                <div className="flex flex-wrap gap-2">
+                                  {selectedAlgorithms.map((algorithmId) => {
                                     const algorithm = algorithms.find(a => a.Id === algorithmId);
                                     return (
-                                      <TableHead key={algorithmId} className="text-center min-w-[100px] h-8 py-1 px-2 text-xs">
-                                        <div className="font-semibold truncate">{algorithm?.Name || algorithmId}</div>
-                                      </TableHead>
+                                      <SortableAlgorithmBadge
+                                        key={algorithmId}
+                                        algorithmId={algorithmId}
+                                        algorithm={algorithm}
+                                        onRemove={removeAlgorithm}
+                                      />
                                     );
                                   })}
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {expressions.map(expression => (
-                                  <TableRow key={expression} className="border-b">
-                                    <TableCell className="font-code text-xs border-r py-1 px-2">
-                                      <code className="text-xs">{expression}</code>
-                                    </TableCell>
-                                    {selectedAlgorithms.map(algorithmId => (
-                                      <TableCell key={`${expression}-${algorithmId}`} className="text-center py-0 px-1">
-                                        {renderCell(algorithmId, expression)}
-                                      </TableCell>
-                                    ))}
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
+                                </div>
+                              </SortableContext>
+                              
+                              <AlgorithmSelector
+                                algorithms={algorithms}
+                                onAlgorithmChange={(algorithmId) => {
+                                  addAlgorithm(algorithmId);
+                                  setAlgorithmSearch('');
+                                }}
+                              />
+                            </div>
                           </div>
-                        )
-                      ) : (
-                        <SideBySideComparison
-                          selectedAlgorithms={selectedAlgorithms}
-                          expressions={expressions}
-                          comparisonResults={comparisonResults}
-                        />
+                        </div>
                       )}
-                    </div>
-                  </div>
-                </Panel>
-              </PanelGroup>
+                    </Panel>
+
+                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+                    {/* Middle Panel - Test Expressions */}
+                    <Panel 
+                      ref={expressionRef}
+                      id="expressions"
+                      order={2}
+                      defaultSize={25} 
+                      minSize={20} 
+                      maxSize={40} 
+                      collapsible={true}
+                      collapsedSize={3}
+                      onCollapse={() => setExpressionCollapsed(true)}
+                      onExpand={() => setExpressionCollapsed(false)}
+                    >
+                      {expressionCollapsed ? (
+                        <div 
+                          className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                          onClick={handleExpandExpression}
+                        >
+                          <div className="flex flex-col items-center justify-center gap-3">
+                            <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                              <span 
+                                className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                                style={{ 
+                                  transform: 'rotate(270deg)',
+                                  transformOrigin: 'center'
+                                }}
+                              >
+                                Test Expressions
+                              </span>
+                            </div>
+                            <Code className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
+                          </div>
+                        </div>
+                      ) : (
+                        expressionsContent
+                      )}
+                    </Panel>
+
+                <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+                    {/* Right Panel - Comparison Table */}
+                    <Panel id="comparison" order={3} defaultSize={50} minSize={35}>
+                      {comparisonContent}
+                    </Panel>
+                  </PanelGroup>
+                </div>
+              )}
             </div>
           </div>
-        </div>
       </DndContext>
         
       {/* Derivation Modal */}

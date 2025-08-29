@@ -18,6 +18,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { KaTeXRenderer } from './KaTeXRenderer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import { TypingRules } from './TypingRules';
 import { ZoomDialog } from './ZoomDialog';
@@ -49,6 +51,10 @@ export const TypeInferencePlayground = () => {
   const [algorithmsCollapsed, setAlgorithmsCollapsed] = useState(false);
   const [expressionCollapsed, setExpressionCollapsed] = useState(false);
   const [rulesCollapsed, setRulesCollapsed] = useState(false);
+  
+  // Mobile tab state
+  const [activeTab, setActiveTab] = useState('algorithms');
+  const isMobile = useIsMobile();
   
   const expressionInputRef = useRef<HTMLTextAreaElement>(null);
   const algorithmsRef = useRef<ImperativePanelHandle>(null);
@@ -298,87 +304,284 @@ export const TypeInferencePlayground = () => {
 
 
 
+  // Mobile component content
+  const algorithmsContent = (
+    <div className="h-full flex flex-col bg-background">
+      <div className="p-2 flex items-center justify-between h-10">
+        <h3 className="text-sm font-medium flex items-center gap-2">
+          <Binary className="w-4 h-4 text-primary" />
+          Algorithms
+        </h3>
+        {!isMobile && (
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCollapseAlgorithms}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Minimize panel"
+            >
+              <Minus className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setZoomAlgorithms(true)}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Maximize panel"
+            >
+              <Maximize2 className="w-3 h-3" />
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="mx-2 border-b border-border"></div>
+      <div className="flex-1 p-3 overflow-y-auto">
+        <AlgorithmSelector
+          algorithms={allAlgorithms}
+          selectedAlgorithm={selectedAlgorithm}
+          selectedVariant={selectedVariant}
+          onAlgorithmChange={handleAlgorithmChange}
+          onVariantChange={handleVariantChange}
+        />
+      </div>
+    </div>
+  );
+
+  const expressionContent = (
+    <div className="h-full flex flex-col bg-background">
+      <div className="p-2 flex items-center justify-between h-10">
+        <h3 className="text-sm font-medium flex items-center gap-2">
+          <Code className="w-4 h-4 text-primary" />
+          Expression
+        </h3>
+        {!isMobile && (
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCollapseExpression}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Minimize panel"
+            >
+              <Minus className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setZoomExpression(true)}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Maximize panel"
+            >
+              <Maximize2 className="w-3 h-3" />
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="mx-2 border-b border-border"></div>
+      <div className="flex-1 p-3 overflow-y-auto">
+        <div className="space-y-4 h-full flex flex-col">
+          <ExpressionInput
+            ref={expressionInputRef}
+            expression={expression}
+            onExpressionChange={(expr) => {
+              setExpression(expr);
+              if (!expr.trim()) {
+                setResult(undefined);
+              }
+            }}
+            onInfer={handleInference}
+            isInferring={isInferring}
+            selectedAlgorithm={selectedAlgorithm}
+            algorithms={allAlgorithms}
+            selectedVariant={selectedVariant}
+          />
+          
+          {/* History Input */}
+          <div className="flex-1 bg-card border border-border rounded-lg p-3">
+            <h3 className="text-sm font-medium mb-2">Expression History</h3>
+            <div className="space-y-1 text-xs">
+              <div className="text-muted-foreground">Recent expressions will appear here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const derivationContent = (
+    <div className="h-full flex flex-col bg-background">
+      <div className="p-2 flex items-center justify-between h-10">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <Workflow className="w-4 h-4 text-primary flex-shrink-0" />
+          <h2 className="text-sm font-medium flex-shrink-0">Derivation</h2>
+          <div className="flex items-center gap-1 min-w-0">
+            {selectedAlgorithmData && (
+              <Badge variant="secondary" className="text-xs truncate">
+                {selectedAlgorithmData.Name}
+                {selectedVariant && selectedAlgorithmData.Variants?.find(v => v.Id === selectedVariant) && (
+                  <span className="ml-1">
+                    ({selectedAlgorithmData.Variants.find(v => v.Id === selectedVariant)?.Name})
+                  </span>
+                )}
+              </Badge>
+            )}
+          </div>
+        </div>
+        {!isMobile && (
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setZoomDerivation(true)}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Maximize panel"
+            >
+              <Maximize2 className="w-3 h-3" />
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="mx-2 border-b border-border"></div>
+      <div className="flex-1 overflow-y-auto">
+        <DerivationViewer
+          result={result}
+          algorithm={selectedAlgorithmData}
+          onStepClick={handleStepClick}
+          activeStepPath={activeStepPath}
+          activeRuleId={activeRuleId}
+          expression={expression}
+          isInferring={isInferring}
+        />
+      </div>
+    </div>
+  );
+
+  const rulesContent = (
+    <div className="h-full flex flex-col bg-background">
+      <div className="p-2 flex items-center justify-between h-10">
+        <h3 className="text-sm font-medium flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-primary" />
+          Typing Rules
+        </h3>
+        {!isMobile && (
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCollapseRules}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Minimize panel"
+            >
+              <Minus className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setZoomRules(true)}
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
+              title="Maximize panel"
+            >
+              <Maximize2 className="w-3 h-3" />
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="mx-2 border-b border-border"></div>
+      <div className="flex-1 p-3 overflow-y-auto">
+        <TypingRules
+          rules={selectedAlgorithmData?.Rules || []}
+          activeRuleId={activeRuleId}
+          onRuleClick={handleRuleClick}
+          showHeader={false}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       <Navbar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Modern resizable layout for all screens */}
-        <div className="flex flex-1 overflow-hidden">
-          <PanelGroup direction="horizontal" className="h-full">
-            {/* Left Sidebar - Algorithm Selector */}
-            <Panel 
-              ref={algorithmsRef}
-              id="algorithms"
-              order={1}
-              defaultSize={25} 
-              minSize={15} 
-              maxSize={40} 
-              collapsible={true}
-              collapsedSize={3}
-              onCollapse={() => setAlgorithmsCollapsed(true)}
-              onExpand={() => setAlgorithmsCollapsed(false)}
-            >
-              {algorithmsCollapsed ? (
-                <div 
-                  className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
-                  onClick={handleExpandAlgorithms}
-                >
-                  <div className="flex flex-col items-center justify-center gap-3">
-                    <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
-                      <span 
-                        className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
-                        style={{ 
-                          transform: 'rotate(270deg)',
-                          transformOrigin: 'center'
-                        }}
-                      >
-                        Algorithms
-                      </span>
+        {isMobile ? (
+          // Mobile tab layout
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+            <div className="border-b border-border bg-background">
+              <TabsList className="grid w-full grid-cols-4 h-auto p-1">
+                <TabsTrigger value="algorithms" className="text-xs py-2">
+                  <Binary className="w-3 h-3 mr-1" />
+                  Alg
+                </TabsTrigger>
+                <TabsTrigger value="expression" className="text-xs py-2">
+                  <Code className="w-3 h-3 mr-1" />
+                  Expr
+                </TabsTrigger>
+                <TabsTrigger value="derivation" className="text-xs py-2">
+                  <Workflow className="w-3 h-3 mr-1" />
+                  Deriv
+                </TabsTrigger>
+                <TabsTrigger value="rules" className="text-xs py-2">
+                  <BookOpen className="w-3 h-3 mr-1" />
+                  Rules
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <TabsContent value="algorithms" className="h-full m-0">
+                {algorithmsContent}
+              </TabsContent>
+              <TabsContent value="expression" className="h-full m-0">
+                {expressionContent}
+              </TabsContent>
+              <TabsContent value="derivation" className="h-full m-0">
+                {derivationContent}
+              </TabsContent>
+              <TabsContent value="rules" className="h-full m-0">
+                {rulesContent}
+              </TabsContent>
+            </div>
+          </Tabs>
+        ) : (
+          // Desktop resizable layout
+          <div className="flex flex-1 overflow-hidden">
+            <PanelGroup direction="horizontal" className="h-full">
+              {/* Left Sidebar - Algorithm Selector */}
+              <Panel 
+                ref={algorithmsRef}
+                id="algorithms"
+                order={1}
+                defaultSize={25} 
+                minSize={15} 
+                maxSize={40} 
+                collapsible={true}
+                collapsedSize={3}
+                onCollapse={() => setAlgorithmsCollapsed(true)}
+                onExpand={() => setAlgorithmsCollapsed(false)}
+              >
+                {algorithmsCollapsed ? (
+                  <div 
+                    className="h-full w-full flex flex-col items-center justify-center bg-background border-r border-border hover:bg-muted/30 transition-colors cursor-pointer group"
+                    onClick={handleExpandAlgorithms}
+                  >
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="flex items-center justify-center" style={{ height: '60px', width: '20px' }}>
+                        <span 
+                          className="text-sm font-medium text-muted-foreground group-hover:text-foreground whitespace-nowrap select-none"
+                          style={{ 
+                            transform: 'rotate(270deg)',
+                            transformOrigin: 'center'
+                          }}
+                        >
+                          Algorithms
+                        </span>
+                      </div>
+                      <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
                     </div>
-                    <Binary className="w-4 h-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
                   </div>
-                </div>
-              ) : (
-                <div className="h-full flex flex-col bg-background border-r border-border">
-                  <div className="p-2 flex items-center justify-between h-10">
-                    <h3 className="text-sm font-medium flex items-center gap-2">
-                      <Binary className="w-4 h-4 text-primary" />
-                      Algorithms
-                    </h3>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleCollapseAlgorithms}
-                        className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
-                        title="Minimize panel"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setZoomAlgorithms(true)}
-                        className="h-6 w-6 p-0 opacity-60 hover:opacity-100 transition-smooth"
-                        title="Maximize panel"
-                      >
-                        <Maximize2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="mx-2 border-b border-border"></div>
-                  <div className="flex-1 p-3 overflow-y-auto">
-                    <AlgorithmSelector
-                      algorithms={allAlgorithms}
-                      selectedAlgorithm={selectedAlgorithm}
-                      selectedVariant={selectedVariant}
-                      onAlgorithmChange={handleAlgorithmChange}
-                      onVariantChange={handleVariantChange}
-                    />
-                  </div>
-                </div>
-              )}
-            </Panel>
+                ) : (
+                  algorithmsContent
+                )}
+              </Panel>
 
             <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
@@ -600,11 +803,12 @@ export const TypeInferencePlayground = () => {
                     </div>
                   )}
                 </Panel>
-                  </PanelGroup>
-                </Panel>
+              </PanelGroup>
+            </Panel>
           </PanelGroup>
         </div>
-
+        )}
+        
         {/* Zoom Dialogs */}
         <ZoomDialog
           open={zoomAlgorithms}
@@ -612,15 +816,13 @@ export const TypeInferencePlayground = () => {
           title="Algorithms"
           icon={<Binary className="w-4 h-4 text-primary" />}
         >
-          <div className="h-full">
-            <AlgorithmSelector
-              algorithms={allAlgorithms}
-              selectedAlgorithm={selectedAlgorithm}
-              selectedVariant={selectedVariant}
-              onAlgorithmChange={handleAlgorithmChange}
-              onVariantChange={handleVariantChange}
-            />
-          </div>
+          <AlgorithmSelector
+            algorithms={allAlgorithms}
+            selectedAlgorithm={selectedAlgorithm}
+            selectedVariant={selectedVariant}
+            onAlgorithmChange={handleAlgorithmChange}
+            onVariantChange={handleVariantChange}
+          />
         </ZoomDialog>
 
         <ZoomDialog
@@ -629,23 +831,16 @@ export const TypeInferencePlayground = () => {
           title="Expression"
           icon={<Code className="w-4 h-4 text-primary" />}
         >
-          <div className="h-full">
-            <ExpressionInput
-              ref={expressionInputRef}
-              expression={expression}
-              onExpressionChange={(expr) => {
-                setExpression(expr);
-                if (!expr.trim()) {
-                  setResult(undefined);
-                }
-              }}
-              onInfer={handleInference}
-              isInferring={isInferring}
-              selectedAlgorithm={selectedAlgorithm}
-              algorithms={allAlgorithms}
-              selectedVariant={selectedVariant}
-            />
-          </div>
+          <ExpressionInput
+            ref={expressionInputRef}
+            expression={expression}
+            onExpressionChange={setExpression}
+            onInfer={handleInference}
+            isInferring={isInferring}
+            selectedAlgorithm={selectedAlgorithm}
+            algorithms={allAlgorithms}
+            selectedVariant={selectedVariant}
+          />
         </ZoomDialog>
 
         <ZoomDialog
@@ -654,52 +849,29 @@ export const TypeInferencePlayground = () => {
           title="Derivation"
           icon={<Workflow className="w-4 h-4 text-primary" />}
         >
-          <div className="h-full flex flex-col">
-            {result?.finalType && (
-              <div className="mb-4 p-3 bg-muted/20 rounded border">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Type:</span>
-                  <Badge variant="secondary" className="text-sm font-mono">
-                    <KaTeXRenderer expression={result.finalType} />
-                  </Badge>
-                </div>
-              </div>
-            )}
-            <div className="flex-1 overflow-y-auto">
-              <DerivationViewer
-                result={result}
-                algorithm={selectedAlgorithmData}
-                activeStepPath={activeStepPath}
-                activeRuleId={activeRuleId}
-                onStepClick={handleStepClick}
-                expression={expression}
-                isInferring={isInferring}
-                variant={selectedVariant}
-              />
-            </div>
-          </div>
+          <DerivationViewer
+            result={result}
+            algorithm={selectedAlgorithmData}
+            onStepClick={handleStepClick}
+            activeStepPath={activeStepPath}
+            activeRuleId={activeRuleId}
+            expression={expression}
+            isInferring={isInferring}
+          />
         </ZoomDialog>
 
         <ZoomDialog
           open={zoomRules}
           onOpenChange={setZoomRules}
-          title="Algorithmic Rules"
+          title="Typing Rules"
           icon={<BookOpen className="w-4 h-4 text-primary" />}
         >
-          <div className="h-full">
-            {selectedAlgorithmData && (
-              <TypingRules
-                rules={
-                  selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                    ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                    : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                }
-                activeRuleId={activeRuleId}
-                onRuleClick={handleRuleClick}
-                showHeader={false}
-              />
-            )}
-          </div>
+          <TypingRules
+            rules={selectedAlgorithmData?.Rules || []}
+            activeRuleId={activeRuleId}
+            onRuleClick={handleRuleClick}
+            showHeader={false}
+          />
         </ZoomDialog>
       </div>
     </div>

@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import { Separator } from '@/components/ui/separator';
 import { Navbar } from '@/components/Navbar';
-import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ExpressionInput } from './ExpressionInput';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -298,65 +296,7 @@ export const TypeInferencePlayground = () => {
     }
   }, [selectedAlgorithm, selectedVariant, expression, initialized]);
 
-  // Keyboard shortcuts
-  useKeyboardShortcuts({
-    onRunInference: () => {
-      if (expression.trim() && !isInferring) {
-        handleInference();
-        toast({
-          description: "Running type inference...",
-          duration: 1500,
-        });
-      }
-    },
-    onClearInput: () => {
-      setExpression('');
-      setResult(undefined);
-      toast({
-        description: "Expression cleared",
-        duration: 1500,
-      });
-    },
-    onFocusInput: () => {
-      expressionInputRef.current?.focus();
-    },
-    onShare: async () => {
-      if (expression.trim()) {
-        try {
-          const url = new URL(window.location.href);
-          url.searchParams.set('algorithm', selectedAlgorithm);
-          url.searchParams.set('expression', expression);
-          if (selectedVariant) {
-            url.searchParams.set('variant', selectedVariant);
-          }
-          await navigator.clipboard.writeText(url.toString());
-          toast({
-            description: "Link copied to clipboard",
-            duration: 2000,
-          });
-        } catch {
-          toast({
-            description: "Failed to copy link",
-            variant: "destructive",
-            duration: 2000,
-          });
-        }
-      }
-    },
-    onToggleCompare: () => {
-      const url = new URL(window.location.href);
-      if (url.searchParams.has('compare')) {
-        url.searchParams.delete('compare');
-      } else {
-        url.searchParams.set('compare', 'true');
-      }
-      navigate(url.pathname + url.search);
-      toast({
-        description: url.searchParams.has('compare') ? "Switched to compare mode" : "Switched to single mode",
-        duration: 1500,
-      });
-    }
-  });
+
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">

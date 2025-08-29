@@ -1,4 +1,4 @@
-import { Github, Sun, Moon, Table2, HelpCircle, Keyboard, Settings, ChevronDown } from 'lucide-react';
+import { Github, Sun, Moon, Table2, Settings, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -11,14 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
-import { HelpModal } from './HelpModal';
+
 import { SettingsModal } from './SettingsModal';
 import { wasmInference } from '@/lib/wasmInterface';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const [helpModalOpen, setHelpModalOpen] = useState(false);
+
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -78,36 +78,7 @@ export const Navbar = () => {
               <span className="hidden sm:inline text-xs">Compare</span>
             </Button>
 
-            {/* Help & Shortcuts Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="btn-interactive"
-                  size="sm"
-                >
-                  <HelpCircle className="w-4 h-4 mr-1" />
-                  <span className="hidden sm:inline text-xs">Help</span>
-                  <ChevronDown className="w-3 h-3 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => setHelpModalOpen(true)}>
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Quick Reference
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => {
-                    // Trigger keyboard shortcuts help - we'll need to create a function for this
-                    const event = new KeyboardEvent('keydown', { key: '?' });
-                    document.dispatchEvent(event);
-                  }}
-                >
-                  <Keyboard className="w-4 h-4 mr-2" />
-                  Keyboard Shortcuts
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+
 
             {/* Theme Toggle */}
             <Button
@@ -160,8 +131,7 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-      
-      <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
+
       <SettingsModal 
         open={settingsModalOpen} 
         onOpenChange={setSettingsModalOpen}

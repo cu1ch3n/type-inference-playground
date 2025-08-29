@@ -33,12 +33,12 @@ import { KaTeXRenderer } from '@/components/KaTeXRenderer';
 import { Navbar } from '@/components/Navbar';
 import { DerivationModal } from '@/components/DerivationModal';
 import { CompareShareExportButtons } from '@/components/CompareShareExportButtons';
-import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
+
 import { SideBySideComparison } from '@/components/SideBySideComparison';
 // Import compare utilities - access functions with bracket notation
 import { cleanUrl } from '@/lib/shareUtils';
 import { useToast } from '@/hooks/use-toast';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+
 import { AlgorithmSelector } from '@/components/AlgorithmSelector';
 
 import { InferenceResult } from '@/types/inference';
@@ -357,72 +357,7 @@ export const Compare = () => {
     }
   }, [selectedAlgorithms, expressions, runAllComparisons]);
 
-  // Keyboard shortcuts
-  useKeyboardShortcuts({
-    onRunInference: () => {
-      if (selectedAlgorithms.length > 0 && expressions.length > 0) {
-        runAllComparisons();
-        toast({
-          description: "Running comparisons...",
-          duration: 1500,
-        });
-      }
-    },
-    onClearInput: () => {
-      setNewExpression('');
-      toast({
-        description: "Input cleared",
-        duration: 1500,
-      });
-    },
-    onFocusInput: () => {
-      // Focus search input if available, otherwise focus expression input
-      const searchInput = document.querySelector('input[placeholder="Search algorithms..."]') as HTMLInputElement;
-      const expressionInput = document.querySelector('input[placeholder="Add expression..."]') as HTMLInputElement;
-      if (searchInput) {
-        searchInput.focus();
-      } else if (expressionInput) {
-        expressionInput.focus();
-      }
-    },
-    onShare: async () => {
-      if (selectedAlgorithms.length > 0 || expressions.length > 0) {
-        try {
-          const url = new URL(window.location.href);
-          url.searchParams.set('compare', 'true');
-          if (selectedAlgorithms.length > 0) {
-            url.searchParams.set('algorithms', selectedAlgorithms.join(','));
-          }
-          if (expressions.length > 0) {
-            url.searchParams.set('expressions', expressions.join('|'));
-          }
-          await navigator.clipboard.writeText(url.toString());
-          toast({
-            description: "Comparison link copied to clipboard",
-            duration: 2000,
-          });
-        } catch {
-          toast({
-            description: "Failed to copy link",
-            variant: "destructive",
-            duration: 2000,
-          });
-        }
-      }
-    },
-    onToggleCompare: () => {
-      navigate('/');
-      toast({
-        description: "Switched to single mode",
-        duration: 1500,
-      });
-    },
-    onCloseModal: () => {
-      if (modalOpen) {
-        setModalOpen(false);
-      }
-    }
-  });
+
 
   const handleCellClick = (algorithmId: string, expression: string) => {
     const key = getCellKey(algorithmId, expression);

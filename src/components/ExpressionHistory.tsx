@@ -39,11 +39,13 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   // Provide addToHistory function to parent
   useEffect(() => {
     const addToHistory = (expression: string) => {
+      console.log('addToHistory called with:', expression);
       if (expression && expression.trim()) {
         const trimmedExpression = expression.trim();
         
         // Don't add if it's the same as the last entry
         if (history.length > 0 && history[0].expression === trimmedExpression) {
+          console.log('Skipping duplicate entry');
           return;
         }
 
@@ -53,6 +55,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           id: Math.random().toString(36).substr(2, 9)
         };
 
+        console.log('Adding new entry:', newEntry);
         setHistory(prev => {
           // Remove duplicates and add to front
           const filtered = prev.filter(entry => entry.expression !== trimmedExpression);
@@ -65,6 +68,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
     };
 
     if (onAddToHistory) {
+      console.log('Setting addToHistory function');
       onAddToHistory(addToHistory);
     }
   }, [onAddToHistory]);
@@ -76,6 +80,8 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   const removeEntry = (id: string) => {
     setHistory(prev => prev.filter(entry => entry.id !== id));
   };
+
+  console.log('ExpressionHistory render - history length:', history.length);
 
   if (history.length === 0) {
     return null;
@@ -103,23 +109,12 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           {history.map((entry) => (
             <div
               key={entry.id}
-              className="group flex items-center justify-between px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
+              className="px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
               onClick={() => onSelectExpression(entry.expression)}
             >
-              <code className="font-mono text-foreground truncate flex-1 pr-2">
+              <code className="font-mono text-foreground truncate block">
                 {entry.expression}
               </code>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeEntry(entry.id);
-                }}
-                className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0"
-              >
-                <X className="w-2.5 h-2.5" />
-              </Button>
             </div>
           ))}
         </div>

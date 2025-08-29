@@ -72,8 +72,10 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   };
 
   const handleInfer = () => {
+    console.log('handleInfer called - expression:', expression, 'addToHistoryFunction:', !!addToHistoryFunction);
     // Add current expression to history when running inference
     if (addToHistoryFunction && expression && expression.trim()) {
+      console.log('Adding to history:', expression.trim());
       addToHistoryFunction(expression.trim());
     }
     onInfer();

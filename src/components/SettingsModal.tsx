@@ -306,63 +306,65 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-hidden flex flex-col p-8">
-        <DialogHeader className="flex-shrink-0">
-          <DialogTitle>WASM Sources</DialogTitle>
+      <DialogContent className="max-w-3xl w-[85vw] max-h-[80vh] overflow-hidden flex flex-col p-4">
+        <DialogHeader className="flex-shrink-0 pb-2">
+          <DialogTitle className="text-lg">WASM Sources</DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 overflow-y-auto space-y-8 pr-2">
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {/* Current Selection */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Select WASM Source</Label>
-              <div className="flex gap-2">
+              <Label className="text-sm font-medium">Select WASM Source</Label>
+              <div className="flex gap-1">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsAddingNew(!isAddingNew)}
+                  className="h-7 text-xs"
                 >
-                  <Plus className="w-3 h-3 mr-1" />
-                  Add New
+                  <Plus className="w-3 h-3" />
+                  Add
                 </Button>
                 <Button
                   variant="destructive"
                   size="sm"
                   onClick={clearAllSources}
                   disabled={sources.length <= 1}
+                  className="h-7 text-xs"
                 >
-                  <Trash2 className="w-3 h-3 mr-1" />
-                  Clear All
+                  <Trash2 className="w-3 h-3" />
+                  Clear
                 </Button>
               </div>
             </div>
             
-            <RadioGroup value={selectedSourceId} onValueChange={setSelectedSourceId}>
+            <RadioGroup value={selectedSourceId} onValueChange={setSelectedSourceId} className="space-y-1">
               {sources.map((source) => (
-                <div key={source.id} className="flex items-start gap-3 p-3 border rounded-lg overflow-hidden">
-                  <RadioGroupItem value={source.id} id={source.id} className="mt-1 flex-shrink-0" />
+                <div key={source.id} className="flex items-start gap-2 p-2 border rounded overflow-hidden">
+                  <RadioGroupItem value={source.id} id={source.id} className="mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0 overflow-hidden">
-                    <Label htmlFor={source.id} className="font-medium cursor-pointer block">
-                      {source.name} {source.isLocal && '(Local)'}
+                    <Label htmlFor={source.id} className="text-sm font-medium cursor-pointer block leading-tight">
+                      {source.name} {source.isLocal && <span className="text-xs text-muted-foreground">(Local)</span>}
                     </Label>
-                    <div className="text-xs text-muted-foreground font-mono mt-1 overflow-hidden">
-                      <div className="break-all line-clamp-2 max-w-full">
+                    <div className="text-xs text-muted-foreground font-mono overflow-hidden">
+                      <div className="break-all line-clamp-1 max-w-full">
                         {source.url}
                       </div>
                     </div>
                     {source.authType !== 'none' && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <span className="text-xs text-muted-foreground">
                         Auth: {source.authType}
-                      </p>
+                      </span>
                     )}
                    </div>
-                   <div className="flex gap-1 flex-shrink-0">
+                   <div className="flex gap-0.5 flex-shrink-0">
                      {!source.isLocal && (
                        <Button
                          variant="ghost"
                          size="sm"
                          onClick={() => handleExportSource(source)}
-                         className="text-muted-foreground hover:text-foreground"
+                         className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
                          title="Export as URL"
                        >
                          <Share2 className="w-3 h-3" />
@@ -373,7 +375,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                          variant="ghost"
                          size="sm"
                          onClick={() => deleteSource(source.id)}
-                         className="text-destructive hover:text-destructive"
+                         className="h-6 w-6 p-0 text-destructive hover:text-destructive"
                        >
                          <X className="w-3 h-3" />
                        </Button>
@@ -386,27 +388,28 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
           {/* Add New Source Form */}
           {isAddingNew && (
-            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-              <h4 className="font-medium">Add New WASM Source</h4>
+            <div className="space-y-3 p-3 border rounded bg-muted/50">
+              <h4 className="text-sm font-medium">Add New WASM Source</h4>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="new-name">Name</Label>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label htmlFor="new-name" className="text-xs">Name</Label>
                   <Input
                     id="new-name"
                     value={newSource.name || ''}
                     onChange={(e) => setNewSource(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="My WASM Module"
+                    className="h-8 text-sm"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="new-auth">Authentication</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="new-auth" className="text-xs">Authentication</Label>
                   <select
                     id="new-auth"
                     value={newSource.authType || 'none'}
                     onChange={(e) => setNewSource(prev => ({ ...prev, authType: e.target.value as any }))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
                   >
                     <option value="none">None</option>
                     <option value="bearer">Bearer Token</option>
@@ -416,20 +419,20 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="new-url">URL</Label>
+              <div className="space-y-1">
+                <Label htmlFor="new-url" className="text-xs">URL</Label>
                 <Input
                   id="new-url"
                   value={newSource.url || ''}
                   onChange={(e) => setNewSource(prev => ({ ...prev, url: e.target.value }))}
                   placeholder="https://your-domain.com/module.wasm"
-                  className="font-mono"
+                  className="font-mono h-8 text-sm"
                 />
               </div>
 
               {newSource.authType === 'bearer' && (
-                <div className="space-y-2">
-                  <Label htmlFor="new-token">Bearer Token</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="new-token" className="text-xs">Bearer Token</Label>
                   <div className="relative">
                     <Input
                       id="new-token"
@@ -437,7 +440,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                       value={newSource.authToken || ''}
                       onChange={(e) => setNewSource(prev => ({ ...prev, authToken: e.target.value }))}
                       placeholder="your-bearer-token"
-                      className="font-mono pr-8"
+                      className="font-mono pr-8 h-8 text-sm"
                     />
                     <Button
                       variant="ghost"
@@ -452,26 +455,27 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
               )}
 
               {newSource.authType === 'header' && (
-                <div className="space-y-2">
-                  <Label htmlFor="new-header">Authorization Header</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="new-header" className="text-xs">Authorization Header</Label>
                   <Input
                     id="new-header"
                     value={newSource.authHeader || ''}
                     onChange={(e) => setNewSource(prev => ({ ...prev, authHeader: e.target.value }))}
                     placeholder="X-API-Key: your-api-key"
-                    className="font-mono"
+                    className="font-mono h-8 text-sm"
                   />
                 </div>
               )}
 
               <div className="flex gap-2">
-                <Button onClick={addNewSource} size="sm">
+                <Button onClick={addNewSource} size="sm" className="h-7 text-xs">
                   Add Source
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setIsAddingNew(false)}
                   size="sm"
+                  className="h-7 text-xs"
                 >
                   Cancel
                 </Button>
@@ -479,11 +483,11 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
             </div>
           )}
 
-          <Separator />
+          <Separator className="my-3" />
 
           {/* URL Import */}
-          <div className="space-y-3">
-            <Label>Import from URL</Label>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Import from URL</Label>
             <p className="text-xs text-muted-foreground">
               Paste a URL that contains encoded WASM source information
             </p>
@@ -492,26 +496,27 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                 value={subscriptionUrl}
                 onChange={(e) => setSubscriptionUrl(e.target.value)}
                 placeholder="infer://..."
-                className="font-mono"
+                className="font-mono h-8 text-sm"
               />
               <Button
                 onClick={handleSubscriptionImport}
                 disabled={!subscriptionUrl.trim()}
                 size="sm"
+                className="h-8 text-xs"
               >
-                <Link className="w-3 h-3 mr-1" />
+                <Link className="w-3 h-3" />
                 Import
               </Button>
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-3" />
 
           {/* File Upload */}
-          <div className="space-y-3">
-            <Label>Upload Local WASM File</Label>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Upload Local WASM File</Label>
             <div 
-              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+              className={`border-2 border-dashed rounded p-3 text-center transition-colors cursor-pointer ${
                 isDragOver 
                   ? 'border-primary bg-primary/5' 
                   : 'border-muted-foreground/25 hover:border-muted-foreground/50'
@@ -528,19 +533,19 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                 className="hidden"
                 id="wasm-file-input"
               />
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex justify-center">
                   {isDragOver ? (
-                    <Upload className="w-8 h-8 text-primary" />
+                    <Upload className="w-5 h-5 text-primary" />
                   ) : (
-                    <FileCode className="w-8 h-8 text-muted-foreground" />
+                    <FileCode className="w-5 h-5 text-muted-foreground" />
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs font-medium">
                     {isDragOver ? 'Drop WASM file here' : 'Drop WASM file or click to browse'}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-muted-foreground">
                     Supports .wasm files only
                   </p>
                 </div>
@@ -550,15 +555,15 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
 
           {/* Current Status */}
           {selectedSource && (
-            <div className="bg-muted/50 p-3 rounded-lg">
-              <p className="text-xs text-muted-foreground">
+            <div className="bg-muted/50 p-2 rounded text-xs">
+              <p className="text-muted-foreground">
                 <strong>Selected:</strong> {selectedSource.name}
               </p>
-              <p className="text-xs font-mono text-muted-foreground mt-1 break-all">
+              <p className="font-mono text-muted-foreground break-all">
                 {selectedSource.url}
               </p>
               {selectedSource.authType !== 'none' && (
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-muted-foreground">
                   Authentication: {selectedSource.authType}
                 </p>
               )}
@@ -566,16 +571,20 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
           )}
         </div>
 
-        <DialogFooter className="flex-shrink-0 mt-6">
+        <DialogFooter className="flex-shrink-0 mt-4 gap-2">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
+            size="sm"
+            className="h-8"
           >
             Cancel
           </Button>
           <Button
             onClick={saveSettings}
             disabled={!hasChanges}
+            size="sm"
+            className="h-8"
           >
             Save Changes
           </Button>

@@ -33,7 +33,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-6 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col min-h-[120px] min-w-[200px]
+        px-8 py-4 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col min-w-[300px]
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -162,7 +162,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
                     {section.Rules.filter(rule => rule.Reduction).map(renderReductionRule)}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                     {section.Rules.filter(rule => !rule.Reduction).map(renderRuleCard)}
                   </div>
                 )}
@@ -186,7 +186,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
 
             {/* Traditional premise/conclusion rules - dense grid layout */}
             {flatRules?.some(rule => !rule.Reduction) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 {flatRules.filter(rule => !rule.Reduction).map(renderRuleCard)}
               </div>
             )}

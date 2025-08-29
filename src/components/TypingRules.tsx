@@ -4,7 +4,6 @@ import { Separator } from '@/components/ui/separator';
 import { KaTeXRenderer } from './KaTeXRenderer';
 import { LatexText } from './LatexText';
 import { TypingRule, RuleSection } from '@/types/inference';
-import { RuleTooltip } from './RuleTooltip';
 import { BookOpen } from 'lucide-react';
 
 interface TypingRulesProps {
@@ -59,16 +58,17 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         </div>
       </div>
       
-      {/* Horizontal line with label positioned outside content area */}
+      {/* Horizontal line with label positioned further right */}
       <div className="relative flex items-center mt-1">
-        <div className="flex-1 border-t border-foreground/20 mr-2"></div>
-        <RuleTooltip 
-          ruleId={rule.Id}
-          rules={[rule]}
-          variant={activeRuleId === rule.Id ? "default" : "secondary"}
-          className="text-xs font-medium shrink-0"
-          isActive={activeRuleId === rule.Id}
-        />
+        <div className="flex-1 border-t border-foreground/20"></div>
+        <div className="absolute right-0 translate-x-4">
+          <Badge 
+            variant={activeRuleId === rule.Id ? "default" : "secondary"}
+            className="text-xs font-medium px-1.5 py-0.5"
+          >
+            {rule.Name}
+          </Badge>
+        </div>
       </div>
       
       {/* Conclusion section */}

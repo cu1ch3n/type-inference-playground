@@ -21,11 +21,16 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
 
   // Load history from localStorage on mount
   useEffect(() => {
+    console.log('Loading history from localStorage...');
     const savedHistory = localStorage.getItem('expression-history');
+    console.log('Saved history raw:', savedHistory);
     if (savedHistory) {
       try {
         const parsed = JSON.parse(savedHistory);
-        setHistory(parsed);
+        console.log('Parsed history:', parsed);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setHistory(parsed);
+        }
       } catch (error) {
         console.error('Error loading expression history:', error);
       }
@@ -34,7 +39,10 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
 
   // Save to localStorage whenever history changes
   useEffect(() => {
-    localStorage.setItem('expression-history', JSON.stringify(history));
+    if (history.length > 0) {
+      console.log('Saving history to localStorage:', history);
+      localStorage.setItem('expression-history', JSON.stringify(history));
+    }
   }, [history]);
 
   // Provide addToHistory function to parent
@@ -75,22 +83,22 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   }, [onAddToHistory, history]);
 
   const clearHistory = () => {
+    console.log('Clearing history');
     setHistory([]);
+    localStorage.removeItem('expression-history');
   };
 
   const removeEntry = (id: string) => {
+    console.log('Removing entry:', id);
     setHistory(prev => prev.filter(entry => entry.id !== id));
   };
 
   console.log('ExpressionHistory render - history length:', history.length);
 
   // Always render the component so useEffect can run, but conditionally show content
-  if (history.length === 0) {
-    return <div style={{ display: 'none' }} />;
-  }
-
   return (
-    <div className="space-y-2">
+    <div style={{ display: history.length === 0 ? 'none' : 'block' }}>
+      <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <History className="w-3.5 h-3.5 text-muted-foreground" />
@@ -132,6 +140,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           ))}
         </div>
       </ScrollArea>
+      </div>
     </div>
   );
 };

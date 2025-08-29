@@ -154,6 +154,17 @@ All colors MUST be HSL. Mathematical typography optimized.
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    overflow: hidden;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
   }
   
   /* Mathematical Typography */

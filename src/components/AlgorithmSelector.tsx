@@ -38,8 +38,8 @@ export const AlgorithmSelector = ({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="space-y-3 pt-3 sm:pt-4 flex-1 flex flex-col">
-        <div className="relative">
+      <div className="space-y-3 flex-1 flex flex-col">
+        <div className="relative pr-3">
           <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
           <Input
             placeholder="Search algorithms..."

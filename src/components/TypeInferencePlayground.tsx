@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
-import { PanelLeft, Workflow, Activity } from 'lucide-react';
+import { PanelLeft, Workflow, Code, Binary } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Badge } from '@/components/ui/badge';
 import { KaTeXRenderer } from './KaTeXRenderer';
@@ -318,7 +318,7 @@ export const TypeInferencePlayground = () => {
   });
 
   return (
-    <div className="h-screen bg-background animate-page-enter flex flex-col overflow-hidden">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       <Navbar />
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile: Traditional stacked layout */}
@@ -385,127 +385,140 @@ export const TypeInferencePlayground = () => {
           </div>
         </div>
 
-        {/* Modern sidebar layout for larger screens */}
-        <div className="hidden lg:flex h-full flex-1">
-           <ModernStackedSidebar
-            algorithms={allAlgorithms}
-            selectedAlgorithm={selectedAlgorithm}
-            selectedVariant={selectedVariant}
-            onAlgorithmChange={handleAlgorithmChange}
-            onVariantChange={handleVariantChange}
-            expression={expression}
-            onExpressionChange={setExpression}
-            onInfer={handleInference}
-            isInferring={isInferring}
-            setResult={setResult}
-            expressionInputRef={expressionInputRef}
-          />
-          
-          {/* Main Content Area */}
-          <div className="flex-1 h-full">
-            <PanelGroup direction="vertical" className="h-full">
-              {/* Derivation Panel */}
-              <Panel defaultSize={60} minSize={30} className="bg-background">
-                <div className="h-full flex flex-col">
-                  <div className="p-3 border-b border-border flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Workflow className="w-4 h-4 text-primary" />
-                      <h2 className="text-sm font-medium">Derivation</h2>
-                      {result?.finalType && (
-                        <div className="flex items-center gap-2 ml-4">
-                          <Separator orientation="vertical" className="h-4" />
-                          <span className="text-xs text-muted-foreground">Type:</span>
-                          <Badge variant="secondary" className="text-xs font-mono">
-                            <KaTeXRenderer expression={result.finalType} />
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {selectedAlgorithmData && expression && (
-                        <ShareExportButtons
-                          algorithm={selectedAlgorithmData}
-                          expression={expression}
-                          result={result}
-                          variant={selectedVariant}
-                          disabled={isInferring}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex-1 p-3 overflow-y-auto">
-                    <DerivationViewer
-                      result={result}
-                      algorithm={selectedAlgorithmData}
-                      activeStepPath={activeStepPath}
-                      activeRuleId={activeRuleId}
-                      onStepClick={handleStepClick}
-                      expression={expression}
-                      isInferring={isInferring}
-                      variant={selectedVariant}
-                    />
-                  </div>
+                {/* Modern resizable layout for larger screens */}
+        <div className="hidden lg:flex flex-1 overflow-hidden">
+          <PanelGroup direction="horizontal" className="h-full">
+            {/* Left Sidebar - Algorithm Selector */}
+            <Panel defaultSize={20} minSize={15} maxSize={35} collapsible={true}>
+              <div className="h-full flex flex-col bg-background border-r border-border">
+                <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                  <h3 className="text-sm font-medium flex items-center gap-2">
+                    <Binary className="w-4 h-4 text-primary" />
+                    Algorithms
+                  </h3>
                 </div>
-              </Panel>
-
-              <PanelResizeHandle className="h-1 bg-border hover:bg-primary/20 transition-colors" />
-
-              {/* Typing Rules Panel */}
-              <Panel defaultSize={40} minSize={20} className="bg-background">
-                <div className="h-full flex flex-col">
-                  <div className="p-3 border-b border-border flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-medium">Typing Rules</h2>
-                  </div>
-                  <div className="flex-1 p-3 overflow-y-auto">
-                    {selectedAlgorithmData && (
-                      <TypingRules
-                        rules={
-                          selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                            ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                            : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                        }
-                        activeRuleId={activeRuleId}
-                        onRuleClick={handleRuleClick}
-                      />
-                    )}
-                  </div>
-                </div>
-              </Panel>
-            </PanelGroup>
-            
-            {/* Footer */}
-            <div className="p-3 border-t border-border bg-background">
-              <div className="text-center text-xs text-muted-foreground">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-                  <span>
-                    Released under the{' '}
-                    <a 
-                      href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline transition-colors duration-200"
-                    >
-                      MIT License
-                    </a>
-                  </span>
-                  <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                  <span>
-                    Copyright © 2025{' '}
-                    <a 
-                      href="https://cuichen.cc" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline transition-colors duration-200"
-                    >
-                      Chen Cui
-                    </a>
-                  </span>
+                <div className="flex-1 p-3 overflow-y-auto">
+                  <AlgorithmSelector
+                    algorithms={allAlgorithms}
+                    selectedAlgorithm={selectedAlgorithm}
+                    selectedVariant={selectedVariant}
+                    onAlgorithmChange={handleAlgorithmChange}
+                    onVariantChange={handleVariantChange}
+                  />
                 </div>
               </div>
-            </div>
-          </div>
+            </Panel>
+
+            <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+            {/* Main Content Area */}
+            <Panel defaultSize={80} minSize={50}>
+              <PanelGroup direction="vertical" className="h-full">
+                {/* Top Row - Expression and Derivation */}
+                <Panel defaultSize={60} minSize={30} className="bg-background">
+                  <PanelGroup direction="horizontal" className="h-full">
+                    {/* Expression Input Column */}
+                    <Panel defaultSize={30} minSize={20} maxSize={50} collapsible={true}>
+                      <div className="h-full flex flex-col bg-background border-r border-border">
+                        <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                          <h3 className="text-sm font-medium flex items-center gap-2">
+                            <Code className="w-4 h-4 text-primary" />
+                            Expression
+                          </h3>
+                        </div>
+                        <div className="flex-1 p-3 overflow-y-auto">
+                          <ExpressionInput
+                            ref={expressionInputRef}
+                            expression={expression}
+                            onExpressionChange={(expr) => {
+                              setExpression(expr);
+                              if (!expr.trim()) {
+                                setResult(undefined);
+                              }
+                            }}
+                            onInfer={handleInference}
+                            isInferring={isInferring}
+                            selectedAlgorithm={selectedAlgorithm}
+                            algorithms={allAlgorithms}
+                            selectedVariant={selectedVariant}
+                          />
+                        </div>
+                      </div>
+                    </Panel>
+
+                    <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
+
+                    {/* Derivation Column */}
+                    <Panel defaultSize={70} minSize={50}>
+                      <div className="h-full flex flex-col bg-background">
+                        <div className="p-2 border-b border-border flex items-center justify-between h-10">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <Workflow className="w-4 h-4 text-primary flex-shrink-0" />
+                            <h2 className="text-sm font-medium flex-shrink-0">Derivation</h2>
+                            {result?.finalType && (
+                              <div className="flex items-center gap-2 ml-2 min-w-0">
+                                <Separator orientation="vertical" className="h-3 flex-shrink-0" />
+                                <span className="text-xs text-muted-foreground flex-shrink-0">Type:</span>
+                                <Badge variant="secondary" className="text-xs font-mono max-w-32 truncate">
+                                  <KaTeXRenderer expression={result.finalType} />
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {selectedAlgorithmData && expression && (
+                              <ShareExportButtons
+                                algorithm={selectedAlgorithmData}
+                                expression={expression}
+                                result={result}
+                                variant={selectedVariant}
+                                disabled={isInferring}
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex-1 p-3 overflow-y-auto">
+                          <DerivationViewer
+                            result={result}
+                            algorithm={selectedAlgorithmData}
+                            activeStepPath={activeStepPath}
+                            activeRuleId={activeRuleId}
+                            onStepClick={handleStepClick}
+                            expression={expression}
+                            isInferring={isInferring}
+                            variant={selectedVariant}
+                          />
+                        </div>
+                      </div>
+                    </Panel>
+                  </PanelGroup>
+                </Panel>
+
+                <PanelResizeHandle className="h-px bg-border hover:bg-primary/20 transition-colors shadow-sm" />
+
+                {/* Bottom Row - Typing Rules (Full Width) */}
+                <Panel defaultSize={40} minSize={20} className="bg-background">
+                  <div className="h-full flex flex-col">
+                    <div className="flex-1 p-3 overflow-y-auto">
+                      {selectedAlgorithmData && (
+                        <TypingRules
+                          rules={
+                            selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                              ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                              : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                          }
+                          activeRuleId={activeRuleId}
+                          onRuleClick={handleRuleClick}
+                        />
+                      )}
+                                            </div>
+                      </div>
+                    </Panel>
+                  </PanelGroup>
+                </Panel>
+          </PanelGroup>
         </div>
+
       </div>
     </div>
   );

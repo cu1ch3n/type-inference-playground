@@ -178,7 +178,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   value={leftType} 
                   onChange={e => setLeftType(e.target.value)} 
                   placeholder="Left type (e.g., Int, Top -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[120px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
@@ -209,7 +209,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                   value={rightType} 
                   onChange={e => setRightType(e.target.value)} 
                   placeholder="Right type (e.g., Top, a -> Int, mu a. a -> Int)" 
-                  className="font-code text-xs sm:text-sm bg-code min-h-[80px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+                  className="font-code text-xs sm:text-sm bg-code min-h-[120px] resize-none pr-16 pl-3 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
                   spellCheck={false} 
                 />
                 <div className="absolute top-2 right-2 text-xs text-muted-foreground font-medium">
@@ -283,14 +283,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
   // Original single input mode for type inference
   return (
-    <div className="space-y-4">
-      <div className="border-b border-border pb-2">
-        <h3 className="text-sm font-medium flex items-center gap-2">
-          <Code className="w-4 h-4 text-primary" />
-          Input Program
-        </h3>
-      </div>
-      <div className="space-y-3">
+    <div className="space-y-2 h-full flex flex-col">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <Select value={selectedExample} onValueChange={handleExampleSelect}>
             <SelectTrigger className="w-full bg-card transition-smooth hover:border-primary/50">
@@ -348,8 +341,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
           </Select>
         </div>
 
-        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <div className="relative">
+        <div className="animate-fade-in flex-1 flex flex-col" style={{ animationDelay: '0.2s' }}>
+          <div className="relative flex-1 flex flex-col">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -363,7 +356,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
               value={expression} 
               onChange={e => onExpressionChange(e.target.value)} 
               placeholder="Please enter an expression. For example, (\x. x) 1" 
-              className="font-code text-xs sm:text-sm bg-code min-h-[90px] sm:min-h-[100px] resize-none pr-12 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
+              className="font-code text-xs sm:text-sm bg-code h-full resize-none pr-12 pl-8 border-muted-foreground/20 focus:border-primary transition-smooth focus:shadow-lg focus:shadow-primary/10 touch-manipulation" 
               spellCheck={false} 
             />
             {/* Clear button - top right */}
@@ -405,7 +398,6 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             </p>
           </div>
         )}
-      </div>
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />
     </div>

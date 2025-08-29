@@ -434,9 +434,9 @@ export const TypeInferencePlayground = () => {
               ref={algorithmsRef}
               id="algorithms"
               order={1}
-              defaultSize={20} 
-              minSize={15} 
-              maxSize={35} 
+              defaultSize={30} 
+              minSize={20} 
+              maxSize={45} 
               collapsible={true}
               collapsedSize={3}
               onCollapse={() => setAlgorithmsCollapsed(true)}
@@ -507,7 +507,7 @@ export const TypeInferencePlayground = () => {
             <PanelResizeHandle className="bg-border hover:bg-primary/20 transition-colors shadow-sm" style={{ width: '0.5px' }} />
 
             {/* Main Content Area */}
-            <Panel id="main" order={2} defaultSize={80} minSize={50}>
+            <Panel id="main" order={2} defaultSize={70} minSize={45}>
               <PanelGroup direction="vertical" className="h-full">
                 {/* Top Row - Expression and Derivation */}
                 <Panel id="top-row" order={1} defaultSize={60} minSize={30} className="bg-background">

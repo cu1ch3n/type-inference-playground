@@ -17,17 +17,13 @@ interface HistoryEntry {
 
 export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: ExpressionHistoryProps) => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
-  console.log('ExpressionHistory component initialized, onAddToHistory:', !!onAddToHistory);
 
   // Load history from localStorage on mount
   useEffect(() => {
-    console.log('Loading history from localStorage...');
     const savedHistory = localStorage.getItem('expression-history');
-    console.log('Saved history raw:', savedHistory);
     if (savedHistory) {
       try {
         const parsed = JSON.parse(savedHistory);
-        console.log('Parsed history:', parsed);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setHistory(parsed);
         }
@@ -40,7 +36,6 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   // Save to localStorage whenever history changes
   useEffect(() => {
     if (history.length > 0) {
-      console.log('Saving history to localStorage:', history);
       localStorage.setItem('expression-history', JSON.stringify(history));
     }
   }, [history]);
@@ -48,13 +43,11 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
   // Provide addToHistory function to parent
   useEffect(() => {
     const addToHistory = (expression: string) => {
-      console.log('addToHistory called with:', expression);
       if (expression && expression.trim()) {
         const trimmedExpression = expression.trim();
         
         // Don't add if it's the same as the last entry
         if (history.length > 0 && history[0].expression === trimmedExpression) {
-          console.log('Skipping duplicate entry');
           return;
         }
 
@@ -64,7 +57,6 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           id: Math.random().toString(36).substr(2, 9)
         };
 
-        console.log('Adding new entry:', newEntry);
         setHistory(prev => {
           // Remove duplicates and add to front
           const filtered = prev.filter(entry => entry.expression !== trimmedExpression);
@@ -77,23 +69,18 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
     };
 
     if (onAddToHistory) {
-      console.log('Setting addToHistory function');
       onAddToHistory(addToHistory);
     }
-  }, [onAddToHistory, history]);
+  }, [onAddToHistory]); // Removed 'history' dependency to prevent infinite loop
 
   const clearHistory = () => {
-    console.log('Clearing history');
     setHistory([]);
     localStorage.removeItem('expression-history');
   };
 
   const removeEntry = (id: string) => {
-    console.log('Removing entry:', id);
     setHistory(prev => prev.filter(entry => entry.id !== id));
   };
-
-  console.log('ExpressionHistory render - history length:', history.length);
 
   // Always render the component so useEffect can run, but conditionally show content
   return (

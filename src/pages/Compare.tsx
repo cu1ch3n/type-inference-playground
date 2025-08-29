@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid, Binary, Code, Minus, Maximize2 } from 'lucide-react';
+import { Plus, X, Check, X as CrossIcon, RotateCcw, GripVertical, Table2, Undo2, Search, Lightbulb, LayoutGrid, Binary, Code, Minus, Maximize2, SquareSplitHorizontal } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -650,21 +650,23 @@ export const Compare = () => {
                             {viewMode === 'table' ? 'Click any cell to view detailed derivation' : 'Navigate between expressions to compare side-by-side'}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center border rounded-lg p-1 bg-muted/50">
                           <Button
-                            variant={viewMode === 'table' ? 'default' : 'outline'}
+                            variant={viewMode === 'table' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('table')}
+                            className={`h-7 px-3 ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <Table2 className="h-4 w-4 mr-2" />
+                            <Table2 className="h-3.5 w-3.5 mr-1.5" />
                             Table
                           </Button>
                           <Button
-                            variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
+                            variant={viewMode === 'sidebyside' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('sidebyside')}
+                            className={`h-7 px-3 ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <LayoutGrid className="h-4 w-4 mr-2" />
+                            <SquareSplitHorizontal className="h-3.5 w-3.5 mr-1.5" />
                             Side-by-Side
                           </Button>
                         </div>
@@ -933,23 +935,23 @@ export const Compare = () => {
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <Table2 className="w-4 h-4 text-primary flex-shrink-0" />
                         <h2 className="text-sm font-medium flex-shrink-0">Comparison</h2>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center border rounded-lg p-1 bg-muted/50">
                           <Button
-                            variant={viewMode === 'table' ? 'default' : 'outline'}
+                            variant={viewMode === 'table' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('table')}
-                            className="h-6 px-2 text-xs"
+                            className={`h-6 px-2 text-xs ${viewMode === 'table' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
                             <Table2 className="h-3 w-3 mr-1" />
                             Table
                           </Button>
                           <Button
-                            variant={viewMode === 'sidebyside' ? 'default' : 'outline'}
+                            variant={viewMode === 'sidebyside' ? 'default' : 'ghost'}
                             size="sm"
                             onClick={() => setViewMode('sidebyside')}
-                            className="h-6 px-2 text-xs"
+                            className={`h-6 px-2 text-xs ${viewMode === 'sidebyside' ? 'shadow-sm' : 'hover:bg-transparent'}`}
                           >
-                            <LayoutGrid className="h-3 w-3 mr-1" />
+                            <SquareSplitHorizontal className="h-3 w-3 mr-1" />
                             Side-by-Side
                           </Button>
                         </div>

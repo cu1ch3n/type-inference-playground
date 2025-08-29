@@ -398,63 +398,65 @@ export const TypeInferencePlayground = () => {
             expressionInputRef={expressionInputRef}
           />
           
-          <div className="flex-1 h-full overflow-hidden">
-            <div className="h-full p-6 overflow-y-auto">
-              <div className="space-y-6">
-                <DerivationViewer
-                  result={result}
-                  algorithm={selectedAlgorithmData}
-                  activeStepPath={activeStepPath}
-                  activeRuleId={activeRuleId}
-                  onStepClick={handleStepClick}
-                  expression={expression}
-                  isInferring={isInferring}
-                  variant={selectedVariant}
-                />
-                
-                {selectedAlgorithmData && (
-                  <TypingRules
-                    rules={
-                      selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
-                        ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
-                        : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
-                    }
+          <div className="flex-1 h-full overflow-hidden flex flex-col">
+            <div className="h-full p-6 overflow-y-auto flex flex-col">
+              <div className="space-y-6 flex-1 flex flex-col">
+                <div className="flex-1 space-y-6">
+                  <DerivationViewer
+                    result={result}
+                    algorithm={selectedAlgorithmData}
+                    activeStepPath={activeStepPath}
                     activeRuleId={activeRuleId}
-                    onRuleClick={handleRuleClick}
+                    onStepClick={handleStepClick}
+                    expression={expression}
+                    isInferring={isInferring}
+                    variant={selectedVariant}
                   />
-                )}
+                  
+                  {selectedAlgorithmData && (
+                    <TypingRules
+                      rules={
+                        selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
+                          ? selectedAlgorithmData.VariantRules.find(([id]) => id === selectedVariant)?.[1] || selectedAlgorithmData.Rules
+                          : selectedAlgorithmData.RuleGroups || selectedAlgorithmData.Rules
+                      }
+                      activeRuleId={activeRuleId}
+                      onRuleClick={handleRuleClick}
+                    />
+                  )}
+                </div>
+                
+                {/* Footer moved to derivation column */}
+                <div className="mt-6 pt-4 border-t border-muted-foreground/20">
+                  <div className="text-center text-xs text-muted-foreground">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                      <span>
+                        Released under the{' '}
+                        <a 
+                          href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline transition-colors duration-200"
+                        >
+                          MIT License
+                        </a>
+                      </span>
+                      <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                      <span>
+                        Copyright © 2025{' '}
+                        <a 
+                          href="https://cuichen.cc" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline transition-colors duration-200"
+                        >
+                          Chen Cui
+                        </a>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Footnote */}
-        <div className="mt-6 sm:mt-8 lg:mt-10 pt-4 sm:pt-6 border-t border-muted-foreground/20 animate-stagger-5">
-          <div className="text-center text-xs sm:text-sm text-muted-foreground">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-              <span>
-                Released under the{' '}
-                <a 
-                  href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline transition-colors duration-200"
-                >
-                  MIT License
-                </a>
-              </span>
-              <span className="hidden sm:inline text-muted-foreground/50">•</span>
-              <span>
-                Copyright © 2025{' '}
-                <a 
-                  href="https://cuichen.cc" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline transition-colors duration-200"
-                >
-                  Chen Cui
-                </a>
-              </span>
             </div>
           </div>
         </div>

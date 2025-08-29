@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { History, X } from 'lucide-react';
+import { History, Trash2, X } from 'lucide-react';
 
 interface ExpressionHistoryProps {
   onSelectExpression: (expression: string) => void;
@@ -102,7 +102,7 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           onClick={clearHistory}
           className="h-5 w-5 p-0 opacity-60 hover:opacity-100"
         >
-          <X className="w-3 h-3" />
+          <Trash2 className="w-3 h-3" />
         </Button>
       </div>
       
@@ -111,12 +111,23 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
           {history.map((entry) => (
             <div
               key={entry.id}
-              className="px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
+              className="group flex items-center justify-between px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
               onClick={() => onSelectExpression(entry.expression)}
             >
-              <code className="font-mono text-foreground truncate block">
+              <code className="font-mono text-foreground truncate flex-1 pr-2">
                 {entry.expression}
               </code>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeEntry(entry.id);
+                }}
+                className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0"
+              >
+                <X className="w-2.5 h-2.5" />
+              </Button>
             </div>
           ))}
         </div>

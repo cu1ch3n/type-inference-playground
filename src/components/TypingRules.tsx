@@ -58,17 +58,15 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         </div>
       </div>
       
-      {/* Horizontal line with label positioned further right */}
-      <div className="relative flex items-center mt-1">
+      {/* Horizontal line with label inline on the right */}
+      <div className="flex items-center mt-1 gap-3">
         <div className="flex-1 border-t border-foreground/20"></div>
-        <div className="absolute right-0 translate-x-4">
-          <Badge 
-            variant={activeRuleId === rule.Id ? "default" : "secondary"}
-            className="text-xs font-medium px-1.5 py-0.5"
-          >
-            {rule.Name}
-          </Badge>
-        </div>
+        <Badge 
+          variant={activeRuleId === rule.Id ? "default" : "secondary"}
+          className="text-xs font-medium px-1.5 py-0.5 shrink-0"
+        >
+          {rule.Name}
+        </Badge>
       </div>
       
       {/* Conclusion section */}

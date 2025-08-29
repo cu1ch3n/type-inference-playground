@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { X } from 'lucide-react';
+import { History, X } from 'lucide-react';
 
 interface ExpressionHistoryProps {
-  currentExpression: string;
   onSelectExpression: (expression: string) => void;
+  onAddToHistory: (addFunction: (expression: string) => void) => void;
 }
 
 interface HistoryEntry {
@@ -15,7 +15,7 @@ interface HistoryEntry {
   id: string;
 }
 
-export const ExpressionHistory = ({ currentExpression, onSelectExpression }: ExpressionHistoryProps) => {
+export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: ExpressionHistoryProps) => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   // Load history from localStorage on mount
@@ -36,32 +36,40 @@ export const ExpressionHistory = ({ currentExpression, onSelectExpression }: Exp
     localStorage.setItem('expression-history', JSON.stringify(history));
   }, [history]);
 
-  // Add current expression to history when it changes (and is not empty)
+  // Provide addToHistory function to parent
   useEffect(() => {
-    if (currentExpression.trim()) {
-      const trimmedExpression = currentExpression.trim();
-      
-      // Don't add if it's the same as the last entry
-      if (history.length > 0 && history[0].expression === trimmedExpression) {
-        return;
-      }
-
-      const newEntry: HistoryEntry = {
-        expression: trimmedExpression,
-        timestamp: Date.now(),
-        id: Math.random().toString(36).substr(2, 9)
-      };
-
-      setHistory(prev => {
-        // Remove duplicates and add to front
-        const filtered = prev.filter(entry => entry.expression !== trimmedExpression);
-        const newHistory = [newEntry, ...filtered];
+    const addToHistory = (expression: string) => {
+      if (expression.trim()) {
+        const trimmedExpression = expression.trim();
         
-        // Keep only last 10 entries
-        return newHistory.slice(0, 10);
-      });
-    }
-  }, [currentExpression, history]);
+        // Don't add if it's the same as the last entry
+        if (history.length > 0 && history[0].expression === trimmedExpression) {
+          return;
+        }
+
+        const newEntry: HistoryEntry = {
+          expression: trimmedExpression,
+          timestamp: Date.now(),
+          id: Math.random().toString(36).substr(2, 9)
+        };
+
+        setHistory(prev => {
+          // Remove duplicates and add to front
+          const filtered = prev.filter(entry => entry.expression !== trimmedExpression);
+          const newHistory = [newEntry, ...filtered];
+          
+          // Keep only last 10 entries
+          return newHistory.slice(0, 10);
+        });
+      }
+    };
+
+    onAddToHistory(addToHistory);
+  }, [history, onAddToHistory]);
+
+  const clearHistory = () => {
+    setHistory([]);
+  };
 
   const removeEntry = (id: string) => {
     setHistory(prev => prev.filter(entry => entry.id !== id));
@@ -72,29 +80,48 @@ export const ExpressionHistory = ({ currentExpression, onSelectExpression }: Exp
   }
 
   return (
-    <div className="space-y-1">
-      {history.map((entry) => (
-        <div
-          key={entry.id}
-          className="group flex items-center justify-between px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
-          onClick={() => onSelectExpression(entry.expression)}
-        >
-          <code className="font-mono text-foreground truncate flex-1 pr-2">
-            {entry.expression}
-          </code>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              removeEntry(entry.id);
-            }}
-            className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0"
-          >
-            <X className="w-2.5 h-2.5" />
-          </Button>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <History className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-xs font-medium text-muted-foreground">Recent</span>
         </div>
-      ))}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearHistory}
+          className="h-5 w-5 p-0 opacity-60 hover:opacity-100"
+        >
+          <X className="w-3 h-3" />
+        </Button>
+      </div>
+      
+      <ScrollArea className="h-20">
+        <div className="space-y-1 pr-2">
+          {history.map((entry) => (
+            <div
+              key={entry.id}
+              className="group flex items-center justify-between px-2 py-1 rounded border border-border/30 hover:border-primary/50 hover:bg-accent/20 transition-all cursor-pointer text-xs"
+              onClick={() => onSelectExpression(entry.expression)}
+            >
+              <code className="font-mono text-foreground truncate flex-1 pr-2">
+                {entry.expression}
+              </code>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeEntry(entry.id);
+                }}
+                className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all flex-shrink-0"
+              >
+                <X className="w-2.5 h-2.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

@@ -32,6 +32,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [leftType, setLeftType] = useState<string>('');
   const [rightType, setRightType] = useState<string>('');
+  const [addToHistoryFunction, setAddToHistoryFunction] = useState<((expression: string) => void) | null>(null);
   
   const selectedAlgorithmData = algorithms.find(a => a.Id === selectedAlgorithm);
   const isSubtypingMode = selectedAlgorithmData?.Mode === 'subtyping';
@@ -68,6 +69,14 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
       setLeftType('');
       setRightType('');
     }
+  };
+
+  const handleInfer = () => {
+    // Add current expression to history when running inference
+    if (addToHistoryFunction && expression.trim()) {
+      addToHistoryFunction(expression.trim());
+    }
+    onInfer();
   };
 
   // Reset selected example when algorithm changes
@@ -248,7 +257,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
                     <RotateCcw className="w-3 h-3" />
                   </Button>
                   <Button 
-                    onClick={onInfer} 
+                    onClick={handleInfer}
                     disabled={!leftType.trim() || !rightType.trim() || isInferring} 
                     size="sm" 
                     className={`
@@ -278,8 +287,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
           {/* Expression History */}
           <ExpressionHistory 
-            currentExpression={expression}
             onSelectExpression={onExpressionChange}
+            onAddToHistory={setAddToHistoryFunction}
           />
         </div>
         
@@ -379,7 +388,7 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
             )}
             {/* Play button - bottom right */}
             <Button 
-              onClick={onInfer} 
+              onClick={handleInfer} 
               disabled={!expression.trim() || isInferring} 
               size="sm" 
               className={`
@@ -408,8 +417,8 @@ export const ExpressionInput = forwardRef<HTMLTextAreaElement, ExpressionInputPr
 
         {/* Expression History */}
         <ExpressionHistory 
-          currentExpression={expression}
           onSelectExpression={onExpressionChange}
+          onAddToHistory={setAddToHistoryFunction}
         />
       
       <HelpModal open={helpModalOpen} onOpenChange={setHelpModalOpen} />

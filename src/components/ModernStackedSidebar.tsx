@@ -50,14 +50,11 @@ export const ModernStackedSidebar = ({
           collapsedSize={3}
           onCollapse={() => setLeftColumnCollapsed(true)}
           onExpand={() => setLeftColumnCollapsed(false)}
-          className={cn(
-            "border-r border-border relative flex flex-col",
-            leftColumnCollapsed && "min-w-12"
-          )}
+          className="border-r border-border relative flex flex-col"
         >
           {leftColumnCollapsed ? (
             <button
-              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative"
+              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative min-w-12 max-w-12"
               onClick={() => setLeftColumnCollapsed(false)}
             >
               {/* Expand button in the middle */}
@@ -107,14 +104,11 @@ export const ModernStackedSidebar = ({
           collapsedSize={3}
           onCollapse={() => setRightColumnCollapsed(true)}
           onExpand={() => setRightColumnCollapsed(false)}
-          className={cn(
-            "relative flex flex-col",
-            rightColumnCollapsed && "min-w-12"
-          )}
+          className="relative flex flex-col"
         >
           {rightColumnCollapsed ? (
             <button
-              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative"
+              className="h-full w-full flex flex-col items-center justify-center hover:bg-muted/30 transition-colors group cursor-pointer relative min-w-12 max-w-12"
               onClick={() => setRightColumnCollapsed(false)}
             >
               {/* Expand button in the middle */}
@@ -144,21 +138,23 @@ export const ModernStackedSidebar = ({
               
               <div>
                 <h3 className="text-base font-semibold mb-4 text-foreground">Expression & Input</h3>
-                <ExpressionInput
-                  ref={expressionInputRef}
-                  expression={expression}
-                  onExpressionChange={(expr) => {
-                    onExpressionChange(expr);
-                    if (!expr.trim()) {
-                      setResult(undefined);
-                    }
-                  }}
-                  onInfer={onInfer}
-                  isInferring={isInferring}
-                  selectedAlgorithm={selectedAlgorithm}
-                  algorithms={algorithms}
-                  selectedVariant={selectedVariant}
-                />
+                <div className="border-l-2 border-border pl-3">
+                  <ExpressionInput
+                    ref={expressionInputRef}
+                    expression={expression}
+                    onExpressionChange={(expr) => {
+                      onExpressionChange(expr);
+                      if (!expr.trim()) {
+                        setResult(undefined);
+                      }
+                    }}
+                    onInfer={onInfer}
+                    isInferring={isInferring}
+                    selectedAlgorithm={selectedAlgorithm}
+                    algorithms={algorithms}
+                    selectedVariant={selectedVariant}
+                  />
+                </div>
               </div>
               
               {/* History Section */}

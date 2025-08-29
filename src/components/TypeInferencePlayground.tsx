@@ -14,7 +14,10 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
-import { PanelLeft } from 'lucide-react';
+import { PanelLeft, Workflow, Activity } from 'lucide-react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Badge } from '@/components/ui/badge';
+import { KaTeXRenderer } from './KaTeXRenderer';
 
 import { TypingRules } from './TypingRules';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
@@ -398,10 +401,36 @@ export const TypeInferencePlayground = () => {
             expressionInputRef={expressionInputRef}
           />
           
-          <div className="flex-1 h-full overflow-hidden flex flex-col">
-            <div className="h-full p-6 overflow-y-auto flex flex-col">
-              <div className="space-y-6 flex-1 flex flex-col">
-                <div className="flex-1 space-y-6">
+          <div className="flex-1 h-full overflow-hidden">
+            <PanelGroup direction="vertical" className="h-full">
+              {/* Derivation Panel */}
+              <Panel defaultSize={60} minSize={30} className="p-4 overflow-y-auto">
+                <div className="h-full">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Workflow className="w-5 h-5 text-primary" />
+                    <h2 className="text-lg font-semibold">Derivation</h2>
+                    {result?.finalType && (
+                      <div className="flex items-center gap-2 ml-4">
+                        <Separator orientation="vertical" className="h-6" />
+                        <span className="text-sm text-muted-foreground">Type:</span>
+                        <Badge variant="secondary" className="font-math">
+                          <KaTeXRenderer expression={result.finalType} />
+                        </Badge>
+                      </div>
+                    )}
+                    <div className="ml-auto">
+                      {selectedAlgorithmData && expression && (
+                        <ShareExportButtons
+                          algorithm={selectedAlgorithmData}
+                          expression={expression}
+                          result={result}
+                          variant={selectedVariant}
+                          disabled={isInferring}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <Separator className="mb-4" />
                   <DerivationViewer
                     result={result}
                     algorithm={selectedAlgorithmData}
@@ -412,8 +441,20 @@ export const TypeInferencePlayground = () => {
                     isInferring={isInferring}
                     variant={selectedVariant}
                   />
-                  
-                  {selectedAlgorithmData && (
+                </div>
+              </Panel>
+
+              <PanelResizeHandle className="h-1 bg-border hover:bg-accent transition-colors" />
+
+              {/* Typing Rules Panel */}
+              <Panel defaultSize={40} minSize={20} className="p-4 overflow-y-auto">
+                {selectedAlgorithmData && (
+                  <div className="h-full">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Activity className="w-5 h-5 text-primary" />
+                      <h2 className="text-lg font-semibold">Typing Rules</h2>
+                    </div>
+                    <Separator className="mb-4" />
                     <TypingRules
                       rules={
                         selectedVariant && selectedAlgorithmData.VariantRules?.find(([id]) => id === selectedVariant)?.[1]
@@ -423,38 +464,38 @@ export const TypeInferencePlayground = () => {
                       activeRuleId={activeRuleId}
                       onRuleClick={handleRuleClick}
                     />
-                  )}
-                </div>
-                
-                {/* Footer moved to derivation column */}
-                <div className="mt-6 pt-4 border-t border-muted-foreground/20">
-                  <div className="text-center text-xs text-muted-foreground">
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-                      <span>
-                        Released under the{' '}
-                        <a 
-                          href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline transition-colors duration-200"
-                        >
-                          MIT License
-                        </a>
-                      </span>
-                      <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                      <span>
-                        Copyright © 2025{' '}
-                        <a 
-                          href="https://cuichen.cc" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline transition-colors duration-200"
-                        >
-                          Chen Cui
-                        </a>
-                      </span>
-                    </div>
                   </div>
+                )}
+              </Panel>
+            </PanelGroup>
+            
+            {/* Footer moved to bottom of main content */}
+            <div className="p-4 border-t border-muted-foreground/20">
+              <div className="text-center text-xs text-muted-foreground">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+                  <span>
+                    Released under the{' '}
+                    <a 
+                      href="https://github.com/cu1ch3n/type-inference-zoo-wasm/blob/main/LICENSE" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline transition-colors duration-200"
+                    >
+                      MIT License
+                    </a>
+                  </span>
+                  <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                  <span>
+                    Copyright © 2025{' '}
+                    <a 
+                      href="https://cuichen.cc" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline transition-colors duration-200"
+                    >
+                      Chen Cui
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>

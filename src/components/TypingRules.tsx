@@ -33,7 +33,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
+        p-6 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col min-h-[120px] min-w-[200px]
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -46,14 +46,14 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       <div className="flex-1 flex flex-col justify-end">
         {/* Content area for premises - constrained width */}
         <div className="max-w-[70%] mx-auto">
-          <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
+          <div className="flex flex-wrap items-end justify-center gap-2 min-h-[2.5rem]">
             {rule.Premises && rule.Premises.length > 0 && (
               rule.Premises.map((premise, index) => (
                 <div key={index} className="text-center">
-                  <KaTeXRenderer 
+                   <KaTeXRenderer 
                     expression={premise} 
                     displayMode={false}
-                    className="text-xs"
+                    className="text-sm"
                   />
                 </div>
               ))
@@ -63,26 +63,26 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       </div>
       
       {/* Horizontal line with label positioned outside content area */}
-      <div className="relative flex items-center mt-1">
+      <div className="relative flex items-center mt-3">
         <div className="flex-1 border-t border-foreground/20"></div>
         <div className="absolute right-0 translate-x-2">
           <RuleTooltip 
             ruleId={rule.Id}
             rules={[rule]}
             variant={activeRuleId === rule.Id ? "default" : "secondary"}
-            className="text-xs font-medium"
+            className="text-sm font-medium"
             isActive={activeRuleId === rule.Id}
           />
         </div>
       </div>
       
       {/* Conclusion section - constrained width */}
-      <div className="max-w-[70%] mx-auto mt-1">
+      <div className="max-w-[70%] mx-auto mt-3">
         <div className="text-center">
           <KaTeXRenderer 
             expression={rule.Conclusion} 
             displayMode={false}
-            className="text-xs"
+            className="text-sm"
           />
         </div>
       </div>
@@ -94,7 +94,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        flex items-center justify-between p-1.5 rounded border transition-all duration-200
+        flex items-center justify-between p-4 rounded border transition-all duration-200 min-h-[80px]
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -107,12 +107,12 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         <KaTeXRenderer 
           expression={rule.Reduction!} 
           displayMode={false}
-          className="text-xs"
+          className="text-sm"
         />
       </div>
       <Badge 
         variant={activeRuleId === rule.Id ? "default" : "secondary"}
-        className="font-medium text-xs ml-1.5 px-1.5 py-0.5"
+        className="font-medium text-sm ml-2 px-2 py-1"
       >
         {rule.Name}
       </Badge>
@@ -162,7 +162,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
                     {section.Rules.filter(rule => rule.Reduction).map(renderReductionRule)}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                     {section.Rules.filter(rule => !rule.Reduction).map(renderRuleCard)}
                   </div>
                 )}
@@ -186,7 +186,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
 
             {/* Traditional premise/conclusion rules - dense grid layout */}
             {flatRules?.some(rule => !rule.Reduction) && (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 {flatRules.filter(rule => !rule.Reduction).map(renderRuleCard)}
               </div>
             )}

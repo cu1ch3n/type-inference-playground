@@ -39,7 +39,7 @@ export const ModernStackedSidebar = ({
     <div className="flex h-full bg-background border-r border-border">
       {/* Left Column - Algorithm Selector */}
       <div className={cn(
-        "transition-all duration-300 border-r border-border relative",
+        "transition-all duration-300 border-r border-border relative flex flex-col",
         leftColumnCollapsed ? "w-12" : "w-[28rem]"
       )}>
         {/* Collapse button */}
@@ -55,7 +55,7 @@ export const ModernStackedSidebar = ({
         </button>
 
         {leftColumnCollapsed ? (
-          <div className="h-full flex items-center justify-center pt-8">
+          <div className="flex-1 flex items-center justify-center">
             <div 
               className="text-sm font-medium text-muted-foreground whitespace-nowrap"
               style={{ 
@@ -82,7 +82,7 @@ export const ModernStackedSidebar = ({
 
       {/* Right Column - Expression Input & History */}
       <div className={cn(
-        "transition-all duration-300 relative",
+        "transition-all duration-300 relative flex flex-col",
         rightColumnCollapsed ? "w-12" : "w-[28rem]"
       )}>
         {/* Collapse button */}
@@ -98,7 +98,7 @@ export const ModernStackedSidebar = ({
         </button>
 
         {rightColumnCollapsed ? (
-          <div className="h-full flex items-center justify-center pt-8">
+          <div className="flex-1 flex items-center justify-center">
             <div 
               className="text-sm font-medium text-muted-foreground whitespace-nowrap"
               style={{ 

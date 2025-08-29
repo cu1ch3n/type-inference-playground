@@ -32,7 +32,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
     <div
       key={rule.Id}
       className={`
-        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col w-fit
+        p-2 rounded border transition-all duration-200 hover:scale-[1.01] flex flex-col
         ${activeRuleId === rule.Id 
           ? 'bg-highlight/30 border-primary shadow-sm' 
           : 'bg-rule border-border hover:bg-rule/80 hover:shadow-sm'
@@ -40,29 +40,28 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
         ${onRuleClick ? 'cursor-pointer' : ''}
       `}
       onClick={() => onRuleClick?.(rule.Id)}
-      style={{ minWidth: 'fit-content' }}
     >
       {/* Premises section - grows to fill available space and aligns to bottom */}
       <div className="flex-1 flex flex-col justify-end">
-        <div className="flex flex-wrap items-end justify-center gap-1.5 min-h-[1.5rem]">
+        <div className="flex items-end justify-center gap-1.5 min-h-[1.5rem] whitespace-nowrap">
           {rule.Premises && rule.Premises.length > 0 && (
             rule.Premises.map((premise, index) => (
-              <div key={index} className="text-center">
+              <span key={index}>
                 <KaTeXRenderer 
                   expression={premise} 
                   displayMode={false}
                   className="text-xs"
                 />
-              </div>
+              </span>
             ))
           )}
         </div>
       </div>
       
-      {/* Horizontal line with label - content area + label area */}
-      <div className="flex items-center mt-1 min-w-0">
-        <div className="flex-1 border-t border-foreground/20 min-w-0"></div>
-        <div className="ml-3 shrink-0">
+      {/* Horizontal line extending to accommodate label */}
+      <div className="relative mt-1">
+        <div className="border-t border-foreground/20 w-full"></div>
+        <div className="absolute right-0 top-0 transform -translate-y-1/2 bg-background pl-2">
           <Badge 
             variant={activeRuleId === rule.Id ? "default" : "secondary"}
             className="text-xs font-medium px-1.5 py-0.5"
@@ -73,7 +72,7 @@ export const TypingRules = ({ rules, activeRuleId, onRuleClick, showHeader = tru
       </div>
       
       {/* Conclusion section */}
-      <div className="text-center mt-1">
+      <div className="text-center mt-1 whitespace-nowrap">
         <KaTeXRenderer 
           expression={rule.Conclusion} 
           displayMode={false}

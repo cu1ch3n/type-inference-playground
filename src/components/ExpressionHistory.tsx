@@ -83,8 +83,9 @@ export const ExpressionHistory = ({ onSelectExpression, onAddToHistory }: Expres
 
   console.log('ExpressionHistory render - history length:', history.length);
 
+  // Always render the component so useEffect can run, but conditionally show content
   if (history.length === 0) {
-    return null;
+    return <div style={{ display: 'none' }} />;
   }
 
   return (

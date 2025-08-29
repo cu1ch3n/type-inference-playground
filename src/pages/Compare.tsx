@@ -211,7 +211,7 @@ export const Compare = () => {
     })
   );
 
-  // Load shared state from URL on mount
+  // Load shared state from URL on mount, or set defaults
   useEffect(() => {
     // Only process URL params after algorithms are loaded
     if (loading || algorithms.length === 0) return;
@@ -241,6 +241,17 @@ export const Compare = () => {
       
       // Clean URL after loading
       cleanUrl();
+    } else {
+      // Set defaults when no URL params exist
+      // Select first two algorithms if available
+      if (algorithms.length >= 2) {
+        setSelectedAlgorithms([algorithms[0].Id, algorithms[1].Id]);
+      } else if (algorithms.length === 1) {
+        setSelectedAlgorithms([algorithms[0].Id]);
+      }
+      
+      // Set default expressions
+      setExpressions(['\\x. x', '(\\x. x) 1']);
     }
   }, [algorithms, loading]);
 

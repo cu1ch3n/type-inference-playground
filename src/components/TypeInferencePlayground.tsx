@@ -26,7 +26,6 @@ import { ZoomDialog } from './ZoomDialog';
 import { WasmStatusIndicator } from './WasmStatusIndicator';
 import { DerivationViewer } from './DerivationViewer';
 import { ShareExportButtons } from './ShareExportButtons';
-import { ModernStackedSidebar } from './ModernStackedSidebar';
 import { useAlgorithms } from '@/contexts/AlgorithmContext';
 import { wasmInference } from '@/lib/wasmInterface';
 import { InferenceResult, SubtypingResult, AlgorithmResult } from '@/types/inference';
@@ -741,7 +740,7 @@ export const TypeInferencePlayground = () => {
                   defaultSize={40} 
                   minSize={20} 
                   collapsible={true}
-                  collapsedSize={5}
+                  collapsedSize={3}
                   onCollapse={() => setRulesCollapsed(true)}
                   onExpand={() => setRulesCollapsed(false)}
                   className="bg-background"

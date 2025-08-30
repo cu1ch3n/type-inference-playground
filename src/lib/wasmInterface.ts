@@ -1,5 +1,6 @@
 // WASM Interface for Type Inference Engines using WASI
-// Based on your type-inference-zoo implementation
+// This is a flexible interface that can work with different WASM modules
+// Default: type-inference-zoo-wasm, but supports any compatible WASM engine
 import { ConsoleStdout, WASI } from "@bjorn3/browser_wasi_shim";
 
 export interface InferenceRequest {
@@ -50,7 +51,7 @@ export class WasmTypeInference {
   constructor(wasmUrl = 'https://files.cuichen.cc/zoo.wasm') {
     this.wasmUrl = wasmUrl;
     // eslint-disable-next-line no-console
-    console.log(`WASM configured for: ${this.wasmUrl}`);
+    console.log(`Type Inference Playground initialized with WASM: ${this.wasmUrl}`);
   }
 
   updateWasmUrl(newUrl: string) {
@@ -60,7 +61,7 @@ export class WasmTypeInference {
       this.wasmModule = null;
       this.isInitialized = false;
       // eslint-disable-next-line no-console
-      console.log(`WASM URL updated to: ${this.wasmUrl}`);
+      console.log(`WASM engine switched to: ${this.wasmUrl}`);
     }
   }
 
@@ -83,7 +84,7 @@ export class WasmTypeInference {
       this.isInitialized = true;
       
       // eslint-disable-next-line no-console
-      console.log(`✅ WASM module loaded: ${this.wasmUrl}`);
+      console.log(`✅ Type inference engine loaded: ${this.wasmUrl}`);
       return true;
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -279,10 +280,10 @@ export class WasmTypeInference {
     this.wasmModule = null;
     this.isInitialized = false;
     // eslint-disable-next-line no-console
-    console.log('WASM module unloaded');
+    console.log('Type inference engine unloaded');
   }
 }
 
-// Global instance (disabled by default)
+// Global instance - defaults to type-inference-zoo-wasm
+// Can be reconfigured to use different WASM engines via settings
 export const wasmInference = new WasmTypeInference();
-// export const wasmInference = new WasmTypeInference("/wasm/bin.wasm");

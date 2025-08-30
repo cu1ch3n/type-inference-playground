@@ -37,7 +37,7 @@ const STORAGE_KEY = 'wasm-sources';
 
 const createDefaultSource = (): WasmSource => ({
   id: 'default',
-  name: 'Default: Type Inference Zoo',
+  name: 'Type Inference Zoo (Default)',
   url: DEFAULT_WASM_URL,
   authType: 'none',
   isLocal: false,

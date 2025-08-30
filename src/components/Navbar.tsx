@@ -107,7 +107,7 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuItem 
-                  onClick={() => window.open('https://github.com/cu1ch3n/type-inference-playground', '_blank')}
+                  onClick={() => window.open('https://github.com/cu1ch3n/type-inference-zoo-frontend', '_blank')}
                 >
                   <Github className="w-4 h-4 mr-2" />
                   Frontend Repository

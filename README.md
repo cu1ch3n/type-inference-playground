@@ -1,11 +1,11 @@
-# Type Inference Playground
+# Typ.How - An Interactive Type Inference Playground
 
-[![Build Status](https://github.com/cu1ch3n/type-inference-playground/actions/workflows/build.yml/badge.svg)](https://github.com/cu1ch3n/type-inference-playground/actions)
+[![Build Status](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions/workflows/build.yml/badge.svg)](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-A modern, extensible frontend playground for type inference algorithms. This project serves as a general-purpose frontend that can work with different WebAssembly type inference engines. The default engine is [type-inference-zoo-wasm](https://github.com/cu1ch3n/type-inference-zoo-wasm), but you can easily switch to other WASM modules or even private implementations.
+A modern, extensible frontend playground for type inference algorithms available at [typ.how](https://typ.how/). This project serves as a general-purpose frontend that can work with different WebAssembly type inference engines. The default engine is [type-inference-zoo-wasm](https://github.com/cu1ch3n/type-inference-zoo-wasm), but you can easily switch to other WASM modules or even private implementations.
 
 ## Features
 
@@ -17,7 +17,7 @@ A modern, extensible frontend playground for type inference algorithms. This pro
 
 ## WASM Engine Configuration
 
-The Type Inference Playground is designed to work with any compatible WebAssembly type inference engine. By default, it uses [type-inference-zoo-wasm](https://github.com/cu1ch3n/type-inference-zoo-wasm), but you can easily configure it to use different engines.
+Typ.How is designed to work with any compatible WebAssembly type inference engine. By default, it uses [type-inference-zoo-wasm](https://github.com/cu1ch3n/type-inference-zoo-wasm), but you can easily configure it to use different engines.
 
 ### Adding Custom WASM Engines
 
@@ -29,7 +29,7 @@ You can add your own WASM engines (clicking the wasm button in the navbar):
 
 ### Authentication Support
 
-The playground supports various authentication methods for private WASM sources:
+Typ.How supports various authentication methods for private WASM sources:
 
 - **Bearer Token**: Standard OAuth/API token authentication
 - **Custom Headers**: Any custom authentication headers
@@ -54,7 +54,7 @@ The engine should output JSON responses for programmatic consumption.
 
 ### Sharing Configurations
 
-You can share WASM configurations using subscription URLs. The playground supports `infer://` URLs (which is just base64-encoded data)
+You can share WASM configurations using subscription URLs. Typ.How supports `infer://` URLs (which is just base64-encoded data)
 
 ## Development
 
@@ -67,8 +67,8 @@ You can share WASM configurations using subscription URLs. The playground suppor
 
 ```bash
 # Clone the repository
-git clone https://github.com/cu1ch3n/type-inference-playground.git
-cd type-inference-playground
+git clone https://github.com/cu1ch3n/typ-how.git
+cd typ-how
 
 # Install dependencies
 npm install

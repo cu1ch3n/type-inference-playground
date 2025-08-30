@@ -21,7 +21,7 @@ The Type Inference Playground is designed to work with any compatible WebAssembl
 
 ### Adding Custom WASM Engines
 
-You can add your own WASM engines through the Settings modal (⚙️ icon in the navbar):
+You can add your own WASM engines (clicking the wasm button in the navbar):
 
 1. **Public WASM Files**: Simply provide a URL to your WASM file
 2. **Private/Authenticated Sources**: Configure authentication headers or tokens
@@ -41,22 +41,20 @@ Your WASM engine should implement the following command-line interface:
 
 ```bash
 # Get metadata about available algorithms
-your-wasm --meta
+wasm-exe --meta
 
 # Run type inference
-your-wasm --typing <algorithm> [--variant <variant>] <expression>
+wasm-exe --typing <algorithm> [--variant <variant>] <expression>
 
 # Run subtyping check
-your-wasm --subtyping <algorithm> [--variant <variant>] <type1> <type2>
+wasm-exe --subtyping <algorithm> [--variant <variant>] <type1> <type2>
 ```
 
 The engine should output JSON responses for programmatic consumption.
 
 ### Sharing Configurations
 
-You can share WASM configurations using subscription URLs. The playground supports:
-- `infer://` protocol URLs
-- URLs with base64-encoded configuration data
+You can share WASM configurations using subscription URLs. The playground supports `infer://` URLs (which is just base64-encoded data)
 
 ## Development
 

@@ -1,6 +1,6 @@
 # Typ.How - An Interactive Type Inference Playground
 
-[![Build Status](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions/workflows/build.yml/badge.svg)](https://github.com/cu1ch3n/type-inference-zoo-frontend/actions)
+[![Build Status](https://github.com/cu1ch3n/typ-how/actions/workflows/build.yml/badge.svg)](https://github.com/cu1ch3n/typ-how/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)

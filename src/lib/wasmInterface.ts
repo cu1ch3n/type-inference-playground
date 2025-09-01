@@ -48,7 +48,7 @@ export class WasmTypeInference {
   private isInitialized = false;
   private outputBuffer = '';
   
-  constructor(wasmUrl = 'https://files.cuichen.cc/zoo.wasm') {
+  constructor(wasmUrl = 'https://files.typ.how/zoo.wasm') {
     this.wasmUrl = wasmUrl;
     // eslint-disable-next-line no-console
     console.log(`Type Inference Playground initialized with WASM: ${this.wasmUrl}`);

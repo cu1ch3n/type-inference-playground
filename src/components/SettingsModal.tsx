@@ -32,7 +32,7 @@ interface SettingsModalProps {
   onWasmUrlChange: (url: string) => void;
 }
 
-const DEFAULT_WASM_URL = 'https://files.cuichen.cc/zoo.wasm';
+const DEFAULT_WASM_URL = 'https://files.typ.how/zoo.wasm';
 const STORAGE_KEY = 'wasm-sources';
 
 const createDefaultSource = (): WasmSource => ({

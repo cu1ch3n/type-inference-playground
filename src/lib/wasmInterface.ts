@@ -110,12 +110,18 @@ export class WasmTypeInference {
     return this.wasmSource.url;
   }
 
+  getWasmSource(): WasmSource {
+    return { ...this.wasmSource };
+  }
+
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
     try {
       // Load WASM file with authentication support
-      const headers: Record<string, string> = {};
+      const headers: Record<string, string> = {
+        'Accept': 'application/wasm',
+      };
       
       // Add authentication headers based on auth type
       switch (this.wasmSource.authType) {
@@ -128,15 +134,13 @@ export class WasmTypeInference {
           if (this.wasmSource.authUsername && this.wasmSource.authPassword) {
             const credentials = btoa(`${this.wasmSource.authUsername}:${this.wasmSource.authPassword}`);
             headers['Authorization'] = `Basic ${credentials}`;
-            console.log('WASM Basic Auth - Username:', this.wasmSource.authUsername);
-            console.log('WASM Basic Auth - Header:', `Basic ${credentials}`);
           }
           break;
         case 'header':
           if (this.wasmSource.authHeader) {
-            const [key, value] = this.wasmSource.authHeader.split(': ');
+            const [key, value] = this.wasmSource.authHeader.split(': ', 2);
             if (key && value) {
-              headers[key] = value;
+              headers[key.trim()] = value.trim();
             }
           }
           break;
@@ -148,11 +152,13 @@ export class WasmTypeInference {
           break;
       }
 
-      console.log('WASM loading with headers:', headers);
+      console.log(`Loading WASM from: ${this.wasmSource.name} (${this.wasmSource.url})`);
       
       const response = await fetch(this.wasmSource.url, {
+        method: 'GET',
         mode: 'cors',
         cache: 'default',
+        credentials: 'omit', // Don't send cookies for CORS
         headers
       });
       
@@ -164,11 +170,9 @@ export class WasmTypeInference {
       this.wasmModule = await WebAssembly.compile(wasmBytes);
       this.isInitialized = true;
       
-      // eslint-disable-next-line no-console
-      console.log(`✅ Type inference engine loaded: ${this.wasmSource.url}`);
+      console.log(`✅ Type inference engine loaded: ${this.wasmSource.url} (${wasmBytes.byteLength} bytes)`);
       return true;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Failed to load WASM module:', error);
       return false;
     }
@@ -304,9 +308,6 @@ export class WasmTypeInference {
     }
   }
 
-  getWasmUrl(): string {
-    return this.wasmUrl;
-  }
 
   async getMetadata(): Promise<import('@/types/inference').TypeInferenceAlgorithm[]> {
     if (!this.isInitialized) {

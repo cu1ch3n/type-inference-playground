@@ -23,7 +23,7 @@ export const useWasmLoader = () => {
 
     try {
       const headers: Record<string, string> = {
-        'Content-Type': 'application/wasm',
+        'Accept': 'application/wasm',
       };
 
       // Add authentication headers based on auth type
@@ -37,14 +37,13 @@ export const useWasmLoader = () => {
           if (source.authUsername && source.authPassword) {
             const credentials = btoa(`${source.authUsername}:${source.authPassword}`);
             headers['Authorization'] = `Basic ${credentials}`;
-
           }
           break;
         case 'header':
           if (source.authHeader) {
-            const [key, value] = source.authHeader.split(': ');
+            const [key, value] = source.authHeader.split(': ', 2);
             if (key && value) {
-              headers[key] = value;
+              headers[key.trim()] = value.trim();
             }
           }
           break;
@@ -60,8 +59,10 @@ export const useWasmLoader = () => {
       
       const response = await fetch(source.url, {
         method: 'GET',
-        headers,
         mode: 'cors',
+        credentials: 'omit', // Don't send cookies for CORS
+        cache: 'default',
+        headers,
       });
 
       if (!response.ok) {

@@ -3,6 +3,19 @@
 // Default: type-inference-zoo-wasm, but supports any compatible WASM engine
 import { ConsoleStdout, WASI } from "@bjorn3/browser_wasi_shim";
 
+interface WasmSource {
+  id: string;
+  name: string;
+  url: string;
+  authType?: 'none' | 'bearer' | 'basic' | 'header' | 'presigned';
+  authToken?: string;
+  authHeader?: string;
+  authUsername?: string;
+  authPassword?: string;
+  isLocal?: boolean;
+  createdAt: number;
+}
+
 export interface InferenceRequest {
   algorithm: string;
   variant?: string;
@@ -44,39 +57,107 @@ export interface SubtypingResponse {
 
 export class WasmTypeInference {
   private wasmModule: WebAssembly.Module | null = null;
-  private wasmUrl: string;
+  private wasmSource: WasmSource;
   private isInitialized = false;
   private outputBuffer = '';
   
   constructor(wasmUrl = 'https://files.typ.how/zoo.wasm') {
-    this.wasmUrl = wasmUrl;
+    this.wasmSource = {
+      id: 'default',
+      name: 'Default WASM',
+      url: wasmUrl,
+      authType: 'none',
+      isLocal: false,
+      createdAt: Date.now()
+    };
     // eslint-disable-next-line no-console
-    console.log(`Type Inference Playground initialized with WASM: ${this.wasmUrl}`);
+    console.log(`Type Inference Playground initialized with WASM: ${this.wasmSource.url}`);
   }
 
   updateWasmUrl(newUrl: string) {
-    if (this.wasmUrl !== newUrl) {
-      this.wasmUrl = newUrl;
+    if (this.wasmSource.url !== newUrl) {
+      this.wasmSource = {
+        ...this.wasmSource,
+        url: newUrl,
+        id: Date.now().toString(),
+        createdAt: Date.now()
+      };
       // Reset initialization when URL changes
       this.wasmModule = null;
       this.isInitialized = false;
       // eslint-disable-next-line no-console
-      console.log(`WASM engine switched to: ${this.wasmUrl}`);
+      console.log(`WASM engine switched to: ${this.wasmSource.url}`);
     }
+  }
+
+  updateWasmSource(newSource: WasmSource) {
+    if (this.wasmSource.url !== newSource.url || 
+        this.wasmSource.authType !== newSource.authType ||
+        this.wasmSource.authToken !== newSource.authToken ||
+        this.wasmSource.authHeader !== newSource.authHeader ||
+        this.wasmSource.authUsername !== newSource.authUsername ||
+        this.wasmSource.authPassword !== newSource.authPassword) {
+      this.wasmSource = { ...newSource };
+      // Reset initialization when source changes
+      this.wasmModule = null;
+      this.isInitialized = false;
+      // eslint-disable-next-line no-console
+      console.log(`WASM engine switched to: ${this.wasmSource.name} (${this.wasmSource.url})`);
+    }
+  }
+
+  getWasmUrl(): string {
+    return this.wasmSource.url;
   }
 
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
     try {
-      // Load WASM file directly
-      const response = await fetch(this.wasmUrl, {
+      // Load WASM file with authentication support
+      const headers: Record<string, string> = {};
+      
+      // Add authentication headers based on auth type
+      switch (this.wasmSource.authType) {
+        case 'bearer':
+          if (this.wasmSource.authToken) {
+            headers['Authorization'] = `Bearer ${this.wasmSource.authToken}`;
+          }
+          break;
+        case 'basic':
+          if (this.wasmSource.authUsername && this.wasmSource.authPassword) {
+            const credentials = btoa(`${this.wasmSource.authUsername}:${this.wasmSource.authPassword}`);
+            headers['Authorization'] = `Basic ${credentials}`;
+            console.log('WASM Basic Auth - Username:', this.wasmSource.authUsername);
+            console.log('WASM Basic Auth - Header:', `Basic ${credentials}`);
+          }
+          break;
+        case 'header':
+          if (this.wasmSource.authHeader) {
+            const [key, value] = this.wasmSource.authHeader.split(': ');
+            if (key && value) {
+              headers[key] = value;
+            }
+          }
+          break;
+        case 'presigned':
+          // For pre-signed URLs, no additional headers needed
+          break;
+        default:
+          // No authentication
+          break;
+      }
+
+      console.log('WASM loading with headers:', headers);
+      
+      const response = await fetch(this.wasmSource.url, {
         mode: 'cors',
-        cache: 'default'
+        cache: 'default',
+        headers
       });
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch WASM: ${response.status}`);
+        throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
       }
       
       const wasmBytes = await response.arrayBuffer();
@@ -84,7 +165,7 @@ export class WasmTypeInference {
       this.isInitialized = true;
       
       // eslint-disable-next-line no-console
-      console.log(`✅ Type inference engine loaded: ${this.wasmUrl}`);
+      console.log(`✅ Type inference engine loaded: ${this.wasmSource.url}`);
       return true;
     } catch (error) {
       // eslint-disable-next-line no-console

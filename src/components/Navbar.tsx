@@ -21,9 +21,9 @@ export const Navbar = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const handleWasmUrlChange = (url: string) => {
-    // Update WASM URL and reset module - using type assertion for now
-    (wasmInference as any).updateWasmUrl(url);
+  const handleWasmSourceChange = (source: any) => {
+    // Update WASM source with authentication data
+    (wasmInference as any).updateWasmSource(source);
   };
 
   const toggleCompareMode = () => {
@@ -130,7 +130,7 @@ export const Navbar = () => {
       <SettingsModal 
         open={settingsModalOpen} 
         onOpenChange={setSettingsModalOpen}
-        onWasmUrlChange={handleWasmUrlChange} 
+        onWasmSourceChange={handleWasmSourceChange} 
       />
     </nav>
   );

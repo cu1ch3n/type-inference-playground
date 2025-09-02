@@ -19,9 +19,11 @@ interface WasmSource {
   id: string;
   name: string;
   url: string;
-  authType?: 'none' | 'bearer' | 'header' | 'presigned';
+  authType?: 'none' | 'bearer' | 'basic' | 'header' | 'presigned';
   authToken?: string;
   authHeader?: string;
+  authUsername?: string;
+  authPassword?: string;
   isLocal?: boolean;
   createdAt: number;
 }
@@ -29,7 +31,7 @@ interface WasmSource {
 interface SettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onWasmUrlChange: (url: string) => void;
+  onWasmSourceChange: (source: WasmSource) => void;
 }
 
 const DEFAULT_WASM_URL = 'https://files.typ.how/zoo.wasm';
@@ -44,16 +46,22 @@ const createDefaultSource = (): WasmSource => ({
   createdAt: Date.now()
 });
 
-export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsModalProps) => {
+export const SettingsModal = ({ open, onOpenChange, onWasmSourceChange }: SettingsModalProps) => {
   const [sources, setSources] = useState<WasmSource[]>([createDefaultSource()]);
   const [selectedSourceId, setSelectedSourceId] = useState('default');
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const [editingSourceId, setEditingSourceId] = useState<string | null>(null);
   const [newSource, setNewSource] = useState<Partial<WasmSource>>({
     name: '',
     url: '',
     authType: 'none'
   });
-  const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
+  const [showTokens, setShowTokens] = useState<Record<string, boolean>>({
+    new: false,
+    newBasic: false,
+    edit: false,
+    editBasic: false
+  });
   const [isDragOver, setIsDragOver] = useState(false);
   const [subscriptionUrl, setSubscriptionUrl] = useState('');
 
@@ -68,13 +76,13 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
           // Find the current source or use the first one
           const currentSource = parsed.find(s => s.url === localStorage.getItem('current-wasm-url')) || parsed[0];
           setSelectedSourceId(currentSource.id);
-          onWasmUrlChange(currentSource.url);
+          onWasmSourceChange(currentSource);
         }
       } catch (error) {
         console.error('Failed to load sources:', error);
       }
     }
-  }, [onWasmUrlChange]);
+  }, [onWasmSourceChange]);
 
   const saveSettings = () => {
     try {
@@ -82,7 +90,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       const selectedSource = sources.find(s => s.id === selectedSourceId);
       if (selectedSource) {
         localStorage.setItem('current-wasm-url', selectedSource.url);
-        onWasmUrlChange(selectedSource.url);
+        onWasmSourceChange(selectedSource);
         
         // Dispatch custom event to notify AlgorithmContext
         window.dispatchEvent(new CustomEvent('wasmUrlChanged', { 
@@ -103,6 +111,8 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       return;
     }
     
+
+    
     const source: WasmSource = {
       id: Date.now().toString(),
       name: newSource.name,
@@ -110,6 +120,8 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
       authType: newSource.authType || 'none',
       authToken: newSource.authToken,
       authHeader: newSource.authHeader,
+      authUsername: newSource.authUsername,
+      authPassword: newSource.authPassword,
       isLocal: false,
       createdAt: Date.now()
     };
@@ -119,6 +131,50 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
     setIsAddingNew(false);
     setNewSource({ name: '', url: '', authType: 'none' });
     toast.success('WASM source added');
+  };
+
+  const startEditing = (source: WasmSource) => {
+    setEditingSourceId(source.id);
+    setNewSource({
+      name: source.name,
+      url: source.url,
+      authType: source.authType || 'none',
+      authToken: source.authToken,
+      authHeader: source.authHeader,
+      authUsername: source.authUsername,
+      authPassword: source.authPassword
+    });
+  };
+
+  const updateSource = () => {
+    if (!editingSourceId || !newSource.name || !newSource.url) {
+      toast.error('Please provide both name and URL');
+      return;
+    }
+    
+    setSources(prev => prev.map(source => 
+      source.id === editingSourceId 
+        ? {
+            ...source,
+            name: newSource.name!,
+            url: newSource.url!,
+            authType: newSource.authType || 'none',
+            authToken: newSource.authToken,
+            authHeader: newSource.authHeader,
+            authUsername: newSource.authUsername,
+            authPassword: newSource.authPassword
+          }
+        : source
+    ));
+    
+    setEditingSourceId(null);
+    setNewSource({ name: '', url: '', authType: 'none' });
+    toast.success('WASM source updated');
+  };
+
+  const cancelEditing = () => {
+    setEditingSourceId(null);
+    setNewSource({ name: '', url: '', authType: 'none' });
   };
 
   const deleteSource = (id: string) => {
@@ -180,6 +236,8 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
         authType: sourceData.authType || 'none',
         authToken: sourceData.authToken,
         authHeader: sourceData.authHeader,
+        authUsername: sourceData.authUsername,
+        authPassword: sourceData.authPassword,
         isLocal: false,
         createdAt: Date.now()
       };
@@ -223,7 +281,9 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
         url: source.url,
         authType: source.authType,
         authToken: source.authToken,
-        authHeader: source.authHeader
+        authHeader: source.authHeader,
+        authUsername: source.authUsername,
+        authPassword: source.authPassword
       };
       
       const encodedData = btoa(JSON.stringify(data));
@@ -359,6 +419,17 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                     )}
                    </div>
                    <div className="flex gap-0.5 flex-shrink-0">
+                     {source.id !== 'default' && (
+                       <Button
+                         variant="ghost"
+                         size="sm"
+                         onClick={() => startEditing(source)}
+                         className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                         title="Edit source"
+                       >
+                         <FileCode className="w-3 h-3" />
+                       </Button>
+                     )}
                      {!source.isLocal && (
                        <Button
                          variant="ghost"
@@ -376,6 +447,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                          size="sm"
                          onClick={() => deleteSource(source.id)}
                          className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                         title="Delete source"
                        >
                          <X className="w-3 h-3" />
                        </Button>
@@ -386,10 +458,12 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
             </RadioGroup>
           </div>
 
-          {/* Add New Source Form */}
-          {isAddingNew && (
+          {/* Add/Edit Source Form */}
+          {(isAddingNew || editingSourceId) && (
             <div className="space-y-3 p-3 border rounded bg-muted/50">
-              <h4 className="text-sm font-medium">Add New WASM Source</h4>
+              <h4 className="text-sm font-medium">
+                {editingSourceId ? 'Edit WASM Source' : 'Add New WASM Source'}
+              </h4>
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
@@ -413,6 +487,7 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                   >
                     <option value="none">None</option>
                     <option value="bearer">Bearer Token</option>
+                    <option value="basic">Basic Auth</option>
                     <option value="header">Custom Header</option>
                     <option value="presigned">Pre-signed URL</option>
                   </select>
@@ -436,20 +511,56 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
                   <div className="relative">
                     <Input
                       id="new-token"
-                      type={showTokens.new ? 'text' : 'password'}
-                      value={newSource.authToken || ''}
-                      onChange={(e) => setNewSource(prev => ({ ...prev, authToken: e.target.value }))}
-                      placeholder="your-bearer-token"
-                      className="font-mono pr-8 h-8 text-sm"
+                                              type={showTokens[editingSourceId ? 'edit' : 'new'] ? 'text' : 'password'}
+                        value={newSource.authToken || ''}
+                        onChange={(e) => setNewSource(prev => ({ ...prev, authToken: e.target.value }))}
+                        placeholder="your-bearer-token"
+                        className="font-mono pr-8 h-8 text-sm"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowTokens(prev => ({ ...prev, [editingSourceId ? 'edit' : 'new']: !prev[editingSourceId ? 'edit' : 'new'] }))}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                      >
+                        {showTokens[editingSourceId ? 'edit' : 'new'] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                      </Button>
+                  </div>
+                </div>
+              )}
+
+              {newSource.authType === 'basic' && (
+                <div className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="new-username" className="text-xs">Username</Label>
+                    <Input
+                      id="new-username"
+                      value={newSource.authUsername || ''}
+                      onChange={(e) => setNewSource(prev => ({ ...prev, authUsername: e.target.value }))}
+                      placeholder="username"
+                      className="h-8 text-sm"
                     />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowTokens(prev => ({ ...prev, new: !prev.new }))}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
-                    >
-                      {showTokens.new ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                    </Button>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="new-password" className="text-xs">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="new-password"
+                        type={showTokens[editingSourceId ? 'editBasic' : 'newBasic'] ? 'text' : 'password'}
+                        value={newSource.authPassword || ''}
+                        onChange={(e) => setNewSource(prev => ({ ...prev, authPassword: e.target.value }))}
+                        placeholder="password"
+                        className="pr-8 h-8 text-sm"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowTokens(prev => ({ ...prev, [editingSourceId ? 'editBasic' : 'newBasic']: !prev[editingSourceId ? 'editBasic' : 'newBasic'] }))}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                      >
+                        {showTokens[editingSourceId ? 'editBasic' : 'newBasic'] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -468,12 +579,16 @@ export const SettingsModal = ({ open, onOpenChange, onWasmUrlChange }: SettingsM
               )}
 
               <div className="flex gap-2">
-                <Button onClick={addNewSource} size="sm" className="h-7 text-xs">
-                  Add Source
+                <Button 
+                  onClick={editingSourceId ? updateSource : addNewSource} 
+                  size="sm" 
+                  className="h-7 text-xs"
+                >
+                  {editingSourceId ? 'Update Source' : 'Add Source'}
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => setIsAddingNew(false)}
+                  onClick={editingSourceId ? cancelEditing : () => setIsAddingNew(false)}
                   size="sm"
                   className="h-7 text-xs"
                 >

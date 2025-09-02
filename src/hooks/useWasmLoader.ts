@@ -4,9 +4,11 @@ interface WasmSource {
   id: string;
   name: string;
   url: string;
-  authType?: 'none' | 'bearer' | 'header' | 'presigned';
+  authType?: 'none' | 'bearer' | 'basic' | 'header' | 'presigned';
   authToken?: string;
   authHeader?: string;
+  authUsername?: string;
+  authPassword?: string;
   isLocal?: boolean;
   createdAt: number;
 }
@@ -29,6 +31,13 @@ export const useWasmLoader = () => {
         case 'bearer':
           if (source.authToken) {
             headers['Authorization'] = `Bearer ${source.authToken}`;
+          }
+          break;
+        case 'basic':
+          if (source.authUsername && source.authPassword) {
+            const credentials = btoa(`${source.authUsername}:${source.authPassword}`);
+            headers['Authorization'] = `Basic ${credentials}`;
+
           }
           break;
         case 'header':

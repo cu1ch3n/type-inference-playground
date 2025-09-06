@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RotateCcw, Upload, FileCode, Plus, X, Eye, EyeOff, Trash2, Link, Share2, Copy } from 'lucide-react';
+import { Upload, FileCode, Plus, X, Eye, EyeOff, Trash2, Link, Share2, Copy } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,6 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
-import { wasmInference } from '@/lib/wasmInterface';
 
 interface WasmSource {
   id: string;
@@ -78,10 +77,6 @@ export const SettingsModal = ({ open, onOpenChange, onWasmSourceChange }: Settin
           const currentSource = parsed.find(s => s.url === localStorage.getItem('current-wasm-url')) || parsed[0];
           setSelectedSourceId(currentSource.id);
           onWasmSourceChange(currentSource);
-          localStorage.setItem('current-wasm-url', currentSource.url);
-          window.dispatchEvent(new CustomEvent('wasmUrlChanged', {
-            detail: { url: currentSource.url }
-          }));
         }
       } catch (error) {
         console.error('Failed to load sources:', error);
@@ -368,17 +363,6 @@ export const SettingsModal = ({ open, onOpenChange, onWasmSourceChange }: Settin
 
   const selectedSource = sources.find(s => s.id === selectedSourceId);
 
-  const handleRefresh = () => {
-    if (selectedSource) {
-      onWasmSourceChange(selectedSource);
-      (wasmInference as any).refresh();
-      window.dispatchEvent(new CustomEvent('wasmUrlChanged', {
-        detail: { url: selectedSource.url }
-      }));
-      toast.success('WASM source refreshed');
-    }
-  };
-
   const hasChanges = selectedSourceId !== sources.find(s => s.url === localStorage.getItem('current-wasm-url'))?.id;
 
   return (
@@ -394,15 +378,6 @@ export const SettingsModal = ({ open, onOpenChange, onWasmSourceChange }: Settin
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Select WASM Source</Label>
               <div className="flex gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleRefresh}
-                  className="h-7 text-xs"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  Refresh
-                </Button>
                 <Button
                   variant="outline"
                   size="sm"

@@ -114,12 +114,6 @@ export class WasmTypeInference {
     return { ...this.wasmSource };
   }
 
-  async refresh(): Promise<boolean> {
-    this.wasmModule = null;
-    this.isInitialized = false;
-    return await this.initialize();
-  }
-
   async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
     
